@@ -24,18 +24,20 @@ export function systemdExecArgument(value) {
   return `"${escaped}"`
 }
 
-export function notificationCommand(message, platform = process.platform) {
-  if (platform === 'darwin') return ['osascript', ['-e', `display notification ${JSON.stringify(message)} with title "PanwithU"`]]
+export function notificationCommand(message, platform = process.platform, title = 'PanwithU') {
+  if (platform === 'darwin')
+    return ['osascript', ['-e', `display notification ${JSON.stringify(message)} with title ${JSON.stringify(title)}`]]
   if (platform === 'win32') {
     const safe = message.replaceAll("'", "''")
-    const script = `$template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('PanwithU')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('PanwithU').Show([Windows.UI.Notifications.ToastNotification]::new($xml))`
+    const safeTitle = title.replaceAll("'", "''")
+    const script = `$template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('${safeTitle}')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('PanwithU').Show([Windows.UI.Notifications.ToastNotification]::new($xml))`
     return ['powershell', ['-NoProfile', '-NonInteractive', '-Command', script]]
   }
-  return ['notify-send', ['PanwithU', message]]
+  return ['notify-send', [title, message]]
 }
 
-export async function notify(message) {
-  const [command, args] = notificationCommand(message)
+export async function notify(message, { title = 'PanwithU' } = {}) {
+  const [command, args] = notificationCommand(message, process.platform, title)
   return run(command, args)
 }
 

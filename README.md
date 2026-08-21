@@ -37,8 +37,8 @@ such as Windows and default macOS installations, `PWU` resolves to the same
 command. Linux users who prefer uppercase can add `alias PWU=pwu` to their shell
 configuration.
 
-The first launch lets you choose a language, pronunciation, companion, and an
-optional invitation code. Without a code, the core learning experience remains
+The first launch lets you choose a language and pronunciation, then optionally
+add an invitation code. Your state-symbol companion can be renamed at any time. Without a code, the core learning experience remains
 available offline.
 
 ## Why PanwithU
@@ -47,7 +47,7 @@ available offline.
 | ------------------ | ---------------------------------------------------------------------------------------------------- |
 | Terminal-first     | Practice, navigate dictionaries, and manage progress without leaving the keyboard.                   |
 | Local-first        | Your profile, review schedule, pet state, and cached audio stay on your computer.                    |
-| Learning companion | 25 companions grow through study sessions, streaks, feeding, play, and accessories.                  |
+| Learning companion | A compact state-symbol agent reacts to study sessions, physical needs, reminders, and play.          |
 | Adaptive review    | Due and failed words are prioritized before unseen vocabulary.                                       |
 | Pi-powered coach   | Recent learning history and companion identity become contextual coaching, summaries, and reminders. |
 | Cross-platform     | Runs on Linux, macOS, and Windows, including native daily reminders and speech fallbacks.            |
