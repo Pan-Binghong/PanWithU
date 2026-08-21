@@ -1,0 +1,2701 @@
+[
+  {
+    "id": "cet4",
+    "name": "CET-4",
+    "description": "大学英语四级词库",
+    "category": "中国考试",
+    "file": "CET4_T.json",
+    "length": 2607,
+    "chapters": 131
+  },
+  {
+    "id": "cet6",
+    "name": "CET-6",
+    "description": "大学英语六级词库",
+    "category": "中国考试",
+    "file": "CET6_T.json",
+    "length": 2345,
+    "chapters": 118
+  },
+  {
+    "id": "xinghuoqiaoji_4",
+    "name": "四级巧记速记",
+    "description": "四级巧记速记",
+    "category": "中国考试",
+    "file": "xinghuoqiaoji_4.json",
+    "length": 2522,
+    "chapters": 127
+  },
+  {
+    "id": "xinghuoqiaoji_6",
+    "name": "六级巧记速记",
+    "description": "六级巧记速记",
+    "category": "中国考试",
+    "file": "xinghuoqiaoji_6.json",
+    "length": 7520,
+    "chapters": 376
+  },
+  {
+    "id": "cet4-sub",
+    "name": "CET-4-Sub",
+    "description": "单词的减法-四级",
+    "category": "中国考试",
+    "file": "DanCiDeJianFa_4.json",
+    "length": 1957,
+    "chapters": 98
+  },
+  {
+    "id": "cet6-sub",
+    "name": "CET-6-Sub",
+    "description": "单词的减法-六级",
+    "category": "中国考试",
+    "file": "DanCiDeJianFa_6.json",
+    "length": 1949,
+    "chapters": 98
+  },
+  {
+    "id": "kaoyan",
+    "name": "考研",
+    "description": "研究生英语入学考试词库",
+    "category": "中国考试",
+    "file": "KaoYan_3_T.json",
+    "length": 3728,
+    "chapters": 187
+  },
+  {
+    "id": "kaoyan_2024",
+    "name": "考研 2024",
+    "description": "研究生英语入学考试词库 2024",
+    "category": "中国考试",
+    "file": "KaoYan_2024.json",
+    "length": 3731,
+    "chapters": 187
+  },
+  {
+    "id": "kaoyanshanguo_2023",
+    "name": "考研闪过 2023",
+    "description": "高中低频词2023",
+    "category": "中国考试",
+    "file": "KaoYanShanGuo_2023.json",
+    "length": 1771,
+    "chapters": 89
+  },
+  {
+    "id": "926",
+    "name": "考研926词汇",
+    "description": "926核心词汇",
+    "category": "中国考试",
+    "file": "926.json",
+    "length": 926,
+    "chapters": 47
+  },
+  {
+    "id": "dancimimi_1",
+    "name": "单词的秘密-英语一",
+    "description": "单词的秘密英语（一）",
+    "category": "中国考试",
+    "file": "DanCiDeMimi_1.json",
+    "length": 5657,
+    "chapters": 283
+  },
+  {
+    "id": "dancimimi_2",
+    "name": "单词的秘密-英语二",
+    "description": "单词的秘密英语（二）",
+    "category": "中国考试",
+    "file": "DanCiDeMimi_2.json",
+    "length": 3827,
+    "chapters": 192
+  },
+  {
+    "id": "2024HongBao T1",
+    "name": "2024考研英语hongbaoshu(上)",
+    "description": "2024考研英语hongbaoshu必考词（上）",
+    "category": "中国考试",
+    "file": "2024HongBao_T1.json",
+    "length": 997,
+    "chapters": 50
+  },
+  {
+    "id": "2024HongBao T2",
+    "name": "2024考研英语hongbaoshu(下)",
+    "description": "2024考研英语hongbaoshu必考词（下）",
+    "category": "中国考试",
+    "file": "2024HongBao_T2.json",
+    "length": 854,
+    "chapters": 43
+  },
+  {
+    "id": "hongbaoshu-2026",
+    "name": "2026考研英语 hongbaoshu",
+    "description": "2026 考研词汇 (必考词+基础词+超纲词）",
+    "category": "中国考试",
+    "file": "hongbaoshu-2026.json",
+    "length": 4858,
+    "chapters": 243
+  },
+  {
+    "id": "English_II",
+    "name": "英语二单词书",
+    "description": "考研英语二单词书",
+    "category": "中国考试",
+    "file": "English_II.json",
+    "length": 4559,
+    "chapters": 228
+  },
+  {
+    "id": "kaoyanshanguo2025",
+    "name": "考研 shanguo 2025",
+    "description": "考研 shanguo 2025",
+    "category": "中国考试",
+    "file": "kaoyanshanguo2025.json",
+    "length": 2257,
+    "chapters": 113
+  },
+  {
+    "id": "level4",
+    "name": "专四",
+    "description": "英语专业四级词库",
+    "category": "中国考试",
+    "file": "Level4luan_2_T.json",
+    "length": 4025,
+    "chapters": 202
+  },
+  {
+    "id": "level8",
+    "name": "专八",
+    "description": "英语专业八级词库",
+    "category": "中国考试",
+    "file": "Level8luan_2_T.json",
+    "length": 12197,
+    "chapters": 610
+  },
+  {
+    "id": "archVocabulary",
+    "name": "建筑专业英语",
+    "description": "大学建筑专业英语词汇",
+    "category": "中国考试",
+    "file": "archVocabulary.json",
+    "length": 630,
+    "chapters": 32
+  },
+  {
+    "id": "itVocabulary",
+    "name": "计算机专用英语",
+    "description": "大学计算机专业英语词汇",
+    "category": "中国考试",
+    "file": "itVocabulary.json",
+    "length": 1665,
+    "chapters": 84
+  },
+  {
+    "id": "pets3",
+    "name": "PETS",
+    "description": "全国英语等级考试常考词汇",
+    "category": "中国考试",
+    "file": "PETS_3.json",
+    "length": 1942,
+    "chapters": 98
+  },
+  {
+    "id": "pets3-2023",
+    "name": "PETS-2023",
+    "description": "全国英语等级考试常考词汇",
+    "category": "中国考试",
+    "file": "PETS3-2023.json",
+    "length": 4449,
+    "chapters": 223
+  },
+  {
+    "id": "self-study_English1",
+    "name": "自考1800高频单词",
+    "description": "自考1800高频单词",
+    "category": "中国考试",
+    "file": "self-study_English1.json",
+    "length": 1800,
+    "chapters": 90
+  },
+  {
+    "id": "self-study_English2",
+    "name": "自考英语二高频悠悠单词",
+    "description": "自考英语二高频悠悠单词",
+    "category": "中国考试",
+    "file": "self-study_English2.json",
+    "length": 2181,
+    "chapters": 110
+  },
+  {
+    "id": "self-study_English3",
+    "name": "自考英语二完整单词",
+    "description": "00015自考英语二完整单词书",
+    "category": "中国考试",
+    "file": "self-study_English3.json",
+    "length": 4603,
+    "chapters": 231
+  },
+  {
+    "id": "coca_20000",
+    "name": "COCA20000词",
+    "description": "COCA20000词",
+    "category": "中国考试",
+    "file": "coca20000.json",
+    "length": 20199,
+    "chapters": 1010
+  },
+  {
+    "id": "4000_Essential_English_Words1",
+    "name": "Essential Words",
+    "description": "4000 Essential English Words meaning",
+    "category": "中国考试",
+    "file": "4000_Essential_English_Words-meaning.json",
+    "length": 3600,
+    "chapters": 180
+  },
+  {
+    "id": "4000_Essential_English_Words2",
+    "name": "Essential Words",
+    "description": "4000 Essential English Words sentence",
+    "category": "中国考试",
+    "file": "4000_Essential_English_Words-sentence.json",
+    "length": 3600,
+    "chapters": 180
+  },
+  {
+    "id": "longman_communication_3000_words",
+    "name": "Longman Communication 3000",
+    "description": "Most frequent words in both spoken and written English",
+    "category": "中国考试",
+    "file": "Longman_Communication_3000.json",
+    "length": 3168,
+    "chapters": 159
+  },
+  {
+    "id": "top_2000_English_Words",
+    "name": "Top 2000 words",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "top2000words.json",
+    "length": 1867,
+    "chapters": 94
+  },
+  {
+    "id": "top_1500_nouns_Words",
+    "name": "Top 1500 Nouns",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "Top1500NounWords.json",
+    "length": 1525,
+    "chapters": 77
+  },
+  {
+    "id": "top_1000_verb_Words",
+    "name": "Top 1000 Verbs",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "Top1000VerbWords.json",
+    "length": 1011,
+    "chapters": 51
+  },
+  {
+    "id": "top_500_Adj_Words",
+    "name": "Top 500 adj.",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "Top500AdjectiveWords.json",
+    "length": 527,
+    "chapters": 27
+  },
+  {
+    "id": "top_250_Adv_Words",
+    "name": "Top 250 adv.",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "Top250AdverbWords.json",
+    "length": 255,
+    "chapters": 13
+  },
+  {
+    "id": "top_60_Pronouns",
+    "name": "Top 60 pron.",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "Top60Pronouns.json",
+    "length": 59,
+    "chapters": 3
+  },
+  {
+    "id": "top_50_Prepositions",
+    "name": "Top 50 prep.",
+    "description": "with highest frequency",
+    "category": "中国考试",
+    "file": "Top50Prepositions.json",
+    "length": 46,
+    "chapters": 3
+  },
+  {
+    "id": "suffix word",
+    "name": "suffix word",
+    "description": "common suffix",
+    "category": "中国考试",
+    "file": "suffix_word.json",
+    "length": 126,
+    "chapters": 7
+  },
+  {
+    "id": "word roots1",
+    "name": "word roots1",
+    "description": "common roots",
+    "category": "中国考试",
+    "file": "word_roots1.json",
+    "length": 369,
+    "chapters": 19
+  },
+  {
+    "id": "adult self-study examination",
+    "name": "专升本词汇",
+    "description": "专升本词汇",
+    "category": "中国考试",
+    "file": "adult-self-study-examination.json",
+    "length": 3692,
+    "chapters": 185
+  },
+  {
+    "id": "zhuan-cha-ben-ying-yu",
+    "name": "专插本英语词汇",
+    "description": "专插本英语词汇",
+    "category": "中国考试",
+    "file": "zhuan-cha-ben.json",
+    "length": 3217,
+    "chapters": 161
+  },
+  {
+    "id": "zhuan-sheng-ben-xue-shi",
+    "name": "专升本学士学位的英语",
+    "description": "专升本学士学位的英语",
+    "category": "中国考试",
+    "file": "xueshiyingyu.json",
+    "length": 897,
+    "chapters": 45
+  },
+  {
+    "id": "Oxford5000",
+    "name": "牛津5000词",
+    "description": "牛津5000词",
+    "category": "国际考试",
+    "file": "Oxford5000.json",
+    "length": 5836,
+    "chapters": 292
+  },
+  {
+    "id": "Merriam_Webster_sVocabularyBuilder",
+    "name": "韦氏词根词典",
+    "description": "韦氏词根词典",
+    "category": "中国考试",
+    "file": "Merriam_Webster_sVocabularyBuilder.json",
+    "length": 1191,
+    "chapters": 60
+  },
+  {
+    "id": "tingshuokaoshi",
+    "name": "听说考试常见词汇",
+    "description": "听说考试16个场景常见词汇量",
+    "category": "中国考试",
+    "file": "tingshuokaoshi.json",
+    "length": 557,
+    "chapters": 28
+  },
+  {
+    "id": "TOEFL_ZhangHongYan",
+    "name": "ZhangHongYan的TOEFL词汇书",
+    "description": "ZhangHongYan的TOEFL词汇书-词以类记",
+    "category": "国际考试",
+    "file": "TOEFL_ZhangHongYan.json",
+    "length": 4032,
+    "chapters": 202
+  },
+  {
+    "id": "2025KaoYanHongBaoShu",
+    "name": "2025考研英语词汇hongbao书",
+    "description": "2025考研英语词汇hongbao书",
+    "category": "中国考试",
+    "file": "2025KaoYanHongBaoShu.json",
+    "length": 6705,
+    "chapters": 336
+  },
+  {
+    "id": "3000_ClassRoom_English_Words",
+    "name": "专升本3000词",
+    "description": "专升本词汇",
+    "category": "中国考试",
+    "file": "3000_ClassRoom_English_Words.json",
+    "length": 2991,
+    "chapters": 150
+  },
+  {
+    "id": "frequently_used_words01",
+    "name": "超频单词level 1",
+    "description": "超频单词level 1",
+    "category": "中国考试",
+    "file": "frequently_used_word01.json",
+    "length": 679,
+    "chapters": 34
+  },
+  {
+    "id": "frequently_used_words03",
+    "name": "超频单词level 3",
+    "description": "超频单词level 3",
+    "category": "中国考试",
+    "file": "frequently_used_word03.json",
+    "length": 1435,
+    "chapters": 72
+  },
+  {
+    "id": "roger",
+    "description": "学习、工作常用英语",
+    "category": "英语词典",
+    "file": "RogersWords.json",
+    "length": 4174,
+    "chapters": 209
+  },
+  {
+    "id": "phrases",
+    "name": "常用短语",
+    "description": "日常交流常用短语和句子",
+    "category": "中国考试",
+    "file": "phrases.json",
+    "length": 53,
+    "chapters": 3
+  },
+  {
+    "id": "phrases-ppp",
+    "name": "测试词典-PPP",
+    "description": "邮件发送功能测试词典",
+    "category": "中国考试",
+    "file": "phrases-ppp.json",
+    "length": 5,
+    "chapters": 1
+  },
+  {
+    "id": "pet-2024",
+    "name": "PET-2024",
+    "description": "剑桥英语 - 2024",
+    "category": "国际考试",
+    "file": "pet-vacabulary-list-2024.json",
+    "length": 1871,
+    "chapters": 94
+  },
+  {
+    "id": "gmat",
+    "name": "GMAT",
+    "description": "GMAT 词库",
+    "category": "国际考试",
+    "file": "GMAT_3_T.json",
+    "length": 3047,
+    "chapters": 153
+  },
+  {
+    "id": "gre",
+    "name": "GRE",
+    "description": "GRE 词库",
+    "category": "国际考试",
+    "file": "GRE_3_T.json",
+    "length": 6515,
+    "chapters": 326
+  },
+  {
+    "id": "gre1500",
+    "name": "GRE重点1500词-fen哥",
+    "description": "GRE & TEM8 重叠高频词汇",
+    "category": "国际考试",
+    "file": "GRE_1500.json",
+    "length": 1533,
+    "chapters": 77
+  },
+  {
+    "id": "gre3000",
+    "name": "GRE3000",
+    "description": "GRE3000 词库",
+    "category": "国际考试",
+    "file": "GRE3000_3_T.json",
+    "length": 3041,
+    "chapters": 153
+  },
+  {
+    "id": "GRE-computer-based-test",
+    "name": "GRE机经词汇",
+    "description": "GRE机经词汇",
+    "category": "国际考试",
+    "file": "GRE-computer-based-test.json",
+    "length": 1451,
+    "chapters": 73
+  },
+  {
+    "id": "ZaiYaoNiMing_GRE3000",
+    "name": "再要你命GRE3000",
+    "description": "再要你命GRE3000词库-有词性新版",
+    "category": "国际考试",
+    "file": "ZaiYaoNiMing_GRE3000.json",
+    "length": 3041,
+    "chapters": 153
+  },
+  {
+    "id": "GRE_equivalent",
+    "name": "GRE等价词",
+    "description": "GRE等价词",
+    "category": "国际考试",
+    "file": "GRE_equivalent.json",
+    "length": 827,
+    "chapters": 42
+  },
+  {
+    "id": "GRE_ciyileiji",
+    "name": "GRE词以类记",
+    "description": "GRE词以类记",
+    "category": "国际考试",
+    "file": "gre-ciyileiji.json",
+    "length": 8785,
+    "chapters": 440
+  },
+  {
+    "id": "biomedical-terms",
+    "name": "生物医学专业英语词汇",
+    "description": "生物医学专业英语词汇",
+    "category": "专业词汇",
+    "file": "BIOmedical.json",
+    "length": 560,
+    "chapters": 28
+  },
+  {
+    "id": "IELTS_tinglichangjing",
+    "name": "雅思听力场景词汇",
+    "description": "雅思听力场景词汇",
+    "category": "国际考试",
+    "file": "IELTS_tinglichangjing.json",
+    "length": 1204,
+    "chapters": 61
+  },
+  {
+    "id": "ielts_disorder",
+    "name": "IELTS乱序完整版",
+    "description": "IELTS乱序完整版",
+    "category": "国际考试",
+    "file": "IELTS_disorder.json",
+    "length": 9389,
+    "chapters": 470
+  },
+  {
+    "id": "ielts_order",
+    "name": "IELTS顺序完整版",
+    "description": "IELTS顺序完整版",
+    "category": "国际考试",
+    "file": "IELTS_order.json",
+    "length": 9389,
+    "chapters": 470
+  },
+  {
+    "id": "ielts",
+    "name": "IELTS",
+    "description": "雅思词库",
+    "category": "国际考试",
+    "file": "IELTS_3_T.json",
+    "length": 3575,
+    "chapters": 179
+  },
+  {
+    "id": "heqiong",
+    "name": "heQiong雅思听力必考词汇",
+    "description": "综合测试",
+    "category": "国际考试",
+    "file": "HeQiong_IELTS.json",
+    "length": 2529,
+    "chapters": 127
+  },
+  {
+    "id": "ieltsWang3",
+    "name": "雅思wang C3",
+    "description": "雅思听力特别名词语料库",
+    "category": "国际考试",
+    "file": "IELTS_WANG_3.json",
+    "length": 1135,
+    "chapters": 57
+  },
+  {
+    "id": "ieltsWang4",
+    "name": "雅思wang C4",
+    "description": "雅思听力形容词副词语料库",
+    "category": "国际考试",
+    "file": "IELTS_WANG_4.json",
+    "length": 346,
+    "chapters": 18
+  },
+  {
+    "id": "ieltsWang5",
+    "name": "雅思wang C5",
+    "description": "吞音连读混合训练语料库",
+    "category": "国际考试",
+    "file": "IELTS_WANG_5.json",
+    "length": 1569,
+    "chapters": 79
+  },
+  {
+    "id": "ieltsWang11",
+    "name": "雅思wang C11",
+    "description": "综合测试",
+    "category": "国际考试",
+    "file": "IELTS_WANG_11.json",
+    "length": 1738,
+    "chapters": 87
+  },
+  {
+    "id": "DuckCircle_IELTS",
+    "name": "鸭圈雅思核心词",
+    "description": "鸭圈雅思核心词",
+    "category": "国际考试",
+    "file": "DuckCircle_IELTS.json",
+    "length": 2644,
+    "chapters": 133
+  },
+  {
+    "id": "IELTSVocabularyBible",
+    "name": "雅思词汇真经",
+    "description": "雅思词汇真经",
+    "category": "国际考试",
+    "file": "IELTSVocabularyBible.json",
+    "length": 3673,
+    "chapters": 184
+  },
+  {
+    "id": "IELTS-807",
+    "name": "雅思 wanglu 807",
+    "description": "雅思 wanglu 807",
+    "category": "国际考试",
+    "file": "ielts-807.json",
+    "length": 4340,
+    "chapters": 217
+  },
+  {
+    "id": "ielts-real-high",
+    "name": "雅思 real 词汇 高频",
+    "description": "雅思 real 词汇（高频词汇）",
+    "category": "国际考试",
+    "file": "ielts-real-high.json",
+    "length": 524,
+    "chapters": 27
+  },
+  {
+    "id": "ielts-real-5",
+    "name": "雅思 real 词汇 5",
+    "description": "雅思 real 词汇 （5频词汇及变频）",
+    "category": "国际考试",
+    "file": "ielts-real-5.json",
+    "length": 183,
+    "chapters": 10
+  },
+  {
+    "id": "ielts-real-4",
+    "name": "雅思 real 词汇 4",
+    "description": "雅思 real 词汇 （4频词汇及变频）",
+    "category": "国际考试",
+    "file": "ielts-real-4.json",
+    "length": 201,
+    "chapters": 11
+  },
+  {
+    "id": "ielts-real-3",
+    "name": "雅思 real 词汇 3",
+    "description": "雅思 real 词汇 （3频词汇及变频）",
+    "category": "国际考试",
+    "file": "ielts-real-3.json",
+    "length": 256,
+    "chapters": 13
+  },
+  {
+    "id": "ielts-real-2",
+    "name": "雅思 real 词汇 2",
+    "description": "雅思 real 词汇 （2频词汇及变频）",
+    "category": "国际考试",
+    "file": "ielts-real-2.json",
+    "length": 402,
+    "chapters": 21
+  },
+  {
+    "id": "ielts-real-1",
+    "name": "雅思 real 词汇 1",
+    "description": "雅思 real 词汇 （1频词汇及变频）",
+    "category": "国际考试",
+    "file": "ielts-real-1.json",
+    "length": 737,
+    "chapters": 37
+  },
+  {
+    "id": "IELTS9988wangyong",
+    "name": "雅思9988wangyong",
+    "description": "雅思9988wangyong",
+    "category": "国际考试",
+    "file": "IELTS9988wangyong.json",
+    "length": 3698,
+    "chapters": 185
+  },
+  {
+    "id": "IELTSKingLu807",
+    "name": "wanglu807雅思词汇听力第2版",
+    "description": "wanglu807雅思词汇听力第2版",
+    "category": "国际考试",
+    "file": "IELTSKingLu807.json",
+    "length": 1916,
+    "chapters": 96
+  },
+  {
+    "id": "IELTSXDF7000",
+    "name": "100个句子记完7000个雅思单词",
+    "description": "xdf 100个句子记完7000个雅思单词 词汇表",
+    "category": "国际考试",
+    "file": "IELTS_XDF_7000.json",
+    "length": 5567,
+    "chapters": 279
+  },
+  {
+    "id": "IELTS-oral-900",
+    "name": "雅思口语 900 beta版",
+    "description": "雅思口语 900 句, 需在 qwerty 设置中调小英语字体",
+    "category": "国际考试",
+    "file": "IELTS-oral-900.json",
+    "length": 900,
+    "chapters": 45
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task1",
+    "name": "xdf听力 雅思中级直通车 day1",
+    "description": "xdf听力 雅思中级直通车 day1",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task1.json",
+    "length": 44,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task2",
+    "name": "xdf听力 雅思中级直通车 day2",
+    "description": "xdf听力 雅思中级直通车 day2",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task2.json",
+    "length": 33,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task3",
+    "name": "xdf听力 雅思中级直通车 day3",
+    "description": "xdf听力 雅思中级直通车 day3",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task3.json",
+    "length": 33,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task4",
+    "name": "xdf听力 雅思中级直通车 day4",
+    "description": "xdf听力 雅思中级直通车 day4",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task4.json",
+    "length": 33,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task5",
+    "name": "xdf听力 雅思中级直通车 day5",
+    "description": "xdf听力 雅思中级直通车 day5",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task5.json",
+    "length": 38,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task6",
+    "name": "xdf听力 雅思中级直通车 day6",
+    "description": "xdf听力 雅思中级直通车 day6",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task6.json",
+    "length": 33,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task7",
+    "name": "xdf听力 雅思中级直通车 day7",
+    "description": "xdf听力 雅思中级直通车 day7",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task7.json",
+    "length": 39,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task8",
+    "name": "xdf听力 雅思中级直通车 day8",
+    "description": "xdf听力 雅思中级直通车 day8",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task8.json",
+    "length": 32,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task9",
+    "name": "xdf听力 雅思中级直通车 day9",
+    "description": "xdf听力 雅思中级直通车 day9",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task9.json",
+    "length": 46,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task10",
+    "name": "xdf听力 雅思中级直通车 day10",
+    "description": "xdf听力 雅思中级直通车 day10",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task10.json",
+    "length": 44,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task11",
+    "name": "xdf听力 雅思中级直通车 day11",
+    "description": "xdf听力 雅思中级直通车 day11",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task11.json",
+    "length": 36,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task12",
+    "name": "xdf听力 雅思中级直通车 day12",
+    "description": "xdf听力 雅思中级直通车 day12",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task12.json",
+    "length": 45,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task13",
+    "name": "xdf听力 雅思中级直通车 day13",
+    "description": "xdf听力 雅思中级直通车 day13",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task13.json",
+    "length": 49,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task14",
+    "name": "xdf听力 雅思中级直通车 day14",
+    "description": "xdf听力 雅思中级直通车 day14",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task14.json",
+    "length": 46,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task15",
+    "name": "xdf听力 雅思中级直通车 day15",
+    "description": "xdf听力 雅思中级直通车 day15",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task15.json",
+    "length": 29,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task16",
+    "name": "xdf听力 雅思中级直通车 day16",
+    "description": "xdf听力 雅思中级直通车 day16",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task16.json",
+    "length": 42,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task17",
+    "name": "xdf听力 雅思中级直通车 day17",
+    "description": "xdf听力 雅思中级直通车 day17",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task17.json",
+    "length": 22,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task18",
+    "name": "xdf听力 雅思中级直通车 day18",
+    "description": "xdf听力 雅思中级直通车 day18",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task18.json",
+    "length": 37,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-NeworientalDirect-Task19",
+    "name": "xdf听力 雅思中级直通车 day19",
+    "description": "xdf听力 雅思中级直通车 day19",
+    "category": "国际考试",
+    "file": "IELTS-listening-NewOrientalDirect-Task19.json",
+    "length": 26,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-18-days-1",
+    "name": "雅思听力词汇18天 day1",
+    "description": "雅思听力词汇18天 day1",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day1.json",
+    "length": 74,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-2",
+    "name": "雅思听力词汇18天 day2",
+    "description": "雅思听力词汇18天 day2",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day2.json",
+    "length": 77,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-3",
+    "name": "雅思听力词汇18天 day3",
+    "description": "雅思听力词汇18天 day3",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day3.json",
+    "length": 77,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-4",
+    "name": "雅思听力词汇18天 day4",
+    "description": "雅思听力词汇18天 day4",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day4.json",
+    "length": 73,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-5",
+    "name": "雅思听力词汇18天 day5",
+    "description": "雅思听力词汇18天 day5",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day5.json",
+    "length": 76,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-6",
+    "name": "雅思听力词汇18天 day6",
+    "description": "雅思听力词汇18天 day6",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day6.json",
+    "length": 77,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-7",
+    "name": "雅思听力词汇18天 day7",
+    "description": "雅思听力词汇18天 day7",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day7.json",
+    "length": 75,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-8",
+    "name": "雅思听力词汇18天 day8",
+    "description": "雅思听力词汇18天 day8",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day8.json",
+    "length": 76,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-9",
+    "name": "雅思听力词汇18天 day9",
+    "description": "雅思听力词汇18天 day9",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day9.json",
+    "length": 76,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-10",
+    "name": "雅思听力词汇18天 day10",
+    "description": "雅思听力词汇18天 day10",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day10.json",
+    "length": 33,
+    "chapters": 2
+  },
+  {
+    "id": "IELTS-listening-18-days-11",
+    "name": "雅思听力词汇18天 day11",
+    "description": "雅思听力词汇18天 day11",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day11.json",
+    "length": 52,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-18-days-12",
+    "name": "雅思听力词汇18天 day12",
+    "description": "雅思听力词汇18天 day12",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day12.json",
+    "length": 77,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-13",
+    "name": "雅思听力词汇18天 day13",
+    "description": "雅思听力词汇18天 day13",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day13.json",
+    "length": 78,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-14",
+    "name": "雅思听力词汇18天 day14",
+    "description": "雅思听力词汇18天 day14",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day14.json",
+    "length": 76,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-15",
+    "name": "雅思听力词汇18天 day15",
+    "description": "雅思听力词汇18天 day15",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day15.json",
+    "length": 77,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-16",
+    "name": "雅思听力词汇18天 day16",
+    "description": "雅思听力词汇18天 day16",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day16.json",
+    "length": 77,
+    "chapters": 4
+  },
+  {
+    "id": "IELTS-listening-18-days-17",
+    "name": "雅思听力词汇18天 day17",
+    "description": "雅思听力词汇18天 day17",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day17.json",
+    "length": 46,
+    "chapters": 3
+  },
+  {
+    "id": "IELTS-listening-18-days-18",
+    "name": "雅思听力词汇18天 day18",
+    "description": "雅思听力词汇18天 day18",
+    "category": "国际考试",
+    "file": "IELTS-listening-18days-day18.json",
+    "length": 76,
+    "chapters": 4
+  },
+  {
+    "id": "sat",
+    "name": "SAT",
+    "description": "美国 SAT 考试词库",
+    "category": "国际考试",
+    "file": "SAT_3_T.json",
+    "length": 4464,
+    "chapters": 224
+  },
+  {
+    "id": "SATen",
+    "name": "SAT en-en",
+    "description": "SAT英英",
+    "category": "国际考试",
+    "file": "SATen.json",
+    "length": 2681,
+    "chapters": 135
+  },
+  {
+    "id": "toefl",
+    "name": "TOEFL",
+    "description": "托福考试常见词",
+    "category": "国际考试",
+    "file": "TOEFL_3_T.json",
+    "length": 4264,
+    "chapters": 214
+  },
+  {
+    "id": "bec2",
+    "name": "商务英语",
+    "description": "商务英语常见词",
+    "category": "国际考试",
+    "file": "BEC_2_T.json",
+    "length": 2753,
+    "chapters": 138
+  },
+  {
+    "id": "bec3",
+    "name": "BEC",
+    "description": "BEC考试常见词",
+    "category": "国际考试",
+    "file": "BEC_3_T.json",
+    "length": 2825,
+    "chapters": 142
+  },
+  {
+    "id": "PTE_junior",
+    "name": "PTE 基础词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_junior.json",
+    "length": 2651,
+    "chapters": 133
+  },
+  {
+    "id": "PTE_senior",
+    "name": "PTE 高阶词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_senior.json",
+    "length": 3170,
+    "chapters": 159
+  },
+  {
+    "id": "PTE_FIB_R_junior",
+    "name": "阅读 FIB 基础机经词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_FIB_R_junior.json",
+    "length": 941,
+    "chapters": 48
+  },
+  {
+    "id": "PTE_FIB_R_senior",
+    "name": "阅读 FIB 高阶机经词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_FIB_R_senior.json",
+    "length": 1272,
+    "chapters": 64
+  },
+  {
+    "id": "PTE_WFD",
+    "name": "WFD 机经词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_WFD.json",
+    "length": 1212,
+    "chapters": 61
+  },
+  {
+    "id": "PTE_FIB_L",
+    "name": "听力 FIB 机经词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_FIB_L.json",
+    "length": 646,
+    "chapters": 33
+  },
+  {
+    "id": "PTE_Basic_apeuni",
+    "name": "PTE 基础词汇 xingji",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_Basic_apeuni.json",
+    "length": 2652,
+    "chapters": 133
+  },
+  {
+    "id": "PTE_Advanced_apeuni.json",
+    "name": "PTE 高阶词汇 xingji",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_Advanced_apeuni.json",
+    "length": 3169,
+    "chapters": 159
+  },
+  {
+    "id": "PTE_Read_apeuni.json",
+    "name": "PTE 阅读FIB机经词汇 xingji",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_Read_apeuni.json",
+    "length": 630,
+    "chapters": 32
+  },
+  {
+    "id": "PTE_Listening_apeuni.json",
+    "name": "PTE 听力FIB机经词汇 xingji",
+    "description": "",
+    "category": "国际考试",
+    "file": "PTE_Listening_apeuni.json",
+    "length": 674,
+    "chapters": 34
+  },
+  {
+    "id": "TOEIC",
+    "name": "TOEIC 词汇",
+    "description": "",
+    "category": "国际考试",
+    "file": "TOEIC.json",
+    "length": 1694,
+    "chapters": 85
+  },
+  {
+    "id": "Duolingo_Vocabulary_B1",
+    "name": "多邻国分级词汇B1",
+    "description": "多邻国分级词汇B1",
+    "category": "国际考试",
+    "file": "Duolingo_Vocabulary_B1.json",
+    "length": 801,
+    "chapters": 41
+  },
+  {
+    "id": "Duolingo_Vocabulary_B2",
+    "name": "多邻国分级词汇B2",
+    "description": "多邻国分级词汇B2",
+    "category": "国际考试",
+    "file": "Duolingo_Vocabulary_B2.json",
+    "length": 1423,
+    "chapters": 72
+  },
+  {
+    "id": "Duolingo_Vocabulary_C1",
+    "name": "多邻国分级词汇C1",
+    "description": "多邻国分级词汇C1",
+    "category": "国际考试",
+    "file": "Duolingo_Vocabulary_C1.json",
+    "length": 1314,
+    "chapters": 66
+  },
+  {
+    "id": "Oxford3000",
+    "name": "牛津3000词",
+    "description": "牛津3000词",
+    "category": "国际考试",
+    "file": "Oxford3000.json",
+    "length": 1342,
+    "chapters": 68
+  },
+  {
+    "id": "voa",
+    "name": "VOA 基础词库",
+    "description": "VOA 基础词库",
+    "category": "国际考试",
+    "file": "voa.json",
+    "length": 1505,
+    "chapters": 76
+  },
+  {
+    "id": "Common-Phrases-PTE-Unofficial",
+    "name": "PTE 常用短语 (非官方)",
+    "description": "PTE 常用短语",
+    "category": "国际考试",
+    "file": "Common-Phrases-PTE-Unofficial.json",
+    "length": 274,
+    "chapters": 14
+  },
+  {
+    "id": "Common-Phrases-FCE-Unofficial",
+    "name": "FCE 常用短语 (非官方)",
+    "description": "FCE 常用短语",
+    "category": "国际考试",
+    "file": "Common-Phrases-FCE-Unofficial.json",
+    "length": 438,
+    "chapters": 22
+  },
+  {
+    "id": "Categorized_TOEFL_Vocabulary_by_Zhanghongyan",
+    "name": "Categorized Vocab.",
+    "description": "词以类记 TOEFL 2021 by ZhangHongYan (原书释义和助记; 单词序号)",
+    "category": "国际考试",
+    "file": "Categorized_TOEFL_Vocabulary_by_Zhanghongyan.json",
+    "length": 4123,
+    "chapters": 207
+  },
+  {
+    "id": "gaokao3500",
+    "name": "高考 3500 词",
+    "description": "高考常见词 3500",
+    "category": "青少年英语",
+    "file": "GaoKao_3500.json",
+    "length": 3893,
+    "chapters": 195
+  },
+  {
+    "id": "gaokaozhentihexin",
+    "name": "高考历年真题核心高频",
+    "description": "高考历年真题核心高频",
+    "category": "青少年英语",
+    "file": "GaoKaoZhenTiHeXinGaoPin.json",
+    "length": 799,
+    "chapters": 40
+  },
+  {
+    "id": "gaokao-yuedu-gaopin",
+    "name": "高考英语阅读高频词汇",
+    "description": "高考英语阅读高频词汇",
+    "category": "青少年英语",
+    "file": "gaokao-yuedu-gaopin.json",
+    "length": 688,
+    "chapters": 35
+  },
+  {
+    "id": "zhongkaohexin",
+    "name": "中考核心词",
+    "description": "中考核心词",
+    "category": "青少年英语",
+    "file": "ZhongKaoHeXin.json",
+    "length": 2140,
+    "chapters": 107
+  },
+  {
+    "id": "nce1",
+    "name": "新概念英语-1",
+    "description": "新概念英语第一册",
+    "category": "青少年英语",
+    "file": "NCE_1.json",
+    "length": 900,
+    "chapters": 45
+  },
+  {
+    "id": "nce2",
+    "name": "新概念英语-2",
+    "description": "新概念英语第二册",
+    "category": "青少年英语",
+    "file": "NCE_2.json",
+    "length": 858,
+    "chapters": 43
+  },
+  {
+    "id": "nce3",
+    "name": "新概念英语-3",
+    "description": "新概念英语第三册",
+    "category": "青少年英语",
+    "file": "NCE_3.json",
+    "length": 1052,
+    "chapters": 53
+  },
+  {
+    "id": "nce4",
+    "name": "新概念英语-4",
+    "description": "新概念英语第四册",
+    "category": "青少年英语",
+    "file": "NCE_4.json",
+    "length": 784,
+    "chapters": 40
+  },
+  {
+    "id": "nce-new-1",
+    "name": "新概念英语(新版)-1",
+    "description": "新概念英语新版第一册",
+    "category": "青少年英语",
+    "file": "nce-new-1.json",
+    "length": 908,
+    "chapters": 46
+  },
+  {
+    "id": "nce-new-2",
+    "name": "新概念英语(新版)-2",
+    "description": "新概念英语新版第二册",
+    "category": "青少年英语",
+    "file": "nce-new-2.json",
+    "length": 862,
+    "chapters": 44
+  },
+  {
+    "id": "nce-new-3",
+    "name": "新概念英语(新版)-3",
+    "description": "新概念英语新版第三册",
+    "category": "青少年英语",
+    "file": "nce-new-3.json",
+    "length": 1062,
+    "chapters": 54
+  },
+  {
+    "id": "nce-new-4",
+    "name": "新概念英语(新版)-4",
+    "description": "新概念英语新版第四册",
+    "category": "青少年英语",
+    "file": "nce-new-4.json",
+    "length": 793,
+    "chapters": 40
+  },
+  {
+    "id": "SHjuniormiddleOxford",
+    "name": "上海初中牛津词汇",
+    "description": "上海初中牛津词汇",
+    "category": "青少年英语",
+    "file": "OxfordVocabulary_juniorMiddleSH.json",
+    "length": 1270,
+    "chapters": 64
+  },
+  {
+    "id": "san1",
+    "name": "三年级上",
+    "description": "人教版三年级上册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue3_1_T.json",
+    "length": 64,
+    "chapters": 4
+  },
+  {
+    "id": "san2",
+    "name": "三年级下",
+    "description": "人教版三年级下册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue3_2_T.json",
+    "length": 72,
+    "chapters": 4
+  },
+  {
+    "id": "si1",
+    "name": "四年级上",
+    "description": "人教版四年级上册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue4_1_T.json",
+    "length": 84,
+    "chapters": 5
+  },
+  {
+    "id": "si2",
+    "name": "四年级下",
+    "description": "人教版四年级下册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue4_2_T.json",
+    "length": 104,
+    "chapters": 6
+  },
+  {
+    "id": "wu1",
+    "name": "五年级上",
+    "description": "人教版五年级上册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue5_1_T.json",
+    "length": 131,
+    "chapters": 7
+  },
+  {
+    "id": "wu2",
+    "name": "五年级下",
+    "description": "人教版五年级下册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue5_2_T.json",
+    "length": 156,
+    "chapters": 8
+  },
+  {
+    "id": "liu1",
+    "name": "六年级上",
+    "description": "人教版六年级上册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue6_1_T.json",
+    "length": 130,
+    "chapters": 7
+  },
+  {
+    "id": "liu2",
+    "name": "六年级下",
+    "description": "人教版六年级下册",
+    "category": "青少年英语",
+    "file": "PEPXiaoXue6_2_T.json",
+    "length": 108,
+    "chapters": 6
+  },
+  {
+    "id": "pep-sl-yi1",
+    "name": "人教版(新起点)一年级上",
+    "description": "人教版一年级上册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue1_1_t.json",
+    "length": 52,
+    "chapters": 3
+  },
+  {
+    "id": "pep-sl-yi2",
+    "name": "人教版(新起点)一年级下",
+    "description": "人教版一年级下册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue1_2_t.json",
+    "length": 45,
+    "chapters": 3
+  },
+  {
+    "id": "pep-sl-er1",
+    "name": "人教版(新起点)二年级上",
+    "description": "人教版二年级上册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue2_1_t.json",
+    "length": 54,
+    "chapters": 3
+  },
+  {
+    "id": "pep-sl-er2",
+    "name": "人教版(新起点)二年级下",
+    "description": "人教版二年级下册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue2_2_t.json",
+    "length": 55,
+    "chapters": 3
+  },
+  {
+    "id": "pep-sl-san1",
+    "name": "人教版(新起点)三年级上",
+    "description": "人教版三年级上册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue3_1_t.json",
+    "length": 103,
+    "chapters": 6
+  },
+  {
+    "id": "pep-sl-san2",
+    "name": "人教版(新起点)三年级下",
+    "description": "人教版三年级下册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue3_2_t.json",
+    "length": 84,
+    "chapters": 5
+  },
+  {
+    "id": "pep-sl-si1",
+    "name": "人教版(新起点)四年级上",
+    "description": "人教版四年级上册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue4_1_t.json",
+    "length": 116,
+    "chapters": 6
+  },
+  {
+    "id": "pep-sl-si2",
+    "name": "人教版(新起点)四年级下",
+    "description": "人教版四年级下册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue4_2_t.json",
+    "length": 87,
+    "chapters": 5
+  },
+  {
+    "id": "pep-sl-wu1",
+    "name": "人教版(新起点)五年级上",
+    "description": "人教版五年级上册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue5_1_t.json",
+    "length": 66,
+    "chapters": 4
+  },
+  {
+    "id": "pep-sl-wu2",
+    "name": "人教版(新起点)五年级下",
+    "description": "人教版五年级下册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue5_2_t.json",
+    "length": 96,
+    "chapters": 5
+  },
+  {
+    "id": "pep-sl-liu1",
+    "name": "人教版(新起点)六年级上",
+    "description": "人教版六年级上册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue6_1_t.json",
+    "length": 102,
+    "chapters": 6
+  },
+  {
+    "id": "pep-sl-liu2",
+    "name": "人教版(新起点)六年级下",
+    "description": "人教版六年级下册",
+    "category": "青少年英语",
+    "file": "PEP_SL_XiaoXue6_2_t.json",
+    "length": 41,
+    "chapters": 3
+  },
+  {
+    "id": "qi1",
+    "name": "七年级上",
+    "description": "人教版七年级上册",
+    "category": "青少年英语",
+    "file": "PEPChuZhong7_1_T.json",
+    "length": 392,
+    "chapters": 20
+  },
+  {
+    "id": "qi2",
+    "name": "七年级下",
+    "description": "人教版七年级下册",
+    "category": "青少年英语",
+    "file": "PEPChuZhong7_2_T.json",
+    "length": 492,
+    "chapters": 25
+  },
+  {
+    "id": "ba1",
+    "name": "八年级上",
+    "description": "人教版八年级上册",
+    "category": "青少年英语",
+    "file": "PEPChuZhong8_1_T.json",
+    "length": 419,
+    "chapters": 21
+  },
+  {
+    "id": "ba2",
+    "name": "八年级下",
+    "description": "人教版八年级下册",
+    "category": "青少年英语",
+    "file": "PEPChuZhong8_2_T.json",
+    "length": 466,
+    "chapters": 24
+  },
+  {
+    "id": "jiu",
+    "name": "九年级",
+    "description": "人教版九年级全册",
+    "category": "青少年英语",
+    "file": "PEPChuZhong9_1_T.json",
+    "length": 551,
+    "chapters": 28
+  },
+  {
+    "id": "renjiaogaozhong1",
+    "name": "高中必修1",
+    "description": "人教版高中必修1",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_1_T.json",
+    "length": 311,
+    "chapters": 16
+  },
+  {
+    "id": "renjiaogaozhong2",
+    "name": "高中必修2",
+    "description": "人教版高中必修2",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_2_T.json",
+    "length": 319,
+    "chapters": 16
+  },
+  {
+    "id": "renjiaogaozhong3",
+    "name": "高中必修3",
+    "description": "人教版高中必修3",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_3_T.json",
+    "length": 366,
+    "chapters": 19
+  },
+  {
+    "id": "renjiaogaozhong4",
+    "name": "高中必修4",
+    "description": "人教版高中必修4",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_4_T.json",
+    "length": 307,
+    "chapters": 16
+  },
+  {
+    "id": "renjiaogaozhong5",
+    "name": "高中必修5",
+    "description": "人教版高中必修5",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_5_T.json",
+    "length": 357,
+    "chapters": 18
+  },
+  {
+    "id": "renjiaogaozhong6",
+    "name": "高中选修6",
+    "description": "人教版高中选修6",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_6_T.json",
+    "length": 391,
+    "chapters": 20
+  },
+  {
+    "id": "renjiaogaozhong7",
+    "name": "高中选修7",
+    "description": "人教版高中选修7",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_7_T.json",
+    "length": 384,
+    "chapters": 20
+  },
+  {
+    "id": "renjiaogaozhong8",
+    "name": "高中选修8",
+    "description": "人教版高中选修8",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_8_T.json",
+    "length": 420,
+    "chapters": 21
+  },
+  {
+    "id": "renjiaogaozhong9",
+    "name": "高中选修9",
+    "description": "人教版高中选修9",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_9_T.json",
+    "length": 352,
+    "chapters": 18
+  },
+  {
+    "id": "renjiaogaozhong10",
+    "name": "高中选修10",
+    "description": "人教版高中选修10",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_10_T.json",
+    "length": 361,
+    "chapters": 19
+  },
+  {
+    "id": "renjiaogaozhong11",
+    "name": "高中选修11",
+    "description": "人教版高中选修11",
+    "category": "青少年英语",
+    "file": "PEPGaoZhong_11_T.json",
+    "length": 309,
+    "chapters": 16
+  },
+  {
+    "id": "waiyan1",
+    "name": "外研七年级上册",
+    "description": "外研版七年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_1_T.json",
+    "length": 629,
+    "chapters": 32
+  },
+  {
+    "id": "new-waiyan1",
+    "name": "新外研七年级上册",
+    "description": "新外研版七年级上册",
+    "category": "青少年英语",
+    "file": "Newwaiyan7-1.json",
+    "length": 294,
+    "chapters": 15
+  },
+  {
+    "id": "new-waiyan2",
+    "name": "新外研七年级下册",
+    "description": "新外研版七年级下册",
+    "category": "青少年英语",
+    "file": "Newwaiyan7-2.json",
+    "length": 306,
+    "chapters": 16
+  },
+  {
+    "id": "waiyan2",
+    "name": "外研七年级下册",
+    "description": "外研版七年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_2_T.json",
+    "length": 438,
+    "chapters": 22
+  },
+  {
+    "id": "waiyan3",
+    "name": "外研八年级上册",
+    "description": "外研版八年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_3_T.json",
+    "length": 320,
+    "chapters": 16
+  },
+  {
+    "id": "waiyan4",
+    "name": "外研八年级下册",
+    "description": "外研版八年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_4_T.json",
+    "length": 266,
+    "chapters": 14
+  },
+  {
+    "id": "waiyan5",
+    "name": "外研九年级上册",
+    "description": "外研版九年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_5_T.json",
+    "length": 381,
+    "chapters": 20
+  },
+  {
+    "id": "waiyan6",
+    "name": "外研九年级下册",
+    "description": "外研版九年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_6_T.json",
+    "length": 128,
+    "chapters": 7
+  },
+  {
+    "id": "waiyan7",
+    "name": "外研高中必修1",
+    "description": "外研高中必修1",
+    "category": "青少年英语",
+    "file": "WaiYanSheGaoZhong_1_T.json",
+    "length": 411,
+    "chapters": 21
+  },
+  {
+    "id": "waiyan8",
+    "name": "外研高中必修2",
+    "description": "外研高中必修2",
+    "category": "青少年英语",
+    "file": "WaiYanSheGaoZhong_2_T.json",
+    "length": 272,
+    "chapters": 14
+  },
+  {
+    "id": "waiyan9",
+    "name": "外研一年级上册",
+    "description": "外研一年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_1-Volume-up.json",
+    "length": 138,
+    "chapters": 7
+  },
+  {
+    "id": "waiyan10",
+    "name": "外研一年级下册",
+    "description": "外研一年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_1-Volume-down.json",
+    "length": 118,
+    "chapters": 6
+  },
+  {
+    "id": "waiyan11",
+    "name": "外研二年级上册",
+    "description": "外研二年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_2-Volume-top.json",
+    "length": 118,
+    "chapters": 6
+  },
+  {
+    "id": "waiyan12",
+    "name": "外研二年级下册",
+    "description": "外研二年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_2-Volume-down.json",
+    "length": 110,
+    "chapters": 6
+  },
+  {
+    "id": "waiyan13",
+    "name": "外研三年级上册",
+    "description": "外研三年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_3-Volume-top.json",
+    "length": 82,
+    "chapters": 5
+  },
+  {
+    "id": "waiyan14",
+    "name": "外研三年级下册",
+    "description": "外研三年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_3-Volume-down.json",
+    "length": 106,
+    "chapters": 6
+  },
+  {
+    "id": "waiyan15",
+    "name": "外研四年级上册",
+    "description": "外研四年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_4-Volume-top.json",
+    "length": 116,
+    "chapters": 6
+  },
+  {
+    "id": "waiyan16",
+    "name": "外研四年级下册",
+    "description": "外研四年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_4-Volume-down.json",
+    "length": 78,
+    "chapters": 4
+  },
+  {
+    "id": "waiyan17",
+    "name": "外研五年级上册",
+    "description": "外研五年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_5-Volume-top.json",
+    "length": 80,
+    "chapters": 4
+  },
+  {
+    "id": "waiyan18",
+    "name": "外研五年级下册",
+    "description": "外研五年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_5-Volume-down.json",
+    "length": 72,
+    "chapters": 4
+  },
+  {
+    "id": "waiyan19",
+    "name": "外研六年级上册",
+    "description": "外研六年级上册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_6-Volume-top.json",
+    "length": 61,
+    "chapters": 4
+  },
+  {
+    "id": "waiyan20",
+    "name": "外研六年级下册",
+    "description": "外研六年级下册",
+    "category": "青少年英语",
+    "file": "WaiYanSheChuZhong_6-Volume-down.json",
+    "length": 91,
+    "chapters": 5
+  },
+  {
+    "id": "waiyan3-1",
+    "name": "外研新起点三年级上册",
+    "description": "外研新起点三年级上册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-3-1.json",
+    "length": 134,
+    "chapters": 7
+  },
+  {
+    "id": "waiyan3-2",
+    "name": "外研新起点三年级下册",
+    "description": "外研新起点三年级下册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-3-2.json",
+    "length": 156,
+    "chapters": 8
+  },
+  {
+    "id": "waiyan4-1",
+    "name": "外研新起点四年级上册",
+    "description": "外研新起点四年级上册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-4-1.json",
+    "length": 144,
+    "chapters": 8
+  },
+  {
+    "id": "waiyan4-2",
+    "name": "外研新起点四年级下册",
+    "description": "外研新起点四年级下册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-4-2.json",
+    "length": 134,
+    "chapters": 7
+  },
+  {
+    "id": "waiyan5-1",
+    "name": "外研新起点五年级上册",
+    "description": "外研新起点五年级上册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-5-1.json",
+    "length": 152,
+    "chapters": 8
+  },
+  {
+    "id": "waiyan5-2",
+    "name": "外研新起点五年级下册",
+    "description": "外研新起点五年级下册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-5-2.json",
+    "length": 147,
+    "chapters": 8
+  },
+  {
+    "id": "waiyan6-1",
+    "name": "外研新起点六年级上册",
+    "description": "外研新起点六年级上册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-6-1.json",
+    "length": 83,
+    "chapters": 5
+  },
+  {
+    "id": "waiyan6-2",
+    "name": "外研新起点六年级下册",
+    "description": "外研新起点六年级下册",
+    "category": "青少年英语",
+    "file": "waiyan-xin-6-2.json",
+    "length": 105,
+    "chapters": 6
+  },
+  {
+    "id": "shanghai-6-2word",
+    "name": "上海新教材六年级下",
+    "description": "上海新教材六年级下",
+    "category": "青少年英语",
+    "file": "shanghai-6-2-word.json",
+    "length": 274,
+    "chapters": 14
+  },
+  {
+    "id": "beishi1",
+    "name": "高中必修1",
+    "description": "北师大版高中必修1",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_1_T.json",
+    "length": 226,
+    "chapters": 12
+  },
+  {
+    "id": "beishi2",
+    "name": "高中必修2",
+    "description": "北师大版高中必修2",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_2_T.json",
+    "length": 244,
+    "chapters": 13
+  },
+  {
+    "id": "beishi3",
+    "name": "高中必修3",
+    "description": "北师大版高中必修3",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_3_T.json",
+    "length": 295,
+    "chapters": 15
+  },
+  {
+    "id": "beishi4",
+    "name": "高中必修4",
+    "description": "北师大版高中必修4",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_4_T.json",
+    "length": 336,
+    "chapters": 17
+  },
+  {
+    "id": "beishi5",
+    "name": "高中必修5",
+    "description": "北师大版高中必修5",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_5_T.json",
+    "length": 327,
+    "chapters": 17
+  },
+  {
+    "id": "beishi6",
+    "name": "高中选修6",
+    "description": "北师大版高中选修6",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_6_T.json",
+    "length": 271,
+    "chapters": 14
+  },
+  {
+    "id": "beishi7",
+    "name": "高中选修7",
+    "description": "北师大版高中选修7",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_7_T.json",
+    "length": 334,
+    "chapters": 17
+  },
+  {
+    "id": "beishi8",
+    "name": "高中选修8",
+    "description": "北师大版高中选修8",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_8_T.json",
+    "length": 364,
+    "chapters": 19
+  },
+  {
+    "id": "beishi9",
+    "name": "高中选修9",
+    "description": "北师大版高中选修9",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_9_T.json",
+    "length": 299,
+    "chapters": 15
+  },
+  {
+    "id": "beishi10",
+    "name": "高中选修10",
+    "description": "北师大版高中选修10",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_10_T.json",
+    "length": 267,
+    "chapters": 14
+  },
+  {
+    "id": "beishi11",
+    "name": "高中选修11",
+    "description": "北师大版高中选修11",
+    "category": "青少年英语",
+    "file": "BeiShiGaoZhong_11_T.json",
+    "length": 330,
+    "chapters": 17
+  },
+  {
+    "id": "jijiao1",
+    "name": "冀教 3 上",
+    "description": "冀教版三年级起点三年级上",
+    "category": "青少年英语",
+    "file": "jiJiao3-1.json",
+    "length": 75,
+    "chapters": 4
+  },
+  {
+    "id": "jijiao2",
+    "name": "冀教 3 下",
+    "description": "冀教版三年级起点三年级下",
+    "category": "青少年英语",
+    "file": "jiJiao3-2.json",
+    "length": 76,
+    "chapters": 4
+  },
+  {
+    "id": "jijiao3",
+    "name": "冀教 4 上",
+    "description": "冀教版三年级起点四年级上",
+    "category": "青少年英语",
+    "file": "jiJiao4-1.json",
+    "length": 78,
+    "chapters": 4
+  },
+  {
+    "id": "jijiao4",
+    "name": "冀教 4 下",
+    "description": "冀教版三年级起点四年级下",
+    "category": "青少年英语",
+    "file": "jiJiao4-2.json",
+    "length": 84,
+    "chapters": 5
+  },
+  {
+    "id": "jijiao5",
+    "name": "冀教 5 上",
+    "description": "冀教版三年级起点五年级上",
+    "category": "青少年英语",
+    "file": "jiJiao5-1.json",
+    "length": 79,
+    "chapters": 4
+  },
+  {
+    "id": "jijiao6",
+    "name": "冀教 5 下",
+    "description": "冀教版三年级起点五年级下",
+    "category": "青少年英语",
+    "file": "jiJiao5-2.json",
+    "length": 96,
+    "chapters": 5
+  },
+  {
+    "id": "jijiao7",
+    "name": "冀教 6 上",
+    "description": "冀教版三年级起点六年级上",
+    "category": "青少年英语",
+    "file": "jiJiao6-1.json",
+    "length": 66,
+    "chapters": 4
+  },
+  {
+    "id": "jijiao8",
+    "name": "冀教 6 下",
+    "description": "冀教版三年级起点六年级下",
+    "category": "青少年英语",
+    "file": "jiJiao6-2.json",
+    "length": 51,
+    "chapters": 3
+  },
+  {
+    "id": "jijiao9",
+    "name": "冀教 7 上",
+    "description": "冀教版三年级起点七年级上",
+    "category": "青少年英语",
+    "file": "jiJiao7-1.json",
+    "length": 561,
+    "chapters": 29
+  },
+  {
+    "id": "jijiao10",
+    "name": "冀教 7 下",
+    "description": "冀教版三年级起点七年级下",
+    "category": "青少年英语",
+    "file": "jiJiao7-2.json",
+    "length": 514,
+    "chapters": 26
+  },
+  {
+    "id": "jijiao11",
+    "name": "冀教 8 上",
+    "description": "冀教版三年级起点八年级上",
+    "category": "青少年英语",
+    "file": "jiJiao8-1.json",
+    "length": 420,
+    "chapters": 21
+  },
+  {
+    "id": "jijiao12",
+    "name": "冀教 8 下",
+    "description": "冀教版三年级起点八年级下",
+    "category": "青少年英语",
+    "file": "jiJiao8-2.json",
+    "length": 487,
+    "chapters": 25
+  },
+  {
+    "id": "jijiao13",
+    "name": "冀教 9 上",
+    "description": "冀教版三年级起点九年级全册",
+    "category": "青少年英语",
+    "file": "jiJiao9.json",
+    "length": 636,
+    "chapters": 32
+  },
+  {
+    "id": "BJJuniorHigh",
+    "name": "北京初中",
+    "description": "北京初中",
+    "category": "青少年英语",
+    "file": "beijing_junior_high_school.json",
+    "length": 1844,
+    "chapters": 93
+  },
+  {
+    "id": "eflevel1",
+    "name": "EF-LEVEL-1",
+    "description": "EF等级1",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_1.json",
+    "length": 297,
+    "chapters": 15
+  },
+  {
+    "id": "eflevel2",
+    "name": "EF-LEVEL-2",
+    "description": "EF等级2",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_2.json",
+    "length": 353,
+    "chapters": 18
+  },
+  {
+    "id": "eflevel3",
+    "name": "EF-LEVEL-3",
+    "description": "EF等级3",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_3.json",
+    "length": 172,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel4",
+    "name": "EF-LEVEL-4",
+    "description": "EF等级4",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_4.json",
+    "length": 178,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel5",
+    "name": "EF-LEVEL-5",
+    "description": "EF等级5",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_5.json",
+    "length": 172,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel6",
+    "name": "EF-LEVEL-6",
+    "description": "EF等级6",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_6.json",
+    "length": 172,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel7",
+    "name": "EF-LEVEL-7",
+    "description": "EF等级7",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_7.json",
+    "length": 171,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel8",
+    "name": "EF-LEVEL-8",
+    "description": "EF等级8",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_8.json",
+    "length": 172,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel9",
+    "name": "EF-LEVEL-9",
+    "description": "EF等级9",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_9.json",
+    "length": 165,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel10",
+    "name": "EF-LEVEL-10",
+    "description": "EF等级10",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_10.json",
+    "length": 174,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel11",
+    "name": "EF-LEVEL-11",
+    "description": "EF等级11",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_11.json",
+    "length": 176,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel12",
+    "name": "EF-LEVEL-12",
+    "description": "EF等级12",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_12.json",
+    "length": 170,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel13",
+    "name": "EF-LEVEL-13",
+    "description": "EF等级13",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_13.json",
+    "length": 172,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel14",
+    "name": "EF-LEVEL-14",
+    "description": "EF等级14",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_14.json",
+    "length": 171,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel15",
+    "name": "EF-LEVEL-15",
+    "description": "EF等级15",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_15.json",
+    "length": 168,
+    "chapters": 9
+  },
+  {
+    "id": "eflevel16",
+    "name": "EF-LEVEL-16",
+    "description": "EF等级16",
+    "category": "青少年英语",
+    "file": "EF_LEVEL_16.json",
+    "length": 170,
+    "chapters": 9
+  },
+  {
+    "id": "ReadingExplorer3",
+    "name": "Reading Explorer 3",
+    "description": "词汇表来自Reading Explorer 3, Third Edition",
+    "category": "青少年英语",
+    "file": "ReadingExplorer3.json",
+    "length": 239,
+    "chapters": 12
+  },
+  {
+    "id": "Macmillan7000",
+    "name": "麦克米伦7000",
+    "description": "麦克米伦7000",
+    "category": "中国考试",
+    "file": "Macmillan7000.json",
+    "length": 6268,
+    "chapters": 314
+  },
+  {
+    "id": "raz-AA",
+    "name": "RAZ 分级阅读 AA",
+    "description": "RAZ 分级阅读 AA",
+    "category": "青少年英语",
+    "file": "raz-AA.json",
+    "length": 422,
+    "chapters": 22
+  },
+  {
+    "id": "raz-A",
+    "name": "RAZ 分级阅读 A",
+    "description": "RAZ 分级阅读 A",
+    "category": "青少年英语",
+    "file": "raz-A.json",
+    "length": 487,
+    "chapters": 25
+  },
+  {
+    "id": "raz-B",
+    "name": "RAZ 分级阅读 B",
+    "description": "RAZ 分级阅读 B",
+    "category": "青少年英语",
+    "file": "raz-B.json",
+    "length": 465,
+    "chapters": 24
+  },
+  {
+    "id": "raz-C",
+    "name": "RAZ 分级阅读 C",
+    "description": "RAZ 分级阅读 C",
+    "category": "青少年英语",
+    "file": "raz-C.json",
+    "length": 480,
+    "chapters": 24
+  },
+  {
+    "id": "raz-D",
+    "name": "RAZ 分级阅读 D",
+    "description": "RAZ 分级阅读 D",
+    "category": "青少年英语",
+    "file": "raz-D.json",
+    "length": 436,
+    "chapters": 22
+  },
+  {
+    "id": "raz-E",
+    "name": "RAZ 分级阅读 E",
+    "description": "RAZ 分级阅读 E",
+    "category": "青少年英语",
+    "file": "raz-E.json",
+    "length": 427,
+    "chapters": 22
+  },
+  {
+    "id": "raz-F",
+    "name": "RAZ 分级阅读 F",
+    "description": "RAZ 分级阅读 F",
+    "category": "青少年英语",
+    "file": "raz-F.json",
+    "length": 437,
+    "chapters": 22
+  },
+  {
+    "id": "raz-G",
+    "name": "RAZ 分级阅读 G",
+    "description": "RAZ 分级阅读 G",
+    "category": "青少年英语",
+    "file": "raz-G.json",
+    "length": 435,
+    "chapters": 22
+  },
+  {
+    "id": "raz-H",
+    "name": "RAZ 分级阅读 H",
+    "description": "RAZ 分级阅读 H",
+    "category": "青少年英语",
+    "file": "raz-H.json",
+    "length": 385,
+    "chapters": 20
+  },
+  {
+    "id": "raz-I",
+    "name": "RAZ 分级阅读 I",
+    "description": "RAZ 分级阅读 I",
+    "category": "青少年英语",
+    "file": "raz-I.json",
+    "length": 408,
+    "chapters": 21
+  },
+  {
+    "id": "raz-J",
+    "name": "RAZ 分级阅读 J",
+    "description": "RAZ 分级阅读 J",
+    "category": "青少年英语",
+    "file": "raz-J.json",
+    "length": 434,
+    "chapters": 22
+  },
+  {
+    "id": "raz-K",
+    "name": "RAZ 分级阅读 K",
+    "description": "RAZ 分级阅读 K",
+    "category": "青少年英语",
+    "file": "raz-K.json",
+    "length": 397,
+    "chapters": 20
+  },
+  {
+    "id": "raz-L",
+    "name": "RAZ 分级阅读 L",
+    "description": "RAZ 分级阅读 L",
+    "category": "青少年英语",
+    "file": "raz-L.json",
+    "length": 402,
+    "chapters": 21
+  },
+  {
+    "id": "raz-M",
+    "name": "RAZ 分级阅读 M",
+    "description": "RAZ 分级阅读 M",
+    "category": "青少年英语",
+    "file": "raz-M.json",
+    "length": 403,
+    "chapters": 21
+  },
+  {
+    "id": "raz-N",
+    "name": "RAZ 分级阅读 N",
+    "description": "RAZ 分级阅读 N",
+    "category": "青少年英语",
+    "file": "raz-N.json",
+    "length": 376,
+    "chapters": 19
+  },
+  {
+    "id": "raz-O",
+    "name": "RAZ 分级阅读 O",
+    "description": "RAZ 分级阅读 O",
+    "category": "青少年英语",
+    "file": "raz-O.json",
+    "length": 429,
+    "chapters": 22
+  },
+  {
+    "id": "raz-P",
+    "name": "RAZ 分级阅读 P",
+    "description": "RAZ 分级阅读 P",
+    "category": "青少年英语",
+    "file": "raz-P.json",
+    "length": 379,
+    "chapters": 19
+  },
+  {
+    "id": "raz-Q",
+    "name": "RAZ 分级阅读 Q",
+    "description": "RAZ 分级阅读 Q",
+    "category": "青少年英语",
+    "file": "raz-Q.json",
+    "length": 442,
+    "chapters": 23
+  },
+  {
+    "id": "raz-R",
+    "name": "RAZ 分级阅读 R",
+    "description": "RAZ 分级阅读 R",
+    "category": "青少年英语",
+    "file": "raz-R.json",
+    "length": 422,
+    "chapters": 22
+  },
+  {
+    "id": "raz-S",
+    "name": "RAZ 分级阅读 S",
+    "description": "RAZ 分级阅读 S",
+    "category": "青少年英语",
+    "file": "raz-S.json",
+    "length": 434,
+    "chapters": 22
+  },
+  {
+    "id": "raz-T",
+    "name": "RAZ 分级阅读 T",
+    "description": "RAZ 分级阅读 T",
+    "category": "青少年英语",
+    "file": "raz-T.json",
+    "length": 427,
+    "chapters": 22
+  },
+  {
+    "id": "raz-U",
+    "name": "RAZ 分级阅读 U",
+    "description": "RAZ 分级阅读 U",
+    "category": "青少年英语",
+    "file": "raz-U.json",
+    "length": 418,
+    "chapters": 21
+  },
+  {
+    "id": "raz-V",
+    "name": "RAZ 分级阅读 V",
+    "description": "RAZ 分级阅读 V",
+    "category": "青少年英语",
+    "file": "raz-V.json",
+    "length": 409,
+    "chapters": 21
+  },
+  {
+    "id": "raz-W",
+    "name": "RAZ 分级阅读 W",
+    "description": "RAZ 分级阅读 W",
+    "category": "青少年英语",
+    "file": "raz-W.json",
+    "length": 392,
+    "chapters": 20
+  },
+  {
+    "id": "raz-X",
+    "name": "RAZ 分级阅读 X",
+    "description": "RAZ 分级阅读 X",
+    "category": "青少年英语",
+    "file": "raz-X.json",
+    "length": 546,
+    "chapters": 28
+  },
+  {
+    "id": "raz-Y",
+    "name": "RAZ 分级阅读 Y",
+    "description": "RAZ 分级阅读 Y",
+    "category": "青少年英语",
+    "file": "raz-Y.json",
+    "length": 461,
+    "chapters": 24
+  },
+  {
+    "id": "raz-Z",
+    "name": "RAZ 分级阅读 Z",
+    "description": "RAZ 分级阅读 Z",
+    "category": "青少年英语",
+    "file": "raz-Z.json",
+    "length": 414,
+    "chapters": 21
+  },
+  {
+    "id": "raz-Z1",
+    "name": "RAZ 分级阅读 Z1",
+    "description": "RAZ 分级阅读 Z1",
+    "category": "青少年英语",
+    "file": "raz-Z1.json",
+    "length": 467,
+    "chapters": 24
+  },
+  {
+    "id": "raz-Z2",
+    "name": "RAZ 分级阅读 Z2",
+    "description": "RAZ 分级阅读 Z2",
+    "category": "青少年英语",
+    "file": "raz-Z2.json",
+    "length": 492,
+    "chapters": 25
+  },
+  {
+    "id": "raz-all",
+    "name": "RAZ 分级阅读 所有词汇",
+    "description": "RAZ 分级阅读 所有词汇",
+    "category": "青少年英语",
+    "file": "raz-all.json",
+    "length": 5831,
+    "chapters": 292
+  },
+  {
+    "id": "Cambridge_JOIN_IN",
+    "name": "剑桥小学英语 JOIN IN",
+    "description": "外研社和剑桥大学出版社依据《义务教育英语课程标准》要求联合为我国小学生开发的一套英语教材。",
+    "category": "青少年英语",
+    "file": "Cambridge_JOIN_IN.json",
+    "length": 1350,
+    "chapters": 68
+  }
+]
