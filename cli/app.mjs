@@ -14,14 +14,14 @@ const copy = {
     accent: '选择英语发音',
     code: '输入邀请码（可留空）: ',
     pet: '选择陪伴你的宠物',
-    welcome: '欢迎来到 PanWithU。我们一起开始吧。',
+    welcome: '欢迎来到 PanwithU。我们一起开始吧。',
   },
   en: {
     language: 'Choose system language / 选择系统语言',
     accent: 'Choose English pronunciation',
     code: 'Invitation code (optional): ',
     pet: 'Choose your companion',
-    welcome: 'Welcome to PanWithU. Let’s begin together.',
+    welcome: 'Welcome to PanwithU. Let’s begin together.',
   },
 }
 

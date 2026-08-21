@@ -25,13 +25,13 @@ export function systemdExecArgument(value) {
 }
 
 export function notificationCommand(message, platform = process.platform) {
-  if (platform === 'darwin') return ['osascript', ['-e', `display notification ${JSON.stringify(message)} with title "PanWithU"`]]
+  if (platform === 'darwin') return ['osascript', ['-e', `display notification ${JSON.stringify(message)} with title "PanwithU"`]]
   if (platform === 'win32') {
     const safe = message.replaceAll("'", "''")
-    const script = `$template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('PanWithU')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('PanWithU').Show([Windows.UI.Notifications.ToastNotification]::new($xml))`
+    const script = `$template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('PanwithU')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('PanwithU').Show([Windows.UI.Notifications.ToastNotification]::new($xml))`
     return ['powershell', ['-NoProfile', '-NonInteractive', '-Command', script]]
   }
-  return ['notify-send', ['PanWithU', message]]
+  return ['notify-send', ['PanwithU', message]]
 }
 
 export async function notify(message) {
@@ -89,14 +89,14 @@ export async function installReminder({ hour = 19, minute = 0 } = {}) {
   await mkdir(join(homedir(), '.config', 'systemd', 'user'), { recursive: true })
   await writeFile(
     service,
-    `[Unit]\nDescription=PanWithU daily learning reminder\n\n[Service]\nType=oneshot\nExecStart=${systemdExecArgument(
+    `[Unit]\nDescription=PanwithU daily learning reminder\n\n[Service]\nType=oneshot\nExecStart=${systemdExecArgument(
       process.execPath,
     )} ${systemdExecArgument(script)} remind\n`,
     { mode: 0o600 },
   )
   await writeFile(
     timer,
-    `[Unit]\nDescription=PanWithU daily learning reminder\n\n[Timer]\nOnCalendar=*-*-* ${String(hour).padStart(2, '0')}:${String(
+    `[Unit]\nDescription=PanwithU daily learning reminder\n\n[Timer]\nOnCalendar=*-*-* ${String(hour).padStart(2, '0')}:${String(
       minute,
     ).padStart(2, '0')}:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n`,
     { mode: 0o600 },

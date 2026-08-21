@@ -19,6 +19,7 @@
     "access": "public"
   },
   "files": [
+    "assets/brand/panwithu-logo.png",
     "bin/",
     "cli/ai.mjs",
     "cli/api-endpoint.mjs",

@@ -1,14 +1,14 @@
-# PanWithU CLI
+# PanwithU CLI
 
 > Learn English. Grow together.
 
-PanWithU is a local-first English learning companion built for the terminal.
+PanwithU is a local-first English learning companion built for the terminal.
 Practice vocabulary, earn stars, and grow an animated pet that remembers the
 journey with you.
 
 ## Install
 
-PanWithU requires Node.js 22.19 or newer.
+PanwithU requires Node.js 22.19 or newer.
 
 ```bash
 npm install -g panwithu@latest
@@ -73,7 +73,7 @@ changes the saved terminal theme.
 
 ## Local data
 
-PanWithU has no account system. Configuration and learning history stay on the
+PanwithU has no account system. Configuration and learning history stay on the
 current computer:
 
 ```text
@@ -96,7 +96,7 @@ yarn lint
 yarn build
 ```
 
-PanWithU embeds the
+PanwithU embeds the
 [Pi coding agent SDK](https://github.com/earendil-works/pi) as its agent
 harness. Intelligent summaries use a fixed model, and generated pronunciation
 uses an OpenAI-compatible speech endpoint. Provider configuration stays
