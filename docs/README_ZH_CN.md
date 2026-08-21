@@ -29,10 +29,14 @@ Pi 驱动的学习教练。
 
 ```bash
 npm install -g panwithu@latest
-PWU
+pwu
 ```
 
-首次启动时，你可以选择界面语言、英语发音、陪伴宠物，并按需填写邀请码。
+同时支持完整名称命令 `panwithu`。在 Windows 和默认 macOS 等大小写不敏感的
+系统中，输入 `PWU` 也会解析到同一个命令。Linux 用户如果偏好大写，可以在
+Shell 配置中添加 `alias PWU=pwu`。
+
+首次启动时，你可以选择界面语言和英语发音，并按需填写邀请码；状态符号伙伴可以随时改名。
 即使不填写邀请码，核心学习功能也可以离线使用。
 
 ## 为什么选择 PanwithU
@@ -41,7 +45,7 @@ PWU
 | ----------- | ---------------------------------------------------------- |
 | 终端优先    | 无需离开键盘即可练习、切换词典并管理学习进度。             |
 | 本地优先    | 学习档案、复习计划、宠物状态和音频缓存保存在本机。         |
-| 学习伙伴    | 25 种伙伴会随着学习、连续打卡、喂食、玩耍和装扮逐渐成长。  |
+| 学习伙伴    | 小巧的状态符号 Agent 会响应学习、身体需求、提醒和玩耍。    |
 | 自适应复习  | 到期单词和答错单词会排在新词之前。                         |
 | Pi 学习教练 | 根据近期学习记录和伙伴身份生成建议、总结与每日提醒。       |
 | 跨平台      | 支持 Linux、macOS 和 Windows，包括系统提醒与语音降级方案。 |
@@ -73,16 +77,16 @@ flowchart LR
 ## CLI 命令
 
 ```text
-PWU                     打开交互式终端界面
-PWU learn [count]       练习单词
-PWU pet                 查看学习伙伴
-PWU feed                喂养伙伴
-PWU play                和伙伴玩耍
-PWU todo                查看学习计划
-PWU reminder install 19 开启每日提醒
-PWU summary             生成学习总结
-PWU status              查看学习进度
-PWU config              重新运行设置
+pwu                     打开交互式终端界面
+pwu learn [count]       练习单词
+pwu pet                 查看学习伙伴
+pwu feed                喂养伙伴
+pwu play                和伙伴玩耍
+pwu todo                查看学习计划
+pwu reminder install 19 开启每日提醒
+pwu summary             生成学习总结
+pwu status              查看学习进度
+pwu config              重新运行设置
 ```
 
 在 TUI 中可以使用 `/dict`、`/chapter` 和 `/mode` 设置学习内容；使用

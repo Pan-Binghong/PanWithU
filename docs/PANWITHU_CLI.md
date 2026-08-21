@@ -12,11 +12,19 @@ PanwithU requires Node.js 22.19 or newer.
 
 ```bash
 npm install -g panwithu@latest
-PWU
+pwu
 ```
 
-The lowercase command is also available: `panwithu`. To try it without a
-global installation, run:
+The full-name command `panwithu` is also available. On case-insensitive systems
+such as Windows and default macOS installations, `PWU` resolves to the same
+command. Linux users who prefer uppercase can add this alias to their shell
+configuration:
+
+```bash
+alias PWU=pwu
+```
+
+To try PanwithU without a global installation, run:
 
 ```bash
 npx --yes panwithu@latest
@@ -32,7 +40,7 @@ npm config set prefix "$HOME/.local"
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.zshrc"
 source "$HOME/.zshrc"
 npm install -g panwithu@latest
-PWU
+pwu
 ```
 
 Use `panwithu@latest`, with an `@`. `panwithu:latest` is an unsupported URL,
@@ -51,23 +59,23 @@ The terminal guides you through four short steps:
 ## Commands
 
 ```text
-PWU learn [count]  Practice English words
-PWU pet            Visit your companion
-PWU feed           Feed your companion
-PWU play           Play together
-PWU todo           View the learning plan
-PWU todo add TEXT  Add a personal task
-PWU todo done N    Complete a task
-PWU reminder install [hour]
+pwu learn [count]  Practice English words
+pwu pet            Visit your companion
+pwu feed           Feed your companion
+pwu play           Play together
+pwu todo           View the learning plan
+pwu todo add TEXT  Add a personal task
+pwu todo done N    Complete a task
+pwu reminder install [hour]
                    Enable the daily system reminder (default: 19:00)
-PWU reminder remove
+pwu reminder remove
                    Disable the daily system reminder
-PWU summary        Get a personal learning summary
-PWU status         Show progress
-PWU config         Run setup again
+pwu summary        Get a personal learning summary
+pwu status         Show progress
+pwu config         Run setup again
 ```
 
-Running `PWU` without a command opens the interactive terminal UI. Inside the
+Running `pwu` without a command opens the interactive terminal UI. Inside the
 UI, `/coach` asks the pet for personalized learning advice, and `/color`
 changes the saved terminal theme.
 

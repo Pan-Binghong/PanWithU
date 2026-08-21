@@ -12,6 +12,14 @@ export const paths = {
   reminders: join(configRoot, 'panwithu', 'reminders'),
 }
 
+export const defaultCompanionAgentConfig = {
+  enabled: true,
+  mode: 'automatic',
+  quietHours: { start: 9, end: 22 },
+  maxEventsPerDay: 2,
+  minGapHours: 5,
+}
+
 async function readJson(path, fallback) {
   try {
     return JSON.parse(await readFile(path, 'utf8'))
@@ -40,11 +48,28 @@ export const defaultProfile = {
   wrong: 0,
   streak: 0,
   inventory: { apple: 1, cookie: 0, ball: 1 },
-  petAccessories: [],
-  equippedAccessory: null,
   companionDays: 0,
   lastCompanionDay: null,
   lastAiCoachDay: null,
+  companionAgent: {
+    lastEventAt: null,
+    lastEventType: null,
+    pendingEvent: null,
+    eventDay: null,
+    eventCount: 0,
+  },
+  userProfile: {
+    name: null,
+    firstSeenAt: null,
+    updatedDay: null,
+    activeDays: 0,
+    visitHours: [],
+    usualTime: null,
+    preferredPracticeMode: 'learn',
+    recentSessions: 0,
+    recentAccuracy: null,
+    averageSessionWords: 0,
+  },
   words: {},
   todos: [],
   achievements: [],
@@ -52,7 +77,22 @@ export const defaultProfile = {
   lastSeenAt: null,
 }
 
-export const loadConfig = () => readJson(paths.config, null)
+export async function loadConfig() {
+  const stored = await readJson(paths.config, null)
+  if (!stored) return null
+  return {
+    ...stored,
+    pet: 'cat',
+    companionAgent: {
+      ...defaultCompanionAgentConfig,
+      ...stored.companionAgent,
+      quietHours: {
+        ...defaultCompanionAgentConfig.quietHours,
+        ...stored.companionAgent?.quietHours,
+      },
+    },
+  }
+}
 export const saveConfig = (config) => writeJson(paths.config, config)
 export async function loadProfile() {
   const stored = await readJson(paths.profile, defaultProfile)
@@ -60,8 +100,11 @@ export async function loadProfile() {
     ...structuredClone(defaultProfile),
     ...stored,
     inventory: { ...defaultProfile.inventory, ...stored.inventory },
-    petAccessories: Array.isArray(stored.petAccessories) ? stored.petAccessories : [],
+    companionAgent: { ...defaultProfile.companionAgent, ...stored.companionAgent },
+    userProfile: { ...defaultProfile.userProfile, ...stored.userProfile },
   }
+  delete profile.petAccessories
+  delete profile.equippedAccessory
   if (profile.lastSeenAt) {
     const elapsed = Date.now() - new Date(profile.lastSeenAt).getTime()
     if (Number.isFinite(elapsed) && elapsed > 0) {

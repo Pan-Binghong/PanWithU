@@ -3,8 +3,8 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 test('notification commands are generated for all supported platforms', () => {
-  assert.equal(notificationCommand('study', 'linux')[0], 'notify-send')
-  assert.equal(notificationCommand('study', 'darwin')[0], 'osascript')
+  assert.deepEqual(notificationCommand('study', 'linux', 'Mimi')[1], ['Mimi', 'study'])
+  assert.match(notificationCommand('study', 'darwin', 'Mimi')[1].join(' '), /Mimi/)
   const windows = notificationCommand("let's study", 'win32')
   assert.equal(windows[0], 'powershell')
   assert.match(windows[1].join(' '), /ToastNotificationManager/)

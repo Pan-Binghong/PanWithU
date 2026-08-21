@@ -29,11 +29,16 @@ review, pronunciation, pet growth, and a Pi-powered learning coach in one CLI.
 
 ```bash
 npm install -g panwithu@latest
-PWU
+pwu
 ```
 
-The first launch lets you choose a language, pronunciation, companion, and an
-optional invitation code. Without a code, the core learning experience remains
+`panwithu` is also available as a full-name alias. On case-insensitive systems
+such as Windows and default macOS installations, `PWU` resolves to the same
+command. Linux users who prefer uppercase can add `alias PWU=pwu` to their shell
+configuration.
+
+The first launch lets you choose a language and pronunciation, then optionally
+add an invitation code. Your state-symbol companion can be renamed at any time. Without a code, the core learning experience remains
 available offline.
 
 ## Why PanwithU
@@ -42,7 +47,7 @@ available offline.
 | ------------------ | ---------------------------------------------------------------------------------------------------- |
 | Terminal-first     | Practice, navigate dictionaries, and manage progress without leaving the keyboard.                   |
 | Local-first        | Your profile, review schedule, pet state, and cached audio stay on your computer.                    |
-| Learning companion | 25 companions grow through study sessions, streaks, feeding, play, and accessories.                  |
+| Learning companion | A compact state-symbol agent reacts to study sessions, physical needs, reminders, and play.          |
 | Adaptive review    | Due and failed words are prioritized before unseen vocabulary.                                       |
 | Pi-powered coach   | Recent learning history and companion identity become contextual coaching, summaries, and reminders. |
 | Cross-platform     | Runs on Linux, macOS, and Windows, including native daily reminders and speech fallbacks.            |
@@ -77,16 +82,16 @@ memory without weakening that local-first boundary.
 ## CLI
 
 ```text
-PWU                     Open the interactive terminal UI
-PWU learn [count]       Practice vocabulary
-PWU pet                 Visit your companion
-PWU feed                Feed your companion
-PWU play                Play together
-PWU todo                View the learning plan
-PWU reminder install 19 Enable the daily reminder
-PWU summary             Generate a learning summary
-PWU status              Show progress
-PWU config              Run setup again
+pwu                     Open the interactive terminal UI
+pwu learn [count]       Practice vocabulary
+pwu pet                 Visit your companion
+pwu feed                Feed your companion
+pwu play                Play together
+pwu todo                View the learning plan
+pwu reminder install 19 Enable the daily reminder
+pwu summary             Generate a learning summary
+pwu status              Show progress
+pwu config              Run setup again
 ```
 
 Inside the TUI, use `/dict`, `/chapter`, and `/mode` to shape a session;

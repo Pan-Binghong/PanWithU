@@ -5,6 +5,7 @@ import { installReminder, notify, parseReminderHour, reminderStatus, removeRemin
 import { loadConfig, loadProfile, saveConfig, saveProfile } from './storage.mjs'
 import { activeTodos, addTodo, completeTodo, dueWordCount, syncLearningTodo } from './todo.mjs'
 import { choose, clear, colors, createPrompt, logo, paint } from './ui.mjs'
+import { updateDailyUserProfile } from './user-profile.mjs'
 import { readFileSync } from 'node:fs'
 import { stdin } from 'node:process'
 
@@ -52,13 +53,18 @@ async function setup() {
   if (!config) process.exitCode = 130
   if (!config) return null
   await saveConfig(config)
+  if (config.invitationCode) {
+    try {
+      await installReminder()
+    } catch {}
+  }
   console.log(`\n${copy[config.language].welcome}\n`)
   return config
 }
 
 function help() {
   console.log(
-    `${APP_NAME} ${VERSION}\n\nUsage: PWU [command]\n       PWU                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage the daily system reminder\n  summary         Get a personal learning summary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet change  /pet rename  /pet feed  /pet play  /pet wardrobe\n`,
+    `${APP_NAME} ${VERSION}\n\nUsage: pwu [command]\n       pwu                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage companion notifications\n  summary         Get a personal learning summary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nReminder subcommands:\n  reminder install [hour]  Schedule daily companion moments\n  reminder test            Send one companion notification now\n  reminder remove          Disable companion notifications\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet rename  /pet feed  /pet play\n`,
   )
 }
 
@@ -116,6 +122,7 @@ export async function run(args) {
   const profile = await loadProfile()
   syncLearningTodo(profile, config.language)
   if (!args.length && stdin.isTTY) {
+    if (updateDailyUserProfile(profile, config)) await saveProfile(profile)
     const { runTui } = await import('./tui.mjs')
     await runTui(config, profile, { saveConfig, saveProfile })
     return
@@ -155,7 +162,11 @@ export async function run(args) {
       let success
       if (action === 'install') success = await installReminder({ hour: parseReminderHour(args[2]) })
       else if (action === 'remove') success = await removeReminder()
-      else success = await reminderStatus()
+      else if (action === 'test') {
+        const { runCompanionAgent } = await import('./companion-agent.mjs')
+        const result = await runCompanionAgent(config, profile, { force: true })
+        success = result.sent && (await notify(result.event.message, { title: result.event.title }))
+      } else success = await reminderStatus()
       const message =
         action === 'status'
           ? success
@@ -165,6 +176,10 @@ export async function run(args) {
             : config.language === 'zh-CN'
             ? '每日提醒尚未开启。'
             : 'Daily reminder is not enabled.'
+          : action === 'test' && success
+          ? config.language === 'zh-CN'
+            ? `${currentPet(config).name} 已经发来一条测试通知。`
+            : `${currentPet(config).name} sent a test notification.`
           : success
           ? config.language === 'zh-CN'
             ? '提醒设置完成。'
@@ -174,19 +189,9 @@ export async function run(args) {
           : 'Could not update the system reminder.'
       console.log(`\n${message}\n`)
     } else if (command === 'remind') {
-      const due = dueWordCount(profile)
-      let message =
-        config.language === 'zh-CN'
-          ? `${currentPet(config).name} 在等你。今天用几分钟${due ? `复习 ${due} 个单词` : '学几个新单词'}吧。`
-          : `${currentPet(config).name} is waiting. Take a few minutes to ${due ? `review ${due} words` : 'learn a few new words'} today.`
-      if (config.invitationCode) {
-        try {
-          const { askCoach } = await import('./ai.mjs')
-          message =
-            (await askCoach(config, profile, `Write one gentle daily learning reminder under 24 words. ${due} words are due.`)) || message
-        } catch {}
-      }
-      await notify(message)
+      const { runCompanionAgent } = await import('./companion-agent.mjs')
+      const result = await runCompanionAgent(config, profile)
+      if (result.sent) await notify(result.event.message, { title: result.event.title })
     } else if (command === 'summary') {
       try {
         const { askCoach } = await import('./ai.mjs')
