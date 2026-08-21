@@ -5,9 +5,9 @@ import { installReminder, notify, parseReminderHour, reminderStatus, removeRemin
 import { loadConfig, loadProfile, saveConfig, saveProfile } from './storage.mjs'
 import { activeTodos, addTodo, completeTodo, dueWordCount, syncLearningTodo } from './todo.mjs'
 import { choose, clear, colors, createPrompt, logo, paint } from './ui.mjs'
+import { updateDailyUserProfile } from './user-profile.mjs'
 import { readFileSync } from 'node:fs'
 import { stdin } from 'node:process'
-import { updateDailyUserProfile } from './user-profile.mjs'
 
 const copy = {
   'zh-CN': {

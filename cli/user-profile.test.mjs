@@ -1,6 +1,6 @@
+import { dailyPetGreeting, updateDailyUserProfile } from './user-profile.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { dailyPetGreeting, updateDailyUserProfile } from './user-profile.mjs'
 
 test('updates the simple user profile only once per local day', () => {
   const profile = {

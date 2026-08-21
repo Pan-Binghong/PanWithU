@@ -1,7 +1,7 @@
 import { apiBaseUrls, rememberApiBaseUrl } from './api-endpoint.mjs'
 import { AI_MODEL } from './constants.mjs'
-import { currentPet } from './pet.mjs'
 import { systemUsername } from './identity.mjs'
+import { currentPet } from './pet.mjs'
 import { createAgentSession, ModelRuntime, SessionManager } from '@earendil-works/pi-coding-agent'
 
 export async function askCoach(config, profile, request) {

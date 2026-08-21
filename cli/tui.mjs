@@ -4,8 +4,8 @@ import { loadChapter, loadDictionaryCatalog } from './dictionary.mjs'
 import { updateWordMemory } from './learning.mjs'
 import { ambientPetState, petStateView } from './pet-state.mjs'
 import { claimDailyCompanion, currentPet, feed, petGrowthStage, play } from './pet.mjs'
-import { dailyPetGreeting } from './user-profile.mjs'
 import { dueWordCount } from './todo.mjs'
+import { dailyPetGreeting } from './user-profile.mjs'
 import {
   Container,
   CURSOR_MARKER,
