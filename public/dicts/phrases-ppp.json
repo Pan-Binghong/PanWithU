@@ -1,0 +1,32 @@
+[
+    {
+        "name": "hello",
+        "trans": ["你好"],
+        "usphone": "həˈloʊ",
+        "ukphone": "həˈləʊ"
+    },
+    {
+        "name": "world",
+        "trans": ["世界"],
+        "usphone": "wɜːrld",
+        "ukphone": "wɜːld"
+    },
+    {
+        "name": "test",
+        "trans": ["测试"],
+        "usphone": "test",
+        "ukphone": "test"
+    },
+    {
+        "name": "email",
+        "trans": ["邮件"],
+        "usphone": "ˈiːmeɪl",
+        "ukphone": "ˈiːmeɪl"
+    },
+    {
+        "name": "send",
+        "trans": ["发送"],
+        "usphone": "send",
+        "ukphone": "send"
+    }
+]

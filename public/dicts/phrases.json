@@ -1,0 +1,320 @@
+[
+    {
+        "name": "good morning",
+        "trans": ["早上好"],
+        "usphone": "ɡʊd 'mɔːrnɪŋ",
+        "ukphone": "ɡʊd 'mɔːnɪŋ"
+    },
+    {
+        "name": "how are you",
+        "trans": ["你好吗"],
+        "usphone": "haʊ ɑːr juː",
+        "ukphone": "haʊ ɑː juː"
+    },
+    {
+        "name": "nice to meet you",
+        "trans": ["很高兴认识你"],
+        "usphone": "naɪs tə miːt juː",
+        "ukphone": "naɪs tə miːt juː"
+    },
+    {
+        "name": "thank you very much",
+        "trans": ["非常感谢你"],
+        "usphone": "θæŋk juː 'veri mʌtʃ",
+        "ukphone": "θæŋk juː 'verɪ mʌtʃ"
+    },
+    {
+        "name": "you are welcome",
+        "trans": ["不客气"],
+        "usphone": "juː ɑːr 'welkəm",
+        "ukphone": "juː ɑː 'welkəm"
+    },
+    {
+        "name": "what is your name",
+        "trans": ["你叫什么名字"],
+        "usphone": "wɑːt ɪz jɔːr neɪm",
+        "ukphone": "wɒt ɪz jɔː neɪm"
+    },
+    {
+        "name": "where are you from",
+        "trans": ["你来自哪里"],
+        "usphone": "wer ɑːr juː frɑːm",
+        "ukphone": "weə ɑː juː frɒm"
+    },
+    {
+        "name": "i love you",
+        "trans": ["我爱你"],
+        "usphone": "aɪ lʌv juː",
+        "ukphone": "aɪ lʌv juː"
+    },
+    {
+        "name": "see you later",
+        "trans": ["待会见"],
+        "usphone": "siː juː 'leɪtər",
+        "ukphone": "siː juː 'leɪtə"
+    },
+    {
+        "name": "have a nice day",
+        "trans": ["祝你有美好的一天"],
+        "usphone": "hæv ə naɪs deɪ",
+        "ukphone": "hæv ə naɪs deɪ"
+    },
+    {
+        "name": "can you help me",
+        "trans": ["你能帮我吗"],
+        "usphone": "kæn juː help miː",
+        "ukphone": "kæn juː help miː"
+    },
+    {
+        "name": "i dont understand",
+        "trans": ["我不明白"],
+        "usphone": "aɪ doʊnt ʌndər'stænd",
+        "ukphone": "aɪ dəʊnt ʌndə'stænd"
+    },
+    {
+        "name": "speak more slowly",
+        "trans": ["说得慢一点"],
+        "usphone": "spiːk mɔːr 'sloʊli",
+        "ukphone": "spiːk mɔː 'sləʊlɪ"
+    },
+    {
+        "name": "how much is it",
+        "trans": ["这个多少钱"],
+        "usphone": "haʊ mʌtʃ ɪz ɪt",
+        "ukphone": "haʊ mʌtʃ ɪz ɪt"
+    },
+    {
+        "name": "where is the bathroom",
+        "trans": ["洗手间在哪里"],
+        "usphone": "wer ɪz ðə 'bæθruːm",
+        "ukphone": "weə ɪz ðə 'bɑːθruːm"
+    },
+    {
+        "name": "do you speak english",
+        "trans": ["你会说英语吗"],
+        "usphone": "duː juː spiːk 'ɪŋɡlɪʃ",
+        "ukphone": "duː juː spiːk 'ɪŋɡlɪʃ"
+    },
+    {
+        "name": "my name is pan",
+        "trans": ["我叫潘"],
+        "usphone": "maɪ neɪm ɪz pæn",
+        "ukphone": "maɪ neɪm ɪz pæn"
+    },
+    {
+        "name": "nice weather today",
+        "trans": ["今天天气很好"],
+        "usphone": "naɪs 'weðər tə'deɪ",
+        "ukphone": "naɪs 'weðə tə'deɪ"
+    },
+    {
+        "name": "what time is it",
+        "trans": ["现在几点"],
+        "usphone": "wɑːt taɪm ɪz ɪt",
+        "ukphone": "wɒt taɪm ɪz ɪt"
+    },
+    {
+        "name": "i am very happy",
+        "trans": ["我很高兴"],
+        "usphone": "aɪ æm 'veri 'hæpi",
+        "ukphone": "aɪ æm 'verɪ 'hæpɪ"
+    },
+    {
+        "name": "let me think about it",
+        "trans": ["让我想想"],
+        "usphone": "let miː θɪŋk ə'baʊt ɪt",
+        "ukphone": "let miː θɪŋk ə'baʊt ɪt"
+    },
+    {
+        "name": "i am sorry",
+        "trans": ["我很抱歉"],
+        "usphone": "aɪ æm 'sɑːri",
+        "ukphone": "aɪ æm 'sɒrɪ"
+    },
+    {
+        "name": "no problem at all",
+        "trans": ["完全没问题"],
+        "usphone": "noʊ 'prɑːbləm æt ɔːl",
+        "ukphone": "nəʊ 'prɒbləm æt ɔːl"
+    },
+    {
+        "name": "take your time",
+        "trans": ["慢慢来"],
+        "usphone": "teɪk jɔːr taɪm",
+        "ukphone": "teɪk jɔː taɪm"
+    },
+    {
+        "name": "i agree with you",
+        "trans": ["我同意你的看法"],
+        "usphone": "aɪ ə'ɡriː wɪð juː",
+        "ukphone": "aɪ ə'ɡriː wɪð juː"
+    },
+    {
+        "name": "that sounds great",
+        "trans": ["听起来很不错"],
+        "usphone": "ðæt saʊndz ɡreɪt",
+        "ukphone": "ðæt saʊndz ɡreɪt"
+    },
+    {
+        "name": "i will be there",
+        "trans": ["我会在那里"],
+        "usphone": "aɪ wɪl bi ðer",
+        "ukphone": "aɪ wɪl bi ðeə"
+    },
+    {
+        "name": "see you tomorrow",
+        "trans": ["明天见"],
+        "usphone": "siː juː tə'mɑːroʊ",
+        "ukphone": "siː juː tə'mɒrəʊ"
+    },
+    {
+        "name": "have a good night",
+        "trans": ["晚安"],
+        "usphone": "hæv ə ɡʊd naɪt",
+        "ukphone": "hæv ə ɡʊd naɪt"
+    },
+    {
+        "name": "what do you think",
+        "trans": ["你觉得怎么样"],
+        "usphone": "wɑːt duː juː θɪŋk",
+        "ukphone": "wɒt duː juː θɪŋk"
+    },
+    {
+        "name": "i am not sure",
+        "trans": ["我不确定"],
+        "usphone": "aɪ æm nɑːt ʃʊr",
+        "ukphone": "aɪ æm nɒt ʃʊə"
+    },
+    {
+        "name": "can i help you",
+        "trans": ["我能帮你吗"],
+        "usphone": "kæn aɪ help juː",
+        "ukphone": "kæn aɪ help juː"
+    },
+    {
+        "name": "that is very kind",
+        "trans": ["你真好"],
+        "usphone": "ðæt ɪz 'veri kaɪnd",
+        "ukphone": "ðæt ɪz 'verɪ kaɪnd"
+    },
+    {
+        "name": "i am learning english",
+        "trans": ["我在学英语"],
+        "usphone": "aɪ æm 'lɜːrnɪŋ 'ɪŋɡlɪʃ",
+        "ukphone": "aɪ æm 'lɜːnɪŋ 'ɪŋɡlɪʃ"
+    },
+    {
+        "name": "how long have you been here",
+        "trans": ["你在这里多久了"],
+        "usphone": "haʊ lɔːŋ hæv juː bɪn hɪr",
+        "ukphone": "haʊ lɒŋ hæv juː bɪn hɪə"
+    },
+    {
+        "name": "i would like to know",
+        "trans": ["我想知道"],
+        "usphone": "aɪ wʊd laɪk tə noʊ",
+        "ukphone": "aɪ wʊd laɪk tə nəʊ"
+    },
+    {
+        "name": "please let me know",
+        "trans": ["请告诉我"],
+        "usphone": "pliːz let miː noʊ",
+        "ukphone": "pliːz let miː nəʊ"
+    },
+    {
+        "name": "i am very interested",
+        "trans": ["我很感兴趣"],
+        "usphone": "aɪ æm 'veri 'ɪntrəstɪd",
+        "ukphone": "aɪ æm 'verɪ 'ɪntrəstɪd"
+    },
+    {
+        "name": "that is not right",
+        "trans": ["那不对"],
+        "usphone": "ðæt ɪz nɑːt raɪt",
+        "ukphone": "ðæt ɪz nɒt raɪt"
+    },
+    {
+        "name": "i need your help",
+        "trans": ["我需要你的帮助"],
+        "usphone": "aɪ niːd jɔːr help",
+        "ukphone": "aɪ niːd jɔː help"
+    },
+    {
+        "name": "thank you for everything",
+        "trans": ["感谢你的一切"],
+        "usphone": "θæŋk juː fər 'evrɪθɪŋ",
+        "ukphone": "θæŋk juː fə 'evrɪθɪŋ"
+    },
+    {
+        "name": "i will call you later",
+        "trans": ["我待会给你打电话"],
+        "usphone": "aɪ wɪl kɔːl juː 'leɪtər",
+        "ukphone": "aɪ wɪl kɔːl juː 'leɪtə"
+    },
+    {
+        "name": "do you have any questions",
+        "trans": ["你有什么问题吗"],
+        "usphone": "duː juː hæv 'eni 'kwestʃənz",
+        "ukphone": "duː juː hæv 'enɪ 'kwestʃənz"
+    },
+    {
+        "name": "i am ready to go",
+        "trans": ["我准备好了"],
+        "usphone": "aɪ æm 'redi tə ɡoʊ",
+        "ukphone": "aɪ æm 'redɪ tə ɡəʊ"
+    },
+    {
+        "name": "let us start now",
+        "trans": ["让我们现在开始"],
+        "usphone": "let əs stɑːrt naʊ",
+        "ukphone": "let əs stɑːt naʊ"
+    },
+    {
+        "name": "i am very tired",
+        "trans": ["我很累"],
+        "usphone": "aɪ æm 'veri 'taɪərd",
+        "ukphone": "aɪ æm 'verɪ 'taɪəd"
+    },
+    {
+        "name": "that is wonderful news",
+        "trans": ["那是个好消息"],
+        "usphone": "ðæt ɪz 'wʌndərfl nuːz",
+        "ukphone": "ðæt ɪz 'wʌndəfl njuːz"
+    },
+    {
+        "name": "i am looking forward to it",
+        "trans": ["我期待着"],
+        "usphone": "aɪ æm 'lʊkɪŋ 'fɔːrwərd tə ɪt",
+        "ukphone": "aɪ æm 'lʊkɪŋ 'fɔːwəd tə ɪt"
+    },
+    {
+        "name": "please come back soon",
+        "trans": ["请尽快回来"],
+        "usphone": "pliːz kʌm bæk suːn",
+        "ukphone": "pliːz kʌm bæk suːn"
+    },
+    {
+        "name": "i am so glad to see you",
+        "trans": ["很高兴见到你"],
+        "usphone": "aɪ æm soʊ ɡlæd tə siː juː",
+        "ukphone": "aɪ æm səʊ ɡlæd tə siː juː"
+    },
+    {
+        "name": "that is a good idea",
+        "trans": ["那是个好主意"],
+        "usphone": "ðæt ɪz ə ɡʊd aɪ'diːə",
+        "ukphone": "ðæt ɪz ə ɡʊd aɪ'dɪə"
+    },
+    {
+        "name": "i will do my best",
+        "trans": ["我会尽力"],
+        "usphone": "aɪ wɪl duː maɪ best",
+        "ukphone": "aɪ wɪl duː maɪ best"
+    },
+    {
+        "name": "thank you for your time",
+        "trans": ["感谢你的时间"],
+        "usphone": "θæŋk juː fər jɔːr taɪm",
+        "ukphone": "θæŋk juː fə jɔː taɪm"
+    }
+]

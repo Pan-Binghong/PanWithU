@@ -1,9 +1,85 @@
 {
-  "name": "qwerty-learner",
-  "version": "0.1.0",
-  "private": true,
-  "homepage": ".",
+  "name": "panwithu",
+  "version": "0.2.0",
+  "description": "A local-first English learning companion with animated terminal pets.",
+  "author": "Pan Binghong <binghongpan0222@gmail.com>",
+  "license": "GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pan-Binghong/PanWithU.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pan-Binghong/PanWithU/issues"
+  },
+  "bin": {
+    "PWU": "bin/pwu.mjs",
+    "panwithu": "bin/pwu.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin/",
+    "cli/ai.mjs",
+    "cli/api-endpoint.mjs",
+    "cli/app.mjs",
+    "cli/audio.mjs",
+    "cli/constants.mjs",
+    "cli/dictionary.mjs",
+    "cli/learning.mjs",
+    "cli/pet.mjs",
+    "cli/reminder.mjs",
+    "cli/storage.mjs",
+    "cli/todo.mjs",
+    "cli/ui.mjs",
+    "cli/dictionaries.json",
+    "cli/tui.mjs",
+    "public/dicts/*.json",
+    "public/sounds/beep.wav",
+    "public/sounds/correct.wav",
+    "public/sounds/key-sound/Default.wav",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "homepage": "https://github.com/Pan-Binghong/PanWithU",
   "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.84.2",
+    "@earendil-works/pi-tui": "0.84.2"
+  },
+  "scripts": {
+    "cli": "node bin/pwu.mjs",
+    "cli:smoke": "node bin/pwu.mjs --help",
+    "dev": "vite",
+    "start": "vite",
+    "build": "cross-env CI=false vite build --base=./",
+    "test": "node --test cli/*.test.mjs",
+    "test:e2e": "playwright test",
+    "lint": "eslint .",
+    "prettier": "prettier --write .",
+    "test:cli": "node --test cli/*.test.mjs",
+    "prepublishOnly": "npm run test:cli && npm run cli:smoke"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
     "@floating-ui/react": "^0.20.1",
     "@headlessui/react": "^1.7.13",
     "@headlessui/tailwindcss": "^0.1.2",
@@ -55,36 +131,7 @@
     "typescript": "^4.0.3",
     "use-immer": "^0.9.0",
     "use-sound": "^4.0.1",
-    "xlsx": "^0.18.5"
-  },
-  "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "cross-env CI=false vite build --base=./",
-    "test": "echo \"No tests\"",
-    "test:e2e": "playwright test",
-    "lint": "eslint .",
-    "prettier": "prettier --write .",
-    "prepare": "husky install"
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
+    "xlsx": "^0.18.5",
     "@iconify/json": "^2.2.242",
     "@playwright/test": "^1.40.1",
     "@svgr/core": "^7.0.0",

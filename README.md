@@ -6,6 +6,21 @@
   Qwerty Learner
 </h1>
 
+## PanWithU terminal companion
+
+This repository also ships PanWithU, a local-first terminal companion for
+English vocabulary practice. It adds spaced review, animated pets, local
+progress, pronunciation, optional AI coaching, and daily system reminders.
+
+```bash
+npm install -g panwithu@latest
+PWU
+```
+
+Run `PWU --help` for command-line usage. See the
+[PanWithU CLI guide](./docs/PANWITHU_CLI.md) for setup, commands, local data,
+and development instructions.
+
 <p align="center">
   <a href="./docs/README_EN.md">English</a>
   <a href="./docs/README_JP.md">日本語</a>
