@@ -58,7 +58,7 @@ async function setup() {
 
 function help() {
   console.log(
-    `${APP_NAME} ${VERSION}\n\nUsage: PWU [command]\n       PWU                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage the daily system reminder\n  summary         Get a personal learning summary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet change  /pet rename  /pet feed  /pet play  /pet wardrobe\n`,
+    `${APP_NAME} ${VERSION}\n\nUsage: pwu [command]\n       pwu                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage the daily system reminder\n  summary         Get a personal learning summary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet change  /pet rename  /pet feed  /pet play  /pet wardrobe\n`,
   )
 }
 

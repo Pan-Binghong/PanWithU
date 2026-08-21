@@ -12,7 +12,7 @@
     "url": "https://github.com/Pan-Binghong/PanWithU/issues"
   },
   "bin": {
-    "PWU": "bin/pwu.mjs",
+    "pwu": "bin/pwu.mjs",
     "panwithu": "bin/pwu.mjs"
   },
   "publishConfig": {
