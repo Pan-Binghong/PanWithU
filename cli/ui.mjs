@@ -23,7 +23,7 @@ export function logo() {
   return paint(
     colors.cyan,
     String.raw`
-  PanWithU  ✦  learn English, grow together
+  PanwithU  ✦  learn English, grow together
 `,
   )
 }

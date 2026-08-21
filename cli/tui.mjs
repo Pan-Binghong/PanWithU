@@ -233,7 +233,7 @@ export async function runTuiSetup() {
   const done = new Promise((resolve) => {
     resolveDone = resolve
   })
-  const title = (value) => new Text(`\n${c.bold(c.purple('  PanWithU'))}\n\n${c.cyan(`  ${value}`)}\n`)
+  const title = (value) => new Text(`\n${c.bold(c.purple('  PanwithU'))}\n\n${c.cyan(`  ${value}`)}\n`)
   const stop = (value) => {
     tui.stop()
     resolveDone(value)
@@ -617,7 +617,7 @@ class Practice {
     ])
     const content = [
       '',
-      `  ${c.bold(c.purple('PanWithU'))}  ${c.dim(`${this.dictionary.name} / Unit ${this.config.chapter + 1}`)}  ${c.dim(
+      `  ${c.bold(c.purple('PanwithU'))}  ${c.dim(`${this.dictionary.name} / Unit ${this.config.chapter + 1}`)}  ${c.dim(
         `${this.index + 1}/${this.words.length}`,
       )}`,
       `  ${bar(this.index, this.words.length, 24)}`,
@@ -728,7 +728,7 @@ export async function runTui(config, profile, persist) {
   const editor = new Editor(tui, editorTheme, { autocompleteMaxVisible: 9 })
   const commands = [
     ['help', '显示所有命令', 'Show all commands'],
-    ['quit', '退出 PanWithU', 'Quit PanWithU'],
+    ['quit', '退出 PanwithU', 'Quit PanwithU'],
     ['home', '返回主页', 'Return home'],
     ['learn', '开始当前单元', 'Start the current unit'],
     ['dict', '选择或搜索题库', 'Choose or search dictionaries'],
@@ -803,7 +803,7 @@ export async function runTui(config, profile, persist) {
   const mount = (title, body, focus = body) => {
     companion.resume()
     root.clear()
-    root.addChild(new Text(`\n  ${c.bold(c.purple('PanWithU'))}`))
+    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
     root.addChild(new Frame(title, body))
     root.addChild(companion)
     root.addChild(new Text(c.dim('  /    ↑↓    ↵    esc')))
@@ -814,7 +814,7 @@ export async function runTui(config, profile, persist) {
   const mountEditor = (title, input) => {
     companion.resume()
     root.clear()
-    root.addChild(new Text(`\n  ${c.bold(c.purple('PanWithU'))}`))
+    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
     root.addChild(new Frame(title, input))
     root.addChild(companion)
     root.addChild(new Text(c.dim('  ↵ confirm    esc back')))
@@ -906,7 +906,7 @@ export async function runTui(config, profile, persist) {
     back.onCancel = onBack
     companion.resume()
     root.clear()
-    root.addChild(new Text(`\n  ${c.bold(c.purple('PanWithU'))}`))
+    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
     root.addChild(new Frame(title, new Text(message, 1, 1)))
     root.addChild(back)
     root.addChild(companion)
@@ -1002,7 +1002,7 @@ export async function runTui(config, profile, persist) {
     const input = new Input()
     input.setValue(pet.name)
     root.clear()
-    root.addChild(new Text(`\n${c.bold(c.purple('  PanWithU'))}\n${c.cyan(`  ${tx('给宠物重新取名', 'Rename your pet')}`)}\n`))
+    root.addChild(new Text(`\n${c.bold(c.purple('  PanwithU'))}\n${c.cyan(`  ${tx('给宠物重新取名', 'Rename your pet')}`)}\n`))
     root.addChild(
       new Text(
         c.dim(
@@ -1124,7 +1124,7 @@ export async function runTui(config, profile, persist) {
     }
     companion.pause()
     root.clear()
-    root.addChild(new Text(`\n  ${c.bold(c.purple('PanWithU'))}`))
+    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
     root.addChild(new Frame(tx('更换伙伴', 'Change companion'), body))
     tui.setFocus(list)
     renderPreview(activePet.id)
@@ -1206,7 +1206,7 @@ export async function runTui(config, profile, persist) {
   const editInvitationCode = () => {
     const input = new SecretInput()
     root.clear()
-    root.addChild(new Text(`\n${c.bold(c.purple('  PanWithU'))}\n${c.cyan(`  ${tx('修改邀请码', 'Change invitation code')}`)}\n`))
+    root.addChild(new Text(`\n${c.bold(c.purple('  PanwithU'))}\n${c.cyan(`  ${tx('修改邀请码', 'Change invitation code')}`)}\n`))
     root.addChild(
       new Text(
         config.invitationCode

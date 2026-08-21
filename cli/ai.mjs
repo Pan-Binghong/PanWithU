@@ -21,7 +21,7 @@ export async function askCoach(config, profile, request) {
 async function askCoachAtEndpoint(config, profile, request, baseUrl) {
   const runtime = await ModelRuntime.create({ refreshOnCreate: false, modelsPath: null })
   runtime.registerProvider('panwithu', {
-    name: 'PanWithU Learning Intelligence',
+    name: 'PanwithU Learning Intelligence',
     baseUrl,
     api: 'openai-completions',
     models: [
@@ -38,7 +38,7 @@ async function askCoachAtEndpoint(config, profile, request, baseUrl) {
   })
   await runtime.setRuntimeApiKey('panwithu', config.invitationCode)
   const model = runtime.getModel('panwithu', AI_MODEL)
-  if (!model) throw new Error('PanWithU AI model is unavailable')
+  if (!model) throw new Error('PanwithU AI model is unavailable')
   const { session } = await createAgentSession({
     modelRuntime: runtime,
     model,
@@ -52,7 +52,7 @@ async function askCoachAtEndpoint(config, profile, request, baseUrl) {
   const language = config.language === 'zh-CN' ? 'Simplified Chinese' : 'English'
   const pet = currentPet(config)
   await session.prompt(
-    `You are the invisible learning intelligence inside PanWithU, a warm local English-learning companion for students. The student's companion is named ${JSON.stringify(
+    `You are the invisible learning intelligence inside PanwithU, a warm local English-learning companion for students. The student's companion is named ${JSON.stringify(
       pet.name,
     )}; its pet type is ${JSON.stringify(pet.type)} and its personality is ${JSON.stringify(
       pet.personality,
