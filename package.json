@@ -35,6 +35,7 @@
     "cli/ui.mjs",
     "cli/dictionaries.json",
     "cli/tui.mjs",
+    "docs/README_ZH_CN.md",
     "public/dicts/*.json",
     "public/sounds/beep.wav",
     "public/sounds/correct.wav",

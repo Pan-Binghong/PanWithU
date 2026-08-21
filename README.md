@@ -5,6 +5,11 @@
 <h1 align="center">PanwithU</h1>
 
 <p align="center">
+  <strong>English</strong> ·
+  <a href="docs/README_ZH_CN.md">简体中文</a>
+</p>
+
+<p align="center">
   <strong>A terminal-first English learning companion powered by Pi Agent.</strong><br />
   在终端里练英语，和你的智能伙伴一起成长。
 </p>
