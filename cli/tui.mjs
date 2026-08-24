@@ -1177,7 +1177,7 @@ export async function runTui(config, profile, persist) {
     const personalEntries = entriesForDay(personalDays[config.chapter])
     if (dictionary.id === personalDictionary.id) {
       if (!personalEntries.length) {
-        tui.flash(tx('先运行 pwu sync 同步今天的 Codex 输入', 'Run pwu sync to import today’s Codex inputs first'))
+        tui.flash(tx('先运行 pwu sync 同步今天的 AI Agent 输入', 'Run pwu sync to import today’s AI-agent inputs first'))
         return home()
       }
     }

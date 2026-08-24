@@ -1,4 +1,4 @@
-import { collectTodayCodexInputs, localDayParts } from './codex-inputs.mjs'
+import { collectTodayAgentInputs, localDayParts } from './codex-inputs.mjs'
 import { APP_NAME, PETS, VERSION } from './constants.mjs'
 import { learn } from './learning.mjs'
 import { animatePet, currentPet, feed, play, showPet } from './pet.mjs'
@@ -60,7 +60,7 @@ async function setup() {
 
 function help() {
   console.log(
-    `${APP_NAME} ${VERSION}\n\nUsage: pwu [command]\n       pwu                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage companion notifications\n  summary         Get a personal learning summary\n  sync            Sync Codex inputs into your personal dictionary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nReminder subcommands:\n  reminder install [hour]  Schedule daily companion moments\n  reminder test            Send one companion notification now\n  reminder remove          Disable companion notifications\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet rename  /pet feed  /pet play\n`,
+    `${APP_NAME} ${VERSION}\n\nUsage: pwu [command]\n       pwu                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion\n  play            Play together\n  todo            View the learning plan\n  reminder        Manage companion notifications\n  summary         Get a personal learning summary\n  sync            Sync local AI-agent inputs into your personal dictionary\n  status          Show learning progress\n  config          Run first-time setup again\n  help, --help    Show this help\n\nReminder subcommands:\n  reminder install [hour]  Schedule daily companion moments\n  reminder test            Send one companion notification now\n  reminder remove          Disable companion notifications\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet rename  /pet feed  /pet play\n`,
   )
 }
 
@@ -244,7 +244,7 @@ export async function run(args) {
         )
       } else {
         try {
-          const inputs = await collectTodayCodexInputs()
+          const inputs = await collectTodayAgentInputs()
           const { preparePersonalDictionary } = await import('./ai.mjs')
           const entries = await preparePersonalDictionary(config, profile, inputs)
           if (inputs.length && !entries.length) throw new Error('AI returned no valid dictionary entries')

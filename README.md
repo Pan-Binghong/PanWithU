@@ -50,7 +50,7 @@ available offline.
 | Local-first        | Your profile, review schedule, pet state, and cached audio stay on your computer.                    |
 | Learning companion | A compact state-symbol agent reacts to study sessions, physical needs, reminders, and play.          |
 | Adaptive review    | Due and failed words are prioritized before unseen vocabulary.                                       |
-| Daily expressions  | `pwu sync` turns the day's Chinese Codex prompts into short, dated English practice sentences.       |
+| Daily expressions  | `pwu sync` turns today's local AI-agent prompts into short, dated English practice sentences.        |
 | Pi-powered coach   | Recent learning history and companion identity become contextual coaching, summaries, and reminders. |
 | Cross-platform     | Runs on Linux, macOS, and Windows, including native daily reminders and speech fallbacks.            |
 
@@ -116,9 +116,11 @@ development instructions.
 ```
 
 There is no PanwithU account system. Core progress is stored locally. Network
-access is used only for dictionary audio and optional AI/TTS features. Codex
-sync reads local conversation records, filters attachments and metadata, and
-stores the generated practice entries locally. Generated audio is cached locally.
+access is used only for dictionary audio and optional AI/TTS features. Agent
+sync reads supported local histories from Codex, Claude, Kiro, OpenClaw,
+Hermes, Harness, Cursor, Gemini, Qwen, Kimi, Trae, OpenCode, and other common agents; it filters attachments and
+metadata and stores generated practice entries locally. Generated audio is
+cached locally.
 
 ## Development
 
