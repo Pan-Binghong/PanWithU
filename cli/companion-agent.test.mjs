@@ -1,4 +1,10 @@
-import { chooseCompanionActivity, createCompanionEvent, runCompanionAgent, shouldSendCompanionEvent } from './companion-agent.mjs'
+import {
+  chooseCompanionActivity,
+  createCompanionEvent,
+  createLocalCompanionEvent,
+  runCompanionAgent,
+  shouldSendCompanionEvent,
+} from './companion-agent.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -32,12 +38,26 @@ test('renamed pet owns an agent-generated notification and pending event', async
   assert.equal(profile.companionAgent.pendingEvent.id, event.id)
 })
 
-test('missing API keys and failed agents do not create fallback pet messages', async () => {
+test('built-in pet greetings keep reminders useful without an API key', async () => {
   const profile = { words: {}, sessions: [], companionAgent: {} }
-  assert.equal((await runCompanionAgent({ ...config, invitationCode: '' }, profile, { force: true })).reason, 'missing-api-key')
+  const local = await runCompanionAgent(
+    { ...config, invitationCode: '' },
+    profile,
+    { force: true, now: new Date(2026, 7, 21, 12) },
+  )
+  assert.equal(local.reason, 'local-routine')
+  assert.match(local.event.message, /中午好/)
+  assert.match(local.event.message, /吃饭了吗/)
   const result = await runCompanionAgent(config, profile, { force: true, generate: async () => null })
-  assert.deepEqual(result, { sent: false, reason: 'agent-unavailable' })
-  assert.equal(profile.companionAgent.pendingEvent, undefined)
+  assert.equal(result.sent, true)
+  assert.equal(result.reason, 'local-routine')
+})
+
+test('local greetings follow the time of day and know the user name', () => {
+  const profile = { companionAgent: {}, userProfile: { name: 'Pan' } }
+  const event = createLocalCompanionEvent(config, profile, { now: new Date(2026, 7, 21, 12) })
+  assert.match(event.message, /中午好呀，Pan/)
+  assert.match(event.title, /^团子/)
 })
 
 test('background companion stays quiet and caps daily interruptions', () => {

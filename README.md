@@ -88,7 +88,7 @@ pwu pet                 Visit your companion
 pwu feed                Feed your companion
 pwu play                Play together
 pwu todo                View the learning plan
-pwu reminder install 19 Enable the daily reminder
+pwu reminder install 19 Change the automatic daily reminder time
 pwu summary             Generate a learning summary
 pwu status              Show progress
 pwu config              Run setup again

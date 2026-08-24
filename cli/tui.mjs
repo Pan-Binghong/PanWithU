@@ -1,4 +1,5 @@
 import { playFeedbackSound, playKeySound, speak } from './audio.mjs'
+import { localDayParts } from './codex-inputs.mjs'
 import { PETS } from './constants.mjs'
 import { loadChapter, loadDictionaryCatalog } from './dictionary.mjs'
 import { updateWordMemory } from './learning.mjs'
@@ -58,6 +59,7 @@ const c = {
   green: (value) => ansi(activeColorTheme.success)(value),
   yellow: (value) => ansi(activeColorTheme.warning)(value),
   red: (value) => ansi(activeColorTheme.danger)(value),
+  text: ansi('38;5;255'),
   dim: ansi('2'),
   bold: ansi('1'),
 }
@@ -84,6 +86,35 @@ const modeCopy = {
     hideConsonant: ['Consonant dictation', 'Dictation · Hide consonants'],
     randomHide: ['Random dictation', 'Dictation · Hide random letters'],
   },
+}
+
+const commandCopy = [
+  ['help', '显示所有命令', 'Show all commands'],
+  ['quit', '退出 PanwithU', 'Quit PanwithU'],
+  ['home', '返回主页', 'Return home'],
+  ['learn', '开始当前单元', 'Start the current unit'],
+  ['dict', '选择或搜索题库', 'Choose or search dictionaries'],
+  ['chapter', '选择单元', 'Choose a unit'],
+  ['mode', '选择学习/默写模式', 'Choose learning or dictation'],
+  ['progress', '查看学习进度', 'View learning progress'],
+  ['coach', '获取伙伴学习建议', 'Get buddy learning advice'],
+  ['t', '中英互译，例如 /t hello', 'Translate Chinese or English, e.g. /t hello'],
+  ['rename', '给宠物重新取名', 'Rename your pet'],
+  ['status', '直接查看宠物状态', 'View your pet status'],
+  ['feed', '直接喂食宠物', 'Feed your pet'],
+  ['play', '直接和宠物玩', 'Play with your pet'],
+  ['pet', '宠物中心', 'Pet center'],
+  ['config', '修改本地设置', 'Change local settings'],
+  ['invite', '添加或修改邀请码', 'Add or change invitation code'],
+  ['language', '切换系统语言', 'Change system language'],
+  ['color', '切换主题颜色', 'Change color theme'],
+]
+
+export function commandSuggestions(query = '', language = 'zh-CN') {
+  const normalized = query.trim().replace(/^\//, '').toLowerCase()
+  return commandCopy
+    .map(([name, zh, en]) => ({ name, zh, en, description: language === 'en' ? en : zh }))
+    .filter((command) => !normalized || command.name.startsWith(normalized) || command.description.toLowerCase().includes(normalized))
 }
 
 export function buddyMessages(language) {
@@ -115,6 +146,10 @@ export function answerPreview(target, typed, mode = 'learn') {
       return mode === 'learn' ? letter : '·'
     })
     .join('')
+}
+
+export function practiceGlyph(character) {
+  return character === ' ' ? '_' : character
 }
 
 class SecretInput {
@@ -311,10 +346,10 @@ export function companionRail(pageTitle, pet, frame, message, language, activity
     .replace(/\s+/g, ' ')
     .trim()
   const candidates = [
-    `${pet.name} ${state.symbol} · ${state.label} · “${speech}” · ${pageTitle}`,
-    `${pet.name} ${state.symbol} · ${state.label} · ${pageTitle}`,
-    `${pet.name} ${state.symbol} · ${pageTitle}`,
-    `${pet.name} ${state.symbol}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(`${state.symbol} · ${state.label}`)} ${c.dim(`· “${speech}”`)} · ${c.cyan(pageTitle)}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(`${state.symbol} · ${state.label}`)} · ${c.cyan(pageTitle)}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(state.symbol)} · ${c.cyan(pageTitle)}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(state.symbol)}`,
   ]
   return candidates.find((candidate) => visibleWidth(candidate) <= width) || truncateToWidth(candidates.at(-1), width)
 }
@@ -366,13 +401,22 @@ class CompanionPanel {
   }
 }
 
-function studyBox(lines, width = 43) {
+function studyBox(lines, width = 43, title = '') {
   const inner = width - 2
   const fit = (text) => {
     const clipped = truncateToWidth(text, inner - 2)
     return ` ${clipped}${' '.repeat(Math.max(0, inner - 2 - visibleWidth(clipped)))} `
   }
-  return [c.purple(`╭${'─'.repeat(inner)}╮`), ...lines.map((line) => `│${fit(line)}│`), c.purple(`╰${'─'.repeat(inner)}╯`)]
+  const clippedTitle = title ? truncateToWidth(title, inner - 4) : ''
+  const labelWidth = clippedTitle ? visibleWidth(clippedTitle) + 3 : 0
+  const top = clippedTitle
+    ? `${c.purple('╭─ ')}${c.yellow(clippedTitle)}${c.purple(` ${'─'.repeat(Math.max(0, inner - labelWidth))}╮`)}`
+    : c.purple(`╭${'─'.repeat(inner)}╮`)
+  return [
+    top,
+    ...lines.map((line) => `${c.purple('│')}${fit(line)}${c.purple('│')}`),
+    c.purple(`╰${'─'.repeat(inner)}╯`),
+  ]
 }
 
 class Practice {
@@ -439,11 +483,13 @@ class Practice {
   }
   clue(target) {
     const mode = this.config.practiceMode || 'learn'
-    if (mode === 'learn') return target
-    if (mode === 'hideAll') return target.replace(/[A-Za-z]/g, '_')
-    if (mode === 'hideVowel') return target.replace(/[aeiou]/gi, '_')
-    if (mode === 'hideConsonant') return target.replace(/[b-df-hj-np-tv-z]/gi, '_')
-    return [...target].map((letter, i) => (/[A-Za-z]/.test(letter) && i % 2 === 0 ? '_' : letter)).join('')
+    let clue
+    if (mode === 'learn') clue = target
+    else if (mode === 'hideAll') clue = target.replace(/[A-Za-z]/g, '_')
+    else if (mode === 'hideVowel') clue = target.replace(/[aeiou]/gi, '_')
+    else if (mode === 'hideConsonant') clue = target.replace(/[b-df-hj-np-tv-z]/gi, '_')
+    else clue = [...target].map((letter, i) => (/[A-Za-z]/.test(letter) && i % 2 === 0 ? '_' : letter)).join('')
+    return [...clue].map(practiceGlyph).join('')
   }
   render(width) {
     const entry = this.word
@@ -453,8 +499,10 @@ class Practice {
     const preview = answerPreview(target, this.typed, mode)
     const shown = [...target]
       .map((letter, i) => {
-        if (i >= this.typed.length) return c.dim(preview[i])
-        return this.typed[i]?.toLowerCase() === letter.toLowerCase() ? c.green(letter) : c.red(letter)
+        if (i >= this.typed.length) return c.dim(practiceGlyph(preview[i]))
+        return this.typed[i]?.toLowerCase() === letter.toLowerCase()
+          ? c.green(practiceGlyph(this.typed[i]))
+          : c.red(practiceGlyph(this.typed[i]))
       })
       .join('')
     const phone = this.config.accent === 'uk' ? entry.ukphone : entry.usphone
@@ -463,19 +511,22 @@ class Practice {
         ? ['Ctrl+J replay audio', '→ skip word  ·  Esc back', '/ pause and open commands']
         : ['Ctrl+J 重新发音', '→ 跳过当前词  ·  Esc 返回', '/ 暂停并打开命令']
     const tip = this.index % 4 === 3 ? '' : tips[this.index % tips.length]
-    const study = studyBox([
-      c.dim((entry.trans || []).join('；')),
-      phone ? c.cyan(`/ ${phone} /`) : '',
-      '',
-      c.bold(this.clue(target)),
-      '',
-      `${shown}${c.yellow('▌')}`,
-    ])
+    const study = studyBox(
+      [
+        c.cyan((entry.trans || []).join('；')),
+        phone ? c.cyan(`/ ${phone} /`) : '',
+        '',
+        c.bold(c.yellow(this.clue(target))),
+        '',
+        `${shown}${c.text('▌')}`,
+      ],
+      Math.max(28, Math.min(72, width - 4)),
+      this.dictionary.id === 'personal-codex' ? (this.config.language === 'zh-CN' ? '你会怎么说？' : 'How would you say it?') : '',
+    )
+    const chapterLabel = this.dictionary.chapterLabels?.[this.config.chapter] || `Unit ${this.config.chapter + 1}`
     const content = [
       '',
-      `  ${c.bold(c.purple('PanwithU'))}  ${c.dim(`${this.dictionary.name} / Unit ${this.config.chapter + 1}`)}  ${c.dim(
-        `${this.index + 1}/${this.words.length}`,
-      )}`,
+      `  ${c.bold(c.purple(this.dictionary.name))}  ${c.dim(`· ${chapterLabel} · ${this.index + 1}/${this.words.length}`)}`,
       `  ${bar(this.index, this.words.length, 24)}`,
       ...study.map((line) => `  ${line}`),
       '',
@@ -483,8 +534,8 @@ class Practice {
     ]
     return content
   }
-  finishWord(isCorrect) {
-    playFeedbackSound(isCorrect)
+  finishWord(isCorrect, playSound = true) {
+    if (playSound) playFeedbackSound(isCorrect)
     updateWordMemory(this.profile, this.word.name, isCorrect)
     if (isCorrect) {
       this.correct += 1
@@ -547,13 +598,19 @@ class Practice {
     this.lastInputAt = Date.now()
     if (this.petState === 'sleep')
       this.setPetState('cheer', this.config.language === 'zh-CN' ? '回来啦，我们继续。' : 'You’re back. Let’s go!', 1200)
-    playKeySound()
     const expected = this.word.name[this.typed.length]
+    const isMatch = printable.toLowerCase() === expected.toLowerCase()
     this.keystrokes += 1
-    if (printable.toLowerCase() !== expected.toLowerCase()) this.hadError = true
+    if (isMatch) playKeySound()
+    else {
+      this.hadError = true
+      playFeedbackSound(false)
+    }
     this.typed += printable
-    if (this.typed.length === this.word.name.length)
-      this.finishWord(!this.hadError && this.typed.toLowerCase() === this.word.name.toLowerCase())
+    if (this.typed.length === this.word.name.length) {
+      const isCorrect = !this.hadError && this.typed.toLowerCase() === this.word.name.toLowerCase()
+      this.finishWord(isCorrect, isCorrect)
+    }
     else this.requestRender()
   }
 }
@@ -563,6 +620,21 @@ export async function runTui(config, profile, persist) {
   const modes = () => modeCopy[config.language === 'en' ? 'en' : 'zh-CN']
   config.colorTheme = setColorTheme(config.colorTheme || 'violet')
   const catalog = await loadDictionaryCatalog()
+  const today = localDayParts().join('-')
+  const personalDays = Object.keys(profile.personalDictionaries || {}).sort().reverse()
+  if (!personalDays.length && profile.personalDictionary?.day) personalDays.push(profile.personalDictionary.day)
+  const entriesForDay = (day) =>
+    profile.personalDictionaries?.[day]?.entries || (profile.personalDictionary?.day === day ? profile.personalDictionary.entries || [] : [])
+  const personalDictionary = {
+    id: 'personal-codex',
+    name: tx('我的表达', 'My Expressions'),
+    description: tx(`按日期保存的 ${personalDays.length} 天表达`, `${personalDays.length} days of personal expressions`),
+    category: tx('个人', 'Personal'),
+    length: personalDays.reduce((total, day) => total + entriesForDay(day).length, 0),
+    chapters: Math.max(1, personalDays.length),
+    chapterLabels: personalDays,
+  }
+  catalog.unshift(personalDictionary)
   const terminal = new ProcessTerminal()
   const tui = new TuiAltScreen(terminal, true)
   let resolveDone
@@ -580,22 +652,7 @@ export async function runTui(config, profile, persist) {
   config.practiceMode ||= 'learn'
 
   const editor = new Editor(tui, editorTheme, { autocompleteMaxVisible: 9 })
-  const commands = [
-    ['help', '显示所有命令', 'Show all commands'],
-    ['quit', '退出 PanwithU', 'Quit PanwithU'],
-    ['home', '返回主页', 'Return home'],
-    ['learn', '开始当前单元', 'Start the current unit'],
-    ['dict', '选择或搜索题库', 'Choose or search dictionaries'],
-    ['chapter', '选择单元', 'Choose a unit'],
-    ['mode', '选择学习/默写模式', 'Choose learning or dictation'],
-    ['progress', '查看学习进度', 'View learning progress'],
-    ['coach', '获取伙伴学习建议', 'Get buddy learning advice'],
-    ['pet', '宠物中心', 'Pet center'],
-    ['config', '修改本地设置', 'Change local settings'],
-    ['invite', '添加或修改邀请码', 'Add or change invitation code'],
-    ['language', '切换系统语言', 'Change system language'],
-    ['color', '切换主题颜色', 'Change color theme'],
-  ].map(([name, zh, en]) => ({ name, zh, en, description: config.language === 'en' ? en : zh }))
+  const commands = commandSuggestions('', config.language)
   const localizeCommands = () => commands.forEach((command) => (command.description = config.language === 'en' ? command.en : command.zh))
   commands.find((item) => item.name === 'dict').getArgumentCompletions = async (prefix) =>
     catalog
@@ -637,8 +694,7 @@ export async function runTui(config, profile, persist) {
       if (/\s/.test(input)) return null
       const query = input.slice(1).toLowerCase()
       return {
-        items: commands
-          .filter((item) => item.name.startsWith(query))
+        items: commandSuggestions(query, config.language)
           .map((item) => ({ value: `/${item.name}`, label: `/${item.name}`, description: item.description })),
         prefix: input,
       }
@@ -709,11 +765,14 @@ export async function runTui(config, profile, persist) {
     )
   const chooseChapter = () =>
     menu(
-      `${dictionary.name} · ${tx('选择单元', 'Choose a unit')}`,
+      `${dictionary.name} · ${dictionary.id === personalDictionary.id ? tx('选择日期', 'Choose a date') : tx('选择单元', 'Choose a unit')}`,
       Array.from({ length: dictionary.chapters }, (_, i) => ({
         value: String(i),
-        label: `Unit ${i + 1}`,
-        description: `${tx('单词', 'Words')} ${i * 20 + 1}–${Math.min(dictionary.length, (i + 1) * 20)}`,
+        label: dictionary.chapterLabels?.[i] || `Unit ${i + 1}`,
+        description:
+          dictionary.id === personalDictionary.id
+            ? `${entriesForDay(dictionary.chapterLabels?.[i]).length} ${tx('句', 'sentences')}`
+            : `${tx('单词', 'Words')} ${i * 20 + 1}–${Math.min(dictionary.length, (i + 1) * 20)}`,
       })),
       async ({ value }) => {
         config.chapter = Number(value)
@@ -1009,8 +1068,10 @@ export async function runTui(config, profile, persist) {
       let backgroundEnabled = false
       try {
         const { installReminder } = await import('./reminder.mjs')
-        backgroundEnabled = await installReminder()
+        backgroundEnabled = await installReminder({ intervalMinutes: 30 })
+        if (backgroundEnabled) config.companionScheduleVersion = 1
       } catch {}
+      await save()
       tui.flash(
         backgroundEnabled
           ? tx('邀请码已保存，宠物会在后台陪伴你', 'Code saved. Your companion can now check in from the background')
@@ -1112,7 +1173,14 @@ export async function runTui(config, profile, persist) {
     )
   const start = async () => {
     activePractice?.dispose()
-    const words = await loadChapter(dictionary, config.chapter)
+    const personalEntries = entriesForDay(personalDays[config.chapter])
+    if (dictionary.id === personalDictionary.id) {
+      if (!personalEntries.length) {
+        tui.flash(tx('先运行 pwu sync 同步今天的 Codex 输入', 'Run pwu sync to import today’s Codex inputs first'))
+        return home()
+      }
+    }
+    const words = dictionary.id === personalDictionary.id ? personalEntries : await loadChapter(dictionary, config.chapter)
     const dailyReward = claimDailyCompanion(profile, config.language)
     const practice = new Practice({
       words,
@@ -1187,10 +1255,19 @@ export async function runTui(config, profile, persist) {
         {
           value: 'start',
           label: tx('开始练习', 'Start practice'),
-          description: `${dictionary.name} · Unit ${config.chapter + 1} · ${modes()[config.practiceMode][0]}`,
+          description: `${dictionary.name} · ${dictionary.chapterLabels?.[config.chapter] || `Unit ${config.chapter + 1}`} · ${
+            modes()[config.practiceMode][0]
+          }`,
         },
         { value: 'dict', label: tx('选择题库', 'Choose dictionary'), description: dictionary.name },
-        { value: 'chapter', label: tx('选择单元', 'Choose unit'), description: `Unit ${config.chapter + 1}/${dictionary.chapters}` },
+        {
+          value: 'chapter',
+          label: dictionary.id === personalDictionary.id ? tx('选择日期', 'Choose date') : tx('选择单元', 'Choose unit'),
+          description:
+            dictionary.id === personalDictionary.id
+              ? dictionary.chapterLabels?.[config.chapter] || tx('尚未同步', 'Not synced')
+              : `Unit ${config.chapter + 1}/${dictionary.chapters}`,
+        },
         { value: 'mode', label: tx('练习模式', 'Practice mode'), description: modes()[config.practiceMode][0] },
         { value: 'progress', label: tx('学习进度', 'Learning progress') },
         {
@@ -1250,6 +1327,37 @@ export async function runTui(config, profile, persist) {
     if (name === 'mode') return chooseMode()
     if (name === 'progress') return progress()
     if (name === 'coach') return coach()
+    if (name === 't') {
+      const source = parts.join(' ').trim()
+      if (!source) {
+        editor.setText('/t ')
+        return mountEditor(tx('输入要翻译的文字', 'Enter text to translate'), editor)
+      }
+      if (!config.invitationCode) {
+        tui.flash(tx('请先用 /invite 配置邀请码', 'Configure an invitation code with /invite first'))
+        return home()
+      }
+      showMessage(tx('翻译', 'Translation'), tx('正在翻译…', 'Translating…'), home)
+      try {
+        const { translateText } = await import('./ai.mjs')
+        const translation = await translateText(config, profile, source)
+        return showMessage(tx('翻译', 'Translation'), translation || tx('暂时没有结果。', 'No result yet.'), home)
+      } catch {
+        return showMessage(tx('翻译', 'Translation'), tx('暂时无法翻译。', 'Translation is unavailable.'), home)
+      }
+    }
+    if (name === 'rename') return renamePet()
+    if (name === 'status') return petStatusPage()
+    if (name === 'feed') {
+      companion.react('feed', feed(config, profile, config.language))
+      await save()
+      return petPage()
+    }
+    if (name === 'play') {
+      companion.react('play', play(config, profile, config.language))
+      await save()
+      return petPage()
+    }
     if (name === 'pet') {
       if (parts[0] === 'rename') return renamePet()
       if (parts[0] === 'feed') {

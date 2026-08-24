@@ -16,8 +16,8 @@ export const defaultCompanionAgentConfig = {
   enabled: true,
   mode: 'automatic',
   quietHours: { start: 9, end: 22 },
-  maxEventsPerDay: 2,
-  minGapHours: 5,
+  maxEventsPerDay: 30,
+  minGapHours: 0.5,
 }
 
 async function readJson(path, fallback) {
@@ -57,7 +57,11 @@ export const defaultProfile = {
     pendingEvent: null,
     eventDay: null,
     eventCount: 0,
+    recentMessages: [],
   },
+  codexReview: { day: null, completed: 0, total: 0 },
+  personalDictionary: { day: null, syncedAt: null, entries: [] },
+  personalDictionaries: {},
   userProfile: {
     name: null,
     firstSeenAt: null,
@@ -80,12 +84,15 @@ export const defaultProfile = {
 export async function loadConfig() {
   const stored = await readJson(paths.config, null)
   if (!stored) return null
+  const companionAgent = stored.companionAgent || {}
   return {
     ...stored,
     pet: 'cat',
     companionAgent: {
       ...defaultCompanionAgentConfig,
-      ...stored.companionAgent,
+      ...companionAgent,
+      maxEventsPerDay: companionAgent.maxEventsPerDay === 2 ? 30 : companionAgent.maxEventsPerDay ?? 30,
+      minGapHours: companionAgent.minGapHours === 5 ? 0.5 : companionAgent.minGapHours ?? 0.5,
       quietHours: {
         ...defaultCompanionAgentConfig.quietHours,
         ...stored.companionAgent?.quietHours,
@@ -101,10 +108,19 @@ export async function loadProfile() {
     ...stored,
     inventory: { ...defaultProfile.inventory, ...stored.inventory },
     companionAgent: { ...defaultProfile.companionAgent, ...stored.companionAgent },
+    codexReview: { ...defaultProfile.codexReview, ...stored.codexReview },
+    personalDictionary: { ...defaultProfile.personalDictionary, ...stored.personalDictionary },
+    personalDictionaries: { ...defaultProfile.personalDictionaries, ...stored.personalDictionaries },
     userProfile: { ...defaultProfile.userProfile, ...stored.userProfile },
   }
   delete profile.petAccessories
   delete profile.equippedAccessory
+  if (profile.personalDictionary.day && profile.personalDictionary.entries?.length && !profile.personalDictionaries[profile.personalDictionary.day]) {
+    profile.personalDictionaries[profile.personalDictionary.day] = {
+      syncedAt: profile.personalDictionary.syncedAt,
+      entries: profile.personalDictionary.entries,
+    }
+  }
   if (profile.lastSeenAt) {
     const elapsed = Date.now() - new Date(profile.lastSeenAt).getTime()
     if (Number.isFinite(elapsed) && elapsed > 0) {

@@ -1,6 +1,6 @@
 {
   "name": "panwithu",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A local-first English learning companion with animated terminal pets.",
   "author": "Pan Binghong <binghongpan0222@gmail.com>",
   "license": "GPL-3.0-only",
@@ -26,6 +26,7 @@
     "cli/app.mjs",
     "cli/audio.mjs",
     "cli/companion-agent.mjs",
+    "cli/codex-inputs.mjs",
     "cli/constants.mjs",
     "cli/dictionary.mjs",
     "cli/identity.mjs",

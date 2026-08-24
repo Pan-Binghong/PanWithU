@@ -83,7 +83,7 @@ pwu pet                 查看学习伙伴
 pwu feed                喂养伙伴
 pwu play                和伙伴玩耍
 pwu todo                查看学习计划
-pwu reminder install 19 开启每日提醒
+pwu reminder install 19 修改自动每日提醒的时间
 pwu summary             生成学习总结
 pwu status              查看学习进度
 pwu config              重新运行设置

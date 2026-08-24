@@ -12,7 +12,7 @@ function run(command, args) {
   })
 }
 
-export function parseReminderHour(value, fallback = 19) {
+export function parseReminderHour(value, fallback = 12) {
   if (value === undefined) return fallback
   const hour = Number(value)
   if (!Number.isInteger(hour) || hour < 0 || hour > 23) throw new RangeError('Reminder hour must be an integer from 0 to 23')
@@ -30,7 +30,7 @@ export function notificationCommand(message, platform = process.platform, title 
   if (platform === 'win32') {
     const safe = message.replaceAll("'", "''")
     const safeTitle = title.replaceAll("'", "''")
-    const script = `$template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('${safeTitle}')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('PanwithU').Show([Windows.UI.Notifications.ToastNotification]::new($xml))`
+    const script = `$manager = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]; $toastType = [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime]; $template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = $manager::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('${safeTitle}')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; $manager::CreateToastNotifier('PanwithU').Show($toastType::new($xml))`
     return ['powershell', ['-NoProfile', '-NonInteractive', '-Command', script]]
   }
   return ['notify-send', [title, message]]
@@ -61,18 +61,16 @@ export async function reminderStatus(platform = process.platform) {
   }
 }
 
-export async function installReminder({ hour = 19, minute = 0 } = {}) {
+export async function installReminder({ hour = 12, minute = 0, intervalMinutes = null } = {}) {
   hour = parseReminderHour(hour)
+  const interval = intervalMinutes == null ? null : Math.max(1, Math.floor(Number(intervalMinutes)))
   const script = process.argv[1]
   if (process.platform === 'win32') {
-    const time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+    const schedule = interval ? ['/SC', 'MINUTE', '/MO', String(interval)] : ['/SC', 'DAILY', '/ST', `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`]
     return run('schtasks', [
       '/Create',
       '/F',
-      '/SC',
-      'DAILY',
-      '/ST',
-      time,
+      ...schedule,
       '/TN',
       'PanWithU Daily Reminder',
       '/TR',
@@ -82,7 +80,10 @@ export async function installReminder({ hour = 19, minute = 0 } = {}) {
   if (process.platform === 'darwin') {
     const [file] = scheduleFiles('darwin')
     await mkdir(join(homedir(), 'Library', 'LaunchAgents'), { recursive: true })
-    const plist = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>Label</key><string>com.panbinghong.panwithu.reminder</string><key>ProgramArguments</key><array><string>${process.execPath}</string><string>${script}</string><string>remind</string></array><key>StartCalendarInterval</key><dict><key>Hour</key><integer>${hour}</integer><key>Minute</key><integer>${minute}</integer></dict></dict></plist>\n`
+    const schedule = interval
+      ? `<key>StartInterval</key><integer>${interval * 60}</integer>`
+      : `<key>StartCalendarInterval</key><dict><key>Hour</key><integer>${hour}</integer><key>Minute</key><integer>${minute}</integer></dict>`
+    const plist = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>Label</key><string>com.panbinghong.panwithu.reminder</string><key>ProgramArguments</key><array><string>${process.execPath}</string><string>${script}</string><string>remind</string></array>${schedule}</dict></plist>\n`
     await writeFile(file, plist, { mode: 0o600 })
     await run('launchctl', ['bootout', `gui/${process.getuid()}`, file])
     return run('launchctl', ['bootstrap', `gui/${process.getuid()}`, file])
@@ -98,9 +99,11 @@ export async function installReminder({ hour = 19, minute = 0 } = {}) {
   )
   await writeFile(
     timer,
-    `[Unit]\nDescription=PanwithU daily learning reminder\n\n[Timer]\nOnCalendar=*-*-* ${String(hour).padStart(2, '0')}:${String(
-      minute,
-    ).padStart(2, '0')}:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n`,
+    interval
+      ? `[Unit]\nDescription=PanwithU companion check\n\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=${interval}min\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n`
+      : `[Unit]\nDescription=PanwithU daily learning reminder\n\n[Timer]\nOnCalendar=*-*-* ${String(hour).padStart(2, '0')}:${String(
+          minute,
+        ).padStart(2, '0')}:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n`,
     { mode: 0o600 },
   )
   await run('systemctl', ['--user', 'daemon-reload'])

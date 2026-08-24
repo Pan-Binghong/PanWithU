@@ -39,6 +39,16 @@ test('phrases and sentences use generated TTS when an invitation code exists', a
   assert.equal(JSON.parse(request.options.body).input, 'grow together')
 })
 
+test('British sentence audio uses a natural English MiniMax voice', async () => {
+  let body
+  await resolveAudio('How are you today?', { invitationCode: 'test-key' }, { accent: 'uk' }, async (_url, options) => {
+    body = JSON.parse(options.body)
+    return audioResponse()
+  })
+  assert.equal(body.model, 'speech-2.6-hd')
+  assert.equal(body.voice, 'English_Graceful_Lady')
+})
+
 test('phrases without an invitation code fall through to system speech', async () => {
   const result = await resolveAudio('learn with me', { invitationCode: '' }, {}, async () => {
     throw new Error('network should not be used')

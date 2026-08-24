@@ -67,7 +67,7 @@ pwu todo           View the learning plan
 pwu todo add TEXT  Add a personal task
 pwu todo done N    Complete a task
 pwu reminder install [hour]
-                   Enable the daily system reminder (default: 19:00)
+                   Change the automatic daily system reminder (default: 12:00)
 pwu reminder remove
                    Disable the daily system reminder
 pwu summary        Get a personal learning summary

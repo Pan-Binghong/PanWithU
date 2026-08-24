@@ -11,7 +11,7 @@ test('notification commands are generated for all supported platforms', () => {
 })
 
 test('reminder hours accept midnight and reject invalid values', () => {
-  assert.equal(parseReminderHour(undefined), 19)
+  assert.equal(parseReminderHour(undefined), 12)
   assert.equal(parseReminderHour('0'), 0)
   assert.equal(parseReminderHour('23'), 23)
   assert.throws(() => parseReminderHour('24'), /0 to 23/)

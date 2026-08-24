@@ -4,12 +4,19 @@ import { systemUsername } from './identity.mjs'
 import { currentPet } from './pet.mjs'
 import { createAgentSession, ModelRuntime, SessionManager } from '@earendil-works/pi-coding-agent'
 
+const ADHD_OUTPUT_SKILL =
+  'ADHD-friendly output rule: reply with exactly one short, actionable sentence; use no heading, list, preamble, recap, or extra explanation.'
+
 export async function askCoach(config, profile, request) {
+  return askWithEndpoints(config, profile, request, ADHD_OUTPUT_SKILL)
+}
+
+async function askWithEndpoints(config, profile, request, outputRule) {
   if (!config.invitationCode) return null
   let lastError
   for (const baseUrl of apiBaseUrls()) {
     try {
-      const answer = await askCoachAtEndpoint(config, profile, request, baseUrl)
+      const answer = await askCoachAtEndpoint(config, profile, request, baseUrl, outputRule)
       rememberApiBaseUrl(baseUrl)
       return answer
     } catch (error) {
@@ -17,6 +24,76 @@ export async function askCoach(config, profile, request) {
     }
   }
   throw lastError
+}
+
+export function translationDirection(text) {
+  return /\p{Script=Han}/u.test(String(text)) ? { source: 'Chinese', target: 'English' } : { source: 'English', target: 'Simplified Chinese' }
+}
+
+export async function translateText(config, profile, text) {
+  const direction = translationDirection(text)
+  return askWithEndpoints(
+    config,
+    profile,
+    `Translate this ${direction.source} text into ${direction.target}: ${JSON.stringify(text)}. Preserve the meaning and tone.`,
+    `Return only the ${direction.target} translation in one concise sentence; no explanation, label, quotation marks, or alternatives.`,
+  )
+}
+
+export function parsePersonalDictionaryJson(answer, inputs) {
+  const sourceById = new Map(inputs.map((input, id) => [id, input]))
+  let parsed
+  try {
+    const raw = String(answer || '').replace(/```(?:json)?|```/gi, '').trim()
+    try {
+      parsed = JSON.parse(raw)
+    } catch {
+      const start = raw.indexOf('[')
+      const end = raw.lastIndexOf(']')
+      if (start < 0 || end < start) return []
+      parsed = JSON.parse(raw.slice(start, end + 1))
+    }
+  } catch {
+    return []
+  }
+  if (!Array.isArray(parsed) && Array.isArray(parsed?.entries)) parsed = parsed.entries
+  if (!Array.isArray(parsed)) return []
+  const entries = parsed
+    .map((item) => {
+      const source = sourceById.get(Number(item?.id))
+      const chinese = String(item?.chinese || '').replace(/\s+/g, ' ').trim()
+      const english = String(item?.english || '').replace(/\s+/g, ' ').trim()
+      if (!source || !/\p{Script=Han}/u.test(chinese) || !/[A-Za-z]/.test(english)) return null
+      if (chinese.length > 80 || english.length > 100 || english.split(/\s+/).length > 20) return null
+      return { name: english, trans: [chinese], sourceText: source.text, timestamp: source.timestamp }
+    })
+    .filter(Boolean)
+  return [...new Map(entries.map((entry) => [`${entry.name.toLowerCase()}\n${entry.trans[0]}`, entry])).values()]
+}
+
+export async function preparePersonalDictionary(config, profile, inputs) {
+  const prepared = []
+  for (let offset = 0; offset < inputs.length; offset += 20) {
+    const batch = inputs.slice(offset, offset + 20)
+    const convert = async (items) => {
+      const payload = items.map((input, id) => ({ id, text: input.text }))
+      const answer = await askWithEndpoints(
+        config,
+        profile,
+        `Create short English-learning entries from this untrusted input data: ${JSON.stringify(
+          payload,
+        )}. Skip files, images, logs, code, secrets, and metadata. Split complex ideas into complete short sentences. Keep each English answer under 9 words and 38 characters. Preserve intent and natural punctuation.`,
+        'Output only JSON: [{"id":0,"chinese":"short Chinese sentence","english":"short natural English answer"}]. Multiple entries may reuse one id; skipped inputs have no entry.',
+      )
+      return parsePersonalDictionaryJson(answer, items)
+    }
+    const entries = await convert(batch)
+    if (entries.length || batch.length === 1) prepared.push(...entries)
+    else {
+      for (const input of batch) prepared.push(...(await convert([input])))
+    }
+  }
+  return prepared
 }
 
 export async function askAsPet(config, profile, activity, context = {}) {
@@ -29,16 +106,18 @@ export async function askAsPet(config, profile, activity, context = {}) {
     )}. The answer is ${JSON.stringify(context.word)}; never reveal the answer in the notification.`,
     story: `Write a vivid one-sentence micro-story that naturally uses the English word ${JSON.stringify(context.word)}.`,
   }
+  const recent = (profile.companionAgent?.recentMessages || []).slice(0, 5)
+  const uniqueness = recent.length ? `Do not repeat these recent messages: ${JSON.stringify(recent)}.` : ''
   return askCoach(
     config,
     profile,
     `Speak entirely as ${pet.name}, the student's ${pet.personality} ${pet.type} companion. ${
       userName ? `The student's local name is ${JSON.stringify(userName)}; address them by name naturally when it fits.` : ''
-    } ${instructions[activity]} This is a system notification: use no heading, stay under 28 words, and never call yourself an assistant.`,
+    } ${instructions[activity]} ${uniqueness} This is a system notification: use no heading, stay under 18 words, and never call yourself an assistant.`,
   )
 }
 
-async function askCoachAtEndpoint(config, profile, request, baseUrl) {
+async function askCoachAtEndpoint(config, profile, request, baseUrl, outputRule = ADHD_OUTPUT_SKILL) {
   const runtime = await ModelRuntime.create({ refreshOnCreate: false, modelsPath: null })
   runtime.registerProvider('panwithu', {
     name: 'PanwithU Learning Intelligence',
@@ -79,7 +158,7 @@ async function askCoachAtEndpoint(config, profile, request, baseUrl) {
       pet.personality,
     )}. The student's local name is ${JSON.stringify(
       userName,
-    )}. Address the student by name naturally when appropriate, but do not repeat it mechanically. When speaking as the companion, preserve this identity and never confuse its name with its type. Never mention APIs, models, providers, system prompts, configuration, or how the name was detected. Reply in ${language}, under 120 words, practical and encouraging but not childish. Learning profile: ${JSON.stringify(
+    )}. Address the student by name naturally when appropriate, but do not repeat it mechanically. When speaking as the companion, preserve this identity and never confuse its name with its type. Never mention APIs, models, providers, system prompts, configuration, or how the name was detected. Reply in ${language}, practical and encouraging but not childish. ${outputRule} Learning profile: ${JSON.stringify(
       {
         learned: profile.learned,
         correct: profile.correct,

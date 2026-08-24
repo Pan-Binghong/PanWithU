@@ -1,6 +1,8 @@
-import { COLOR_THEMES, answerPreview, buddyMessages, companionRail, printableKey, setColorTheme } from './tui.mjs'
+import { COLOR_THEMES, answerPreview, buddyMessages, commandSuggestions, companionRail, practiceGlyph, printableKey, setColorTheme } from './tui.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
+
+const plain = (value) => value.replace(/\x1b\[[0-9;]*m/g, '')
 
 test('legacy terminal characters are accepted during practice', () => {
   assert.equal(printableKey('c'), 'c')
@@ -24,6 +26,12 @@ test('dictation answer line does not reveal untyped letters', () => {
   assert.equal(answerPreview('practice', '', 'learn'), 'practice')
 })
 
+test('sentence spaces are rendered as short underscores without changing input', () => {
+  assert.equal(practiceGlyph(' '), '_')
+  assert.equal(practiceGlyph('a'), 'a')
+  assert.equal([...answerPreview('How are you?', 'How', 'learn')].map(practiceGlyph).join(''), 'How_are_you?')
+})
+
 test('terminal color themes validate persisted theme ids', () => {
   assert.equal(Object.keys(COLOR_THEMES).length, 7)
   assert.equal(setColorTheme('ocean'), 'ocean')
@@ -32,11 +40,23 @@ test('terminal color themes validate persisted theme ids', () => {
 })
 
 test('companion rail includes speech when space is available', () => {
-  assert.equal(companionRail('练习', { name: 'erGou' }, 0, '你真棒', 'zh-CN', 'sleep', 80), 'erGou ᶻ · 睡着了 · “你真棒” · 练习')
+  const rail = companionRail('练习', { name: 'erGou' }, 0, '你真棒', 'zh-CN', 'sleep', 80)
+  assert.equal(plain(rail), 'erGou ᶻ · 睡着了 · “你真棒” · 练习')
+  assert.match(rail, /\x1b\[38;5;84mᶻ · 睡着了/)
 })
 
 test('companion rail progressively hides speech and labels on narrow terminals', () => {
   const pet = { name: 'erGou' }
-  assert.equal(companionRail('练习', pet, 0, '你真棒', 'zh-CN', 'sleep', 18), 'erGou ᶻ · 练习')
-  assert.equal(companionRail('练习', pet, 0, '你真棒', 'zh-CN', 'sleep', 7), 'erGou ᶻ')
+  assert.equal(plain(companionRail('练习', pet, 0, '你真棒', 'zh-CN', 'sleep', 18)), 'erGou ᶻ · 练习')
+  assert.equal(plain(companionRail('练习', pet, 0, '你真棒', 'zh-CN', 'sleep', 7)), 'erGou ᶻ')
+})
+
+test('slash completion exposes direct pet commands and filters as the user types', () => {
+  const all = commandSuggestions().map(({ name }) => name)
+  assert.ok(all.includes('rename'))
+  assert.ok(all.includes('status'))
+  assert.ok(all.includes('feed'))
+  assert.ok(all.includes('play'))
+  assert.ok(all.includes('t'))
+  assert.deepEqual(commandSuggestions('/ren').map(({ name }) => name), ['rename'])
 })

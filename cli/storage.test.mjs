@@ -45,3 +45,15 @@ test('removed wardrobe fields are discarded during migration', async () => {
   assert.equal('petAccessories' in profile, false)
   assert.equal('equippedAccessory' in profile, false)
 })
+
+test('legacy personal dictionary is migrated into its dated archive', async () => {
+  const testRoot = await mkdtemp(join(tmpdir(), 'panwithu-personal-dictionary-'))
+  process.env.XDG_CONFIG_HOME = join(testRoot, 'config')
+  process.env.XDG_DATA_HOME = join(testRoot, 'data')
+  const storage = await import(`./storage.mjs?personal-dictionary-test=${Date.now()}`)
+  await mkdir(dirname(storage.paths.profile), { recursive: true })
+  const entry = { name: 'How are you?', trans: ['你好吗？'] }
+  await writeFile(storage.paths.profile, JSON.stringify({ personalDictionary: { day: '2026-08-24', entries: [entry] } }))
+  const profile = await storage.loadProfile()
+  assert.deepEqual(profile.personalDictionaries['2026-08-24'].entries, [entry])
+})

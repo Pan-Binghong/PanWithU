@@ -1,4 +1,5 @@
 import { APP_NAME, PETS, VERSION } from './constants.mjs'
+import { collectTodayCodexInputs, localDayParts } from './codex-inputs.mjs'
 import { learn } from './learning.mjs'
 import { animatePet, currentPet, feed, play, showPet } from './pet.mjs'
 import { installReminder, notify, parseReminderHour, reminderStatus, removeReminder } from './reminder.mjs'
@@ -53,18 +54,20 @@ async function setup() {
   if (!config) process.exitCode = 130
   if (!config) return null
   await saveConfig(config)
-  if (config.invitationCode) {
-    try {
-      await installReminder()
-    } catch {}
-  }
   console.log(`\n${copy[config.language].welcome}\n`)
   return config
 }
 
 function help() {
   console.log(
-    `${APP_NAME} ${VERSION}\n\nUsage: pwu [command]\n       pwu                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage companion notifications\n  summary         Get a personal learning summary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nReminder subcommands:\n  reminder install [hour]  Schedule daily companion moments\n  reminder test            Send one companion notification now\n  reminder remove          Disable companion notifications\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet rename  /pet feed  /pet play\n`,
+    `${APP_NAME} ${VERSION}\n\nUsage: pwu [command]\n       pwu                 Open the interactive terminal UI\n\nCommands:\n  learn [count]   Practice English words\n  pet             Visit your companion\n  feed            Feed your companion (5 stars)\n  play            Play together\n  todo            Show the learning plan\n  reminder        Manage companion notifications\n  summary         Get a personal learning summary\n  sync            Sync Codex inputs into your personal dictionary\n  status          Show learning progress\n  config          Run first-time setup again\n  pan             Discover a small secret\n  help, --help    Show this help\n\nReminder subcommands:\n  reminder install [hour]  Schedule daily companion moments\n  reminder test            Send one companion notification now\n  reminder remove          Disable companion notifications\n\nInteractive commands:\n  /help  /quit  /home  /learn  /dict  /chapter  /mode\n  /progress  /coach  /pet  /config  /invite  /language  /color\n\nPet subcommands:\n  /pet status  /pet rename  /pet feed  /pet play\n`,
+  )
+}
+
+export function yuSecret() {
+  return paint(
+    colors.pink,
+    '\n╭───────────────────────────────╮\n│                               │\n│     98946893696942646453      │\n│                      — Pan    │\n╰───────────────────────────────╯\n',
   )
 }
 
@@ -122,6 +125,16 @@ export async function run(args) {
   const profile = await loadProfile()
   syncLearningTodo(profile, config.language)
   if (!args.length && stdin.isTTY) {
+    if (config.reminders !== false && config.companionScheduleVersion !== 1) {
+      try {
+        if (await installReminder({ intervalMinutes: 30 })) {
+          config.defaultReminderInstalled = true
+          config.reminderHour = 12
+          config.companionScheduleVersion = 1
+          await saveConfig(config)
+        }
+      } catch {}
+    }
     if (updateDailyUserProfile(profile, config)) await saveProfile(profile)
     const { runTui } = await import('./tui.mjs')
     await runTui(config, profile, { saveConfig, saveProfile })
@@ -160,8 +173,23 @@ export async function run(args) {
     } else if (command === 'reminder') {
       const action = args[1] || 'status'
       let success
-      if (action === 'install') success = await installReminder({ hour: parseReminderHour(args[2]) })
-      else if (action === 'remove') success = await removeReminder()
+      if (action === 'install') {
+        const hour = parseReminderHour(args[2])
+        success = await installReminder({ hour })
+        if (success) {
+          config.reminders = true
+          config.defaultReminderInstalled = true
+          config.reminderHour = hour
+          await saveConfig(config)
+        }
+      } else if (action === 'remove') {
+        success = await removeReminder()
+        if (success) {
+          config.reminders = false
+          config.defaultReminderInstalled = false
+          await saveConfig(config)
+        }
+      }
       else if (action === 'test') {
         const { runCompanionAgent } = await import('./companion-agent.mjs')
         const result = await runCompanionAgent(config, profile, { force: true })
@@ -190,7 +218,7 @@ export async function run(args) {
       console.log(`\n${message}\n`)
     } else if (command === 'remind') {
       const { runCompanionAgent } = await import('./companion-agent.mjs')
-      const result = await runCompanionAgent(config, profile)
+      const result = await runCompanionAgent(config, profile, { force: true })
       if (result.sent) await notify(result.event.message, { title: result.event.title })
     } else if (command === 'summary') {
       try {
@@ -210,10 +238,34 @@ export async function run(args) {
           }\n`,
         )
       }
+    } else if (command === 'sync') {
+      if (!config.invitationCode) {
+        console.log(config.language === 'zh-CN' ? '\n请先在 pwu 中配置邀请码，再运行 pwu sync。\n' : '\nConfigure an invitation code in pwu first.\n')
+      } else {
+        try {
+          const inputs = await collectTodayCodexInputs()
+          const { preparePersonalDictionary } = await import('./ai.mjs')
+          const entries = await preparePersonalDictionary(config, profile, inputs)
+          if (inputs.length && !entries.length) throw new Error('AI returned no valid dictionary entries')
+          const day = localDayParts().join('-')
+          profile.personalDictionary = { day, syncedAt: new Date().toISOString(), entries }
+          profile.personalDictionaries ||= {}
+          profile.personalDictionaries[day] = { syncedAt: profile.personalDictionary.syncedAt, entries }
+          profile.codexReview = { day, completed: 0, total: entries.length }
+          console.log(
+            config.language === 'zh-CN'
+              ? `\nAI 已处理 ${inputs.length} 条输入，保留 ${entries.length} 句到“我的表达”词典。\n`
+              : `\nAI processed ${inputs.length} inputs and kept ${entries.length} in My Expressions.\n`,
+          )
+        } catch {
+          console.log(config.language === 'zh-CN' ? '\n同步失败，原有个人词典未改变。\n' : '\nSync failed; your existing personal dictionary was not changed.\n')
+        }
+      }
     } else if (command === 'pan')
       console.log(
         '\n╭─────────────────────────────╮\n│ I want to become your idol. │\n│                             │\n│ Made with care by Pan.      │\n╰─────────────────────────────╯\n',
       )
+    else if (command === 'yu') console.log(yuSecret())
     else if (command === 'exit') running = false
     else help()
     await saveProfile({ ...profile, lastSeenAt: new Date().toISOString() })
