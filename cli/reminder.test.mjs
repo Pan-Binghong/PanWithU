@@ -3,15 +3,15 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 test('notification commands are generated for all supported platforms', () => {
-  assert.equal(notificationCommand('study', 'linux')[0], 'notify-send')
-  assert.equal(notificationCommand('study', 'darwin')[0], 'osascript')
+  assert.deepEqual(notificationCommand('study', 'linux', 'Mimi')[1], ['Mimi', 'study'])
+  assert.match(notificationCommand('study', 'darwin', 'Mimi')[1].join(' '), /Mimi/)
   const windows = notificationCommand("let's study", 'win32')
   assert.equal(windows[0], 'powershell')
   assert.match(windows[1].join(' '), /ToastNotificationManager/)
 })
 
 test('reminder hours accept midnight and reject invalid values', () => {
-  assert.equal(parseReminderHour(undefined), 19)
+  assert.equal(parseReminderHour(undefined), 12)
   assert.equal(parseReminderHour('0'), 0)
   assert.equal(parseReminderHour('23'), 23)
   assert.throws(() => parseReminderHour('24'), /0 to 23/)

@@ -1,19 +1,12 @@
 import { playFeedbackSound, playKeySound, speak } from './audio.mjs'
+import { localDayParts } from './codex-inputs.mjs'
 import { PETS } from './constants.mjs'
 import { loadChapter, loadDictionaryCatalog } from './dictionary.mjs'
 import { updateWordMemory } from './learning.mjs'
-import {
-  PET_ACCESSORIES,
-  buyAccessory,
-  changeCompanion,
-  claimDailyCompanion,
-  currentPet,
-  decoratePetArt,
-  feed,
-  petGrowthStage,
-  play,
-} from './pet.mjs'
+import { ambientPetState, petStateView } from './pet-state.mjs'
+import { claimDailyCompanion, currentPet, feed, petGrowthStage, play } from './pet.mjs'
 import { dueWordCount } from './todo.mjs'
+import { dailyPetGreeting } from './user-profile.mjs'
 import {
   Container,
   CURSOR_MARKER,
@@ -66,6 +59,7 @@ const c = {
   green: (value) => ansi(activeColorTheme.success)(value),
   yellow: (value) => ansi(activeColorTheme.warning)(value),
   red: (value) => ansi(activeColorTheme.danger)(value),
+  text: ansi('38;5;255'),
   dim: ansi('2'),
   bold: ansi('1'),
 }
@@ -92,6 +86,35 @@ const modeCopy = {
     hideConsonant: ['Consonant dictation', 'Dictation · Hide consonants'],
     randomHide: ['Random dictation', 'Dictation · Hide random letters'],
   },
+}
+
+const commandCopy = [
+  ['help', '显示所有命令', 'Show all commands'],
+  ['quit', '退出 PanwithU', 'Quit PanwithU'],
+  ['home', '返回主页', 'Return home'],
+  ['learn', '开始当前单元', 'Start the current unit'],
+  ['dict', '选择或搜索题库', 'Choose or search dictionaries'],
+  ['chapter', '选择单元', 'Choose a unit'],
+  ['mode', '选择学习/默写模式', 'Choose learning or dictation'],
+  ['progress', '查看学习进度', 'View learning progress'],
+  ['coach', '获取伙伴学习建议', 'Get buddy learning advice'],
+  ['t', '中英互译，例如 /t hello', 'Translate Chinese or English, e.g. /t hello'],
+  ['rename', '给宠物重新取名', 'Rename your pet'],
+  ['status', '直接查看宠物状态', 'View your pet status'],
+  ['feed', '直接喂食宠物', 'Feed your pet'],
+  ['play', '直接和宠物玩', 'Play with your pet'],
+  ['pet', '宠物中心', 'Pet center'],
+  ['config', '修改本地设置', 'Change local settings'],
+  ['invite', '添加或修改邀请码', 'Add or change invitation code'],
+  ['language', '切换系统语言', 'Change system language'],
+  ['color', '切换主题颜色', 'Change color theme'],
+]
+
+export function commandSuggestions(query = '', language = 'zh-CN') {
+  const normalized = query.trim().replace(/^\//, '').toLowerCase()
+  return commandCopy
+    .map(([name, zh, en]) => ({ name, zh, en, description: language === 'en' ? en : zh }))
+    .filter((command) => !normalized || command.name.startsWith(normalized) || command.description.toLowerCase().includes(normalized))
 }
 
 export function buddyMessages(language) {
@@ -123,6 +146,10 @@ export function answerPreview(target, typed, mode = 'learn') {
       return mode === 'learn' ? letter : '·'
     })
     .join('')
+}
+
+export function practiceGlyph(character) {
+  return character === ' ' ? '_' : character
 }
 
 class SecretInput {
@@ -205,7 +232,8 @@ class Frame {
   render(width) {
     const boxWidth = Math.max(28, Math.min(this.maxWidth, width - 4))
     const inner = boxWidth - 2
-    const title = ` ${this.title} `
+    const value = typeof this.title === 'function' ? this.title(Math.max(1, inner - 3)) : this.title
+    const title = ` ${truncateToWidth(value, Math.max(1, inner - 3))} `
     const top = `╭─${title}${'─'.repeat(Math.max(0, inner - visibleWidth(title) - 1))}╮`
     const body = this.child.render(inner).map((line) => {
       const clipped = truncateToWidth(line, inner)
@@ -248,17 +276,12 @@ export async function runTuiSetup() {
     tui.setFocus(list)
     tui.requestRender(true)
   }
-  const petStep = () =>
-    select(
-      result.language === 'zh-CN' ? '选择陪伴你的宠物' : 'Choose your companion',
-      PETS.map((pet) => ({ value: pet.id, label: pet.name, description: pet.id })),
-      ({ value }) => {
-        const pet = PETS.find((item) => item.id === value) || PETS[0]
-        result.pet = pet.id
-        result.petName = pet.name
-        stop(result)
-      },
-    )
+  const petStep = () => {
+    const pet = PETS[0]
+    result.pet = pet.id
+    result.petName = pet.name
+    stop(result)
+  }
   const inviteStep = () => {
     const editor = new SecretInput()
     root.clear()
@@ -317,131 +340,18 @@ function bar(value, total, width = 30) {
   return `${c.green('█'.repeat(filled))}${c.dim('░'.repeat(width - filled))} ${Math.round(ratio * 100)}%`
 }
 
-export const PET_ASCII = {
-  panda: [' .--. .--.', '(  o w o  )', ' /  >*<  \\'],
-  cat: [' /\\_/\\', '( o.o )', ' > ^ <~'],
-  dog: [' / \\__', '(    @\\___', ' /         O', '/   (_____/', '/_____/   U'],
-  rabbit: [' (\\_/)', ' (o.o)', ' / > <\\'],
-  fox: [' /\\   /\\', '(  o.o  )', ' /  ^  \\'],
-  bear: [' .----.', '( o.o )', ' / >*< \\'],
-  koala: [' .-"""-.', '(  o.o  )', ' /  U  \\'],
-  tiger: [' /^=^\\', '( o.o )', ' / =^= \\'],
-  lion: [' {^~~~^}', '( o.o )', ' /  v  \\'],
-  frog: [' @..@', '( o.o )', '/ >*< \\'],
-  penguin: [' _~_', '(o.o)', ' / V \\'],
-  owl: [' ,_,', '(O.O)', ' /)_(\\'],
-  duck: ['   __', ' >(o )__', '  (___/'],
-  chick: [' ,~.', '(o.o)', ' / v \\'],
-  hamster: ['(.___.)', '( o.o )', ' / >o< \\'],
-  mouse: [' ()_()', ' (o.o)', ' / > <\\'],
-  unicorn: ['   /^', ' / o.o \\', '(   ^   )'],
-  dragon: [' /\\^/\\', '( o.o )', ' /  v  \\'],
-  robot: ['.-----.', '|[o.o]|', '|__^__|'],
-  alien: [' .---.', '/ o.o \\', '( > < )'],
-  octopus: [' .---.', '( o.o )', ' /|/ \\|\\'],
-  whale: ['    __', ' __/o \\___', '/_________/'],
-  bee: [' \\   /', '--(o.o)--', ' /_=_\\'],
-  butterfly: ['.==. .==.', ' \\ o.o /', '  \\ | /'],
-  seedling: [' \\|/', '  |', ' _|_'],
-}
-
-export function normalizeAsciiArt(lines) {
-  const rightTrimmed = lines.map((line) => line.trimEnd())
-  const indents = rightTrimmed.filter((line) => line.trim()).map((line) => line.match(/^ */)?.[0].length || 0)
-  const commonIndent = indents.length ? Math.min(...indents) : 0
-  return rightTrimmed.map((line) => line.slice(commonIndent))
-}
-
-export function animateSpeciesArt(petId, lines, frame, activity = 'idle', level = 3) {
-  if (frame % 2 === 0 || level < 3) return lines
-  if (petId === 'cat') return lines.map((line, index) => (index === lines.length - 1 ? line.replace(/\\$/, '~') : line))
-  if (petId === 'dog') return lines.map((line) => line.replace(/O$/, 'o'))
-  if (petId === 'frog') return lines.map((line, index) => (index === 0 ? line.replace('@..@', '@oo@') : line))
-  if (petId === 'rabbit') return lines.map((line, index) => (index === 0 ? line.replace('(\\_/)', '(/_\\)') : line))
-  if (petId === 'owl') return lines.map((line) => line.replace('(O.O)', '(o.O)'))
-  if (petId === 'penguin') return lines.map((line) => line.replace('/ V \\', '\\ V /'))
-  if (petId === 'duck') return lines.map((line) => line.replace('>(o )', '=(o )'))
-  if (petId === 'chick') return lines.map((line) => line.replace(',~.', '.~,').replace('/ v \\', '\\ v /'))
-  if (petId === 'bee') return lines.map((line) => line.replace('\\   /', '/   \\'))
-  if (petId === 'butterfly') return lines.map((line) => line.replace('.==. .==.', '.--. .--.'))
-  if (petId === 'robot') return lines.map((line) => line.replace('[o.o]', activity === 'celebrate' ? '[^.^]' : '[-.-]'))
-  if (petId === 'seedling') return lines.map((line, index) => (index === 0 ? line.replace('\\|/', '/|\\') : line))
-  if (petId === 'octopus') return lines.map((line) => line.replace('\\/|\\/', '/\\|/\\'))
-  if (petId === 'whale') return lines.map((line, index) => (index === 0 ? line.replace('__', '~~') : line))
-  return lines
-}
-
-export function applyPetExpression(petId, lines, expression) {
-  if (!expression) return lines
-  return lines.map((line) => {
-    if (petId === 'panda') return line.replace('o w o', `${expression} w ${expression}`)
-    if (petId === 'dog') return line.replace('@', expression)
-    if (petId === 'duck') return line.replace('(o )', `(${expression} )`)
-    if (petId === 'whale') return line.replace('/o ', `/${expression} `)
-    return line.replace(/o\.o|O\.O/g, `${expression}.${expression}`)
-  })
-}
-
-export function applyGrowthArt(lines, level = 1) {
-  const stage = petGrowthStage(level).id
-  const artWidth = Math.max(0, ...lines.map(visibleWidth))
-  const centered = (line) => `${' '.repeat(Math.max(0, Math.floor((artWidth - visibleWidth(line)) / 2)))}${line}`
-  if (stage === 'star') return [centered('* .*. *'), ...lines]
-  if (stage === 'shining') return [centered('.  *  .'), ...lines]
-  return lines
-}
-
-export function buddyView(pet, frame, message, language, width = 25, activity = 'idle', accessory = null, level = 1) {
-  const state = {
-    idle: language === 'en' ? 'ready' : '准备好了',
-    calm: language === 'en' ? 'with you' : '陪着你',
-    feed: language === 'en' ? 'snack time' : '吃点心',
-    play: language === 'en' ? 'playing' : '玩耍中',
-    cheer: language === 'en' ? 'cheering' : '为你加油',
-    celebrate: language === 'en' ? 'great streak' : '连击庆祝',
-    comfort: language === 'en' ? 'still here' : '依然陪着你',
-    sleep: language === 'en' ? 'resting' : '休息一下',
-  }[activity]
-  const art = PET_ASCII[pet.id] || PET_ASCII.cat
-  const prop =
-    activity === 'feed'
-      ? frame % 2
-        ? '  [ snack ]'
-        : ' [ snack ] '
-      : activity === 'play'
-      ? frame % 2
-        ? ' o'
-        : '   o'
-      : activity === 'cheer' || activity === 'celebrate'
-      ? frame % 2
-        ? '  * *'
-        : ' *  * '
-      : activity === 'comfort'
-      ? '  <3'
-      : activity === 'sleep'
-      ? frame % 2
-        ? ' z Z'
-        : '  z'
-      : ''
-  const dressed = applyGrowthArt(
-    animateSpeciesArt(pet.id, normalizeAsciiArt(decoratePetArt(art, accessory?.id)), frame, activity, level),
-    level,
-  )
-  const expression = activity === 'sleep' ? '-' : activity === 'cheer' || activity === 'celebrate' ? '^' : frame % 6 === 0 ? '-' : null
-  const animated = applyPetExpression(pet.id, dressed, expression)
-  const heading = pet.name
-  const artWidth = Math.max(0, ...animated.map(visibleWidth))
-  const canvasWidth = Math.max(artWidth, visibleWidth(heading))
-  const blockPadding = ' '.repeat(Math.floor((canvasWidth - artWidth) / 2))
-  const centeredArt = animated.map((line) => `${blockPadding}${line}`)
-  const centeredProp = prop ? `${' '.repeat(Math.floor((canvasWidth - visibleWidth(prop.trim())) / 2))}${prop.trim()}` : ''
-  const speech = truncateToWidth(`“${message || state}”`, width)
-  return [
-    c.bold(c.cyan(heading)),
-    ...centeredArt.map((line) => c.purple(line)),
-    ...(centeredProp ? [c.yellow(centeredProp)] : []),
-    c.dim(speech),
+export function companionRail(pageTitle, pet, frame, message, language, activity, width) {
+  const state = petStateView(activity, frame, language)
+  const speech = String(message || state.label)
+    .replace(/\s+/g, ' ')
+    .trim()
+  const candidates = [
+    `${c.bold(c.purple(pet.name))} ${c.green(`${state.symbol} · ${state.label}`)} ${c.dim(`· “${speech}”`)} · ${c.cyan(pageTitle)}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(`${state.symbol} · ${state.label}`)} · ${c.cyan(pageTitle)}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(state.symbol)} · ${c.cyan(pageTitle)}`,
+    `${c.bold(c.purple(pet.name))} ${c.green(state.symbol)}`,
   ]
+  return candidates.find((candidate) => visibleWidth(candidate) <= width) || truncateToWidth(candidates.at(-1), width)
 }
 
 class CompanionPanel {
@@ -452,7 +362,7 @@ class CompanionPanel {
     this.requestRender = requestRender
     this.frame = 0
     this.activity = 'idle'
-    this.message = buddyMessages(config.language).start
+    this.message = dailyPetGreeting(profile, config.language)
     this.resume()
   }
   resume() {
@@ -473,7 +383,7 @@ class CompanionPanel {
     clearTimeout(this.activityTimeout)
     this.activityTimeout = setTimeout(() => {
       this.activity = 'idle'
-      this.message = buddyMessages(this.config.language).start
+      this.message = dailyPetGreeting(this.profile, this.config.language)
       this.requestRender()
     }, 2800)
     this.activityTimeout.unref?.()
@@ -484,42 +394,25 @@ class CompanionPanel {
     clearTimeout(this.activityTimeout)
   }
   invalidate() {}
-  render(width) {
+  rail(pageTitle, width) {
     const pet = currentPet(this.config)
-    const panelWidth = Math.max(24, Math.min(31, width - 4))
-    const accessory = PET_ACCESSORIES.find((item) => item.id === this.profile.equippedAccessory)
-    return [
-      '',
-      ...buddyView(pet, this.frame, this.message, this.config.language, panelWidth, this.activity, accessory, this.profile.petLevel).map(
-        (line) => `  ${line}`,
-      ),
-    ]
+    const activity = this.activity === 'idle' ? ambientPetState(this.profile) : this.activity
+    return companionRail(pageTitle, pet, this.frame, this.message, this.config.language, activity, width)
   }
 }
 
-function studyBox(lines, width = 43) {
+function studyBox(lines, width = 43, title = '') {
   const inner = width - 2
   const fit = (text) => {
     const clipped = truncateToWidth(text, inner - 2)
     return ` ${clipped}${' '.repeat(Math.max(0, inner - 2 - visibleWidth(clipped)))} `
   }
-  return [c.purple(`╭${'─'.repeat(inner)}╮`), ...lines.map((line) => `│${fit(line)}│`), c.purple(`╰${'─'.repeat(inner)}╯`)]
-}
-
-function placeRight(leftLines, rightLines, width, rowOffset = 3) {
-  const gap = 3
-  const rightWidth = Math.max(...rightLines.map(visibleWidth))
-  const start = width - rightWidth - 2
-  if (start < 42) return [...leftLines, '', ...rightLines.map((line) => `  ${line}`)]
-  const result = [...leftLines]
-  while (result.length < rightLines.length + rowOffset) result.push('')
-  rightLines.forEach((right, index) => {
-    const row = index + rowOffset
-    const left = result[row] || ''
-    const padding = Math.max(gap, start - visibleWidth(left))
-    result[row] = `${left}${' '.repeat(padding)}${right}`
-  })
-  return result
+  const clippedTitle = title ? truncateToWidth(title, inner - 4) : ''
+  const labelWidth = clippedTitle ? visibleWidth(clippedTitle) + 3 : 0
+  const top = clippedTitle
+    ? `${c.purple('╭─ ')}${c.yellow(clippedTitle)}${c.purple(` ${'─'.repeat(Math.max(0, inner - labelWidth))}╮`)}`
+    : c.purple(`╭${'─'.repeat(inner)}╮`)
+  return [top, ...lines.map((line) => `${c.purple('│')}${fit(line)}${c.purple('│')}`), c.purple(`╰${'─'.repeat(inner)}╯`)]
 }
 
 class Practice {
@@ -536,7 +429,7 @@ class Practice {
     this.pet = currentPet(config)
     this.buddyCopy = buddyMessages(config.language)
     this.petFrame = 0
-    this.petState = dailyReward?.awarded ? 'celebrate' : 'calm'
+    this.petState = dailyReward?.awarded ? 'celebrate' : 'focus'
     this.petMessage = dailyReward?.message || this.buddyCopy.start
     this.petMessageUntil = Date.now() + (dailyReward?.awarded ? 3200 : 2400)
     this.petStateUntil = this.petMessageUntil
@@ -554,8 +447,8 @@ class Practice {
     if (this.animation) return
     this.animation = setInterval(() => {
       this.petFrame += 1
-      if (Date.now() > this.petStateUntil && this.petState !== 'sleep') this.petState = 'calm'
-      if (Date.now() - this.lastInputAt > 9000 && this.petState === 'calm') {
+      if (Date.now() > this.petStateUntil && this.petState !== 'sleep') this.petState = 'focus'
+      if (Date.now() - this.lastInputAt > 9000 && this.petState === 'focus') {
         this.petState = 'sleep'
         this.petMessage = this.config.language === 'zh-CN' ? '我在等你，慢慢来。' : 'I’m still here. Take your time.'
       }
@@ -580,13 +473,19 @@ class Practice {
     this.petMessageUntil = Date.now() + duration
     this.petStateUntil = this.petMessageUntil
   }
+  rail(pageTitle, width) {
+    const message = Date.now() < this.petMessageUntil ? this.petMessage : this.buddyCopy.start
+    return companionRail(pageTitle, this.pet, this.petFrame, message, this.config.language, this.petState, width)
+  }
   clue(target) {
     const mode = this.config.practiceMode || 'learn'
-    if (mode === 'learn') return target
-    if (mode === 'hideAll') return target.replace(/[A-Za-z]/g, '_')
-    if (mode === 'hideVowel') return target.replace(/[aeiou]/gi, '_')
-    if (mode === 'hideConsonant') return target.replace(/[b-df-hj-np-tv-z]/gi, '_')
-    return [...target].map((letter, i) => (/[A-Za-z]/.test(letter) && i % 2 === 0 ? '_' : letter)).join('')
+    let clue
+    if (mode === 'learn') clue = target
+    else if (mode === 'hideAll') clue = target.replace(/[A-Za-z]/g, '_')
+    else if (mode === 'hideVowel') clue = target.replace(/[aeiou]/gi, '_')
+    else if (mode === 'hideConsonant') clue = target.replace(/[b-df-hj-np-tv-z]/gi, '_')
+    else clue = [...target].map((letter, i) => (/[A-Za-z]/.test(letter) && i % 2 === 0 ? '_' : letter)).join('')
+    return [...clue].map(practiceGlyph).join('')
   }
   render(width) {
     const entry = this.word
@@ -596,8 +495,10 @@ class Practice {
     const preview = answerPreview(target, this.typed, mode)
     const shown = [...target]
       .map((letter, i) => {
-        if (i >= this.typed.length) return c.dim(preview[i])
-        return this.typed[i]?.toLowerCase() === letter.toLowerCase() ? c.green(letter) : c.red(letter)
+        if (i >= this.typed.length) return c.dim(practiceGlyph(preview[i]))
+        return this.typed[i]?.toLowerCase() === letter.toLowerCase()
+          ? c.green(practiceGlyph(this.typed[i]))
+          : c.red(practiceGlyph(this.typed[i]))
       })
       .join('')
     const phone = this.config.accent === 'uk' ? entry.ukphone : entry.usphone
@@ -606,31 +507,31 @@ class Practice {
         ? ['Ctrl+J replay audio', '→ skip word  ·  Esc back', '/ pause and open commands']
         : ['Ctrl+J 重新发音', '→ 跳过当前词  ·  Esc 返回', '/ 暂停并打开命令']
     const tip = this.index % 4 === 3 ? '' : tips[this.index % tips.length]
-    const petMessage = Date.now() < this.petMessageUntil ? this.petMessage : ''
-    const study = studyBox([
-      c.dim((entry.trans || []).join('；')),
-      phone ? c.cyan(`/ ${phone} /`) : '',
-      '',
-      c.bold(this.clue(target)),
-      '',
-      `${shown}${c.yellow('▌')}`,
-    ])
+    const study = studyBox(
+      [
+        c.cyan((entry.trans || []).join('；')),
+        phone ? c.cyan(`/ ${phone} /`) : '',
+        '',
+        c.bold(c.yellow(this.clue(target))),
+        '',
+        `${shown}${c.text('▌')}`,
+      ],
+      Math.max(28, Math.min(72, width - 4)),
+      this.dictionary.id === 'personal-codex' ? (this.config.language === 'zh-CN' ? '你会怎么说？' : 'How would you say it?') : '',
+    )
+    const chapterLabel = this.dictionary.chapterLabels?.[this.config.chapter] || `Unit ${this.config.chapter + 1}`
     const content = [
       '',
-      `  ${c.bold(c.purple('PanwithU'))}  ${c.dim(`${this.dictionary.name} / Unit ${this.config.chapter + 1}`)}  ${c.dim(
-        `${this.index + 1}/${this.words.length}`,
-      )}`,
+      `  ${c.bold(c.purple(this.dictionary.name))}  ${c.dim(`· ${chapterLabel} · ${this.index + 1}/${this.words.length}`)}`,
       `  ${bar(this.index, this.words.length, 24)}`,
       ...study.map((line) => `  ${line}`),
       '',
       tip ? `  ${c.dim(tip)}` : '',
     ]
-    const accessory = PET_ACCESSORIES.find((item) => item.id === this.profile.equippedAccessory)
-    const buddy = buddyView(this.pet, this.petFrame, petMessage, this.config.language, 25, this.petState, accessory, this.profile.petLevel)
-    return placeRight(content, buddy, width)
+    return content
   }
-  finishWord(isCorrect) {
-    playFeedbackSound(isCorrect)
+  finishWord(isCorrect, playSound = true) {
+    if (playSound) playFeedbackSound(isCorrect)
     updateWordMemory(this.profile, this.word.name, isCorrect)
     if (isCorrect) {
       this.correct += 1
@@ -693,14 +594,19 @@ class Practice {
     this.lastInputAt = Date.now()
     if (this.petState === 'sleep')
       this.setPetState('cheer', this.config.language === 'zh-CN' ? '回来啦，我们继续。' : 'You’re back. Let’s go!', 1200)
-    playKeySound()
     const expected = this.word.name[this.typed.length]
+    const isMatch = printable.toLowerCase() === expected.toLowerCase()
     this.keystrokes += 1
-    if (printable.toLowerCase() !== expected.toLowerCase()) this.hadError = true
+    if (isMatch) playKeySound()
+    else {
+      this.hadError = true
+      playFeedbackSound(false)
+    }
     this.typed += printable
-    if (this.typed.length === this.word.name.length)
-      this.finishWord(!this.hadError && this.typed.toLowerCase() === this.word.name.toLowerCase())
-    else this.requestRender()
+    if (this.typed.length === this.word.name.length) {
+      const isCorrect = !this.hadError && this.typed.toLowerCase() === this.word.name.toLowerCase()
+      this.finishWord(isCorrect, isCorrect)
+    } else this.requestRender()
   }
 }
 
@@ -709,6 +615,24 @@ export async function runTui(config, profile, persist) {
   const modes = () => modeCopy[config.language === 'en' ? 'en' : 'zh-CN']
   config.colorTheme = setColorTheme(config.colorTheme || 'violet')
   const catalog = await loadDictionaryCatalog()
+  const today = localDayParts().join('-')
+  const personalDays = Object.keys(profile.personalDictionaries || {})
+    .sort()
+    .reverse()
+  if (!personalDays.length && profile.personalDictionary?.day) personalDays.push(profile.personalDictionary.day)
+  const entriesForDay = (day) =>
+    profile.personalDictionaries?.[day]?.entries ||
+    (profile.personalDictionary?.day === day ? profile.personalDictionary.entries || [] : [])
+  const personalDictionary = {
+    id: 'personal-codex',
+    name: tx('我的表达', 'My Expressions'),
+    description: tx(`按日期保存的 ${personalDays.length} 天表达`, `${personalDays.length} days of personal expressions`),
+    category: tx('个人', 'Personal'),
+    length: personalDays.reduce((total, day) => total + entriesForDay(day).length, 0),
+    chapters: Math.max(1, personalDays.length),
+    chapterLabels: personalDays,
+  }
+  catalog.unshift(personalDictionary)
   const terminal = new ProcessTerminal()
   const tui = new TuiAltScreen(terminal, true)
   let resolveDone
@@ -726,22 +650,7 @@ export async function runTui(config, profile, persist) {
   config.practiceMode ||= 'learn'
 
   const editor = new Editor(tui, editorTheme, { autocompleteMaxVisible: 9 })
-  const commands = [
-    ['help', '显示所有命令', 'Show all commands'],
-    ['quit', '退出 PanwithU', 'Quit PanwithU'],
-    ['home', '返回主页', 'Return home'],
-    ['learn', '开始当前单元', 'Start the current unit'],
-    ['dict', '选择或搜索题库', 'Choose or search dictionaries'],
-    ['chapter', '选择单元', 'Choose a unit'],
-    ['mode', '选择学习/默写模式', 'Choose learning or dictation'],
-    ['progress', '查看学习进度', 'View learning progress'],
-    ['coach', '获取伙伴学习建议', 'Get buddy learning advice'],
-    ['pet', '宠物中心', 'Pet center'],
-    ['config', '修改本地设置', 'Change local settings'],
-    ['invite', '添加或修改邀请码', 'Add or change invitation code'],
-    ['language', '切换系统语言', 'Change system language'],
-    ['color', '切换主题颜色', 'Change color theme'],
-  ].map(([name, zh, en]) => ({ name, zh, en, description: config.language === 'en' ? en : zh }))
+  const commands = commandSuggestions('', config.language)
   const localizeCommands = () => commands.forEach((command) => (command.description = config.language === 'en' ? command.en : command.zh))
   commands.find((item) => item.name === 'dict').getArgumentCompletions = async (prefix) =>
     catalog
@@ -760,11 +669,9 @@ export async function runTui(config, profile, persist) {
         const query = petMatch[1].toLowerCase()
         const actions = [
           ['status', tx('查看宠物状态', 'View pet status')],
-          ['change', tx('更换伙伴', 'Change companion')],
           ['rename', tx('重新取名', 'Rename')],
           ['feed', tx('喂食', 'Feed')],
           ['play', tx('玩耍', 'Play')],
-          ['wardrobe', tx('小衣柜', 'Wardrobe')],
         ]
         return {
           items: actions
@@ -785,9 +692,11 @@ export async function runTui(config, profile, persist) {
       if (/\s/.test(input)) return null
       const query = input.slice(1).toLowerCase()
       return {
-        items: commands
-          .filter((item) => item.name.startsWith(query))
-          .map((item) => ({ value: `/${item.name}`, label: `/${item.name}`, description: item.description })),
+        items: commandSuggestions(query, config.language).map((item) => ({
+          value: `/${item.name}`,
+          label: `/${item.name}`,
+          description: item.description,
+        })),
         prefix: input,
       }
     },
@@ -804,8 +713,7 @@ export async function runTui(config, profile, persist) {
     companion.resume()
     root.clear()
     root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
-    root.addChild(new Frame(title, body))
-    root.addChild(companion)
+    root.addChild(new Frame((width) => companion.rail(title, width), body))
     root.addChild(new Text(c.dim('  /    ↑↓    ↵    esc')))
     editor.setText('')
     tui.setFocus(focus)
@@ -815,8 +723,7 @@ export async function runTui(config, profile, persist) {
     companion.resume()
     root.clear()
     root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
-    root.addChild(new Frame(title, input))
-    root.addChild(companion)
+    root.addChild(new Frame((width) => companion.rail(title, width), input))
     root.addChild(new Text(c.dim('  ↵ confirm    esc back')))
     tui.setFocus(input)
     tui.requestRender(true)
@@ -830,7 +737,8 @@ export async function runTui(config, profile, persist) {
   const mountPractice = (practice) => {
     companion.pause()
     root.clear()
-    root.addChild(practice)
+    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
+    root.addChild(new Frame((width) => practice.rail(tx('练习', 'Practice'), width), practice))
     tui.setFocus(practice)
     tui.requestRender(true)
   }
@@ -858,11 +766,14 @@ export async function runTui(config, profile, persist) {
     )
   const chooseChapter = () =>
     menu(
-      `${dictionary.name} · ${tx('选择单元', 'Choose a unit')}`,
+      `${dictionary.name} · ${dictionary.id === personalDictionary.id ? tx('选择日期', 'Choose a date') : tx('选择单元', 'Choose a unit')}`,
       Array.from({ length: dictionary.chapters }, (_, i) => ({
         value: String(i),
-        label: `Unit ${i + 1}`,
-        description: `${tx('单词', 'Words')} ${i * 20 + 1}–${Math.min(dictionary.length, (i + 1) * 20)}`,
+        label: dictionary.chapterLabels?.[i] || `Unit ${i + 1}`,
+        description:
+          dictionary.id === personalDictionary.id
+            ? `${entriesForDay(dictionary.chapterLabels?.[i]).length} ${tx('句', 'sentences')}`
+            : `${tx('单词', 'Words')} ${i * 20 + 1}–${Math.min(dictionary.length, (i + 1) * 20)}`,
       })),
       async ({ value }) => {
         config.chapter = Number(value)
@@ -907,9 +818,8 @@ export async function runTui(config, profile, persist) {
     companion.resume()
     root.clear()
     root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
-    root.addChild(new Frame(title, new Text(message, 1, 1)))
+    root.addChild(new Frame((width) => companion.rail(title, width), new Text(message, 1, 1)))
     root.addChild(back)
-    root.addChild(companion)
     tui.setFocus(back)
     tui.requestRender(true)
   }
@@ -1001,9 +911,8 @@ export async function runTui(config, profile, persist) {
     const pet = currentPet(config)
     const input = new Input()
     input.setValue(pet.name)
-    root.clear()
-    root.addChild(new Text(`\n${c.bold(c.purple('  PanwithU'))}\n${c.cyan(`  ${tx('给宠物重新取名', 'Rename your pet')}`)}\n`))
-    root.addChild(
+    const body = new Container()
+    body.addChild(
       new Text(
         c.dim(
           tx(
@@ -1013,7 +922,7 @@ export async function runTui(config, profile, persist) {
         ),
       ),
     )
-    root.addChild(input)
+    body.addChild(input)
     input.onSubmit = async (value) => {
       const name = value.trim()
       if (!name || [...name].length > 20) {
@@ -1022,11 +931,36 @@ export async function runTui(config, profile, persist) {
       }
       config.petName = name
       await save()
-      tui.flash(tx(`${name} 记住自己的新名字啦`, `${name} remembers the new name`))
+      companion.react('celebrate', tx(`${name} 记住自己的新名字啦`, `${name} remembers the new name`))
       petPage()
     }
     input.onEscape = petPage
-    tui.setFocus(input)
+    mount(tx('重新取名', 'Rename'), body, input)
+  }
+  const petStatusPage = () => {
+    const growth = petGrowthStage(profile.petLevel, config.language)
+    const back = new SelectList([{ value: 'back', label: tx('返回宠物中心', 'Back to pet center') }], 1, selectTheme)
+    back.onSelect = petPage
+    back.onCancel = petPage
+    const body = new Container()
+    body.addChild(
+      new Text(
+        [
+          `  ${tx('心情', 'Mood')}    ${bar(profile.mood, 100, 14)}`,
+          `  ${tx('精力', 'Energy')}  ${bar(profile.energy, 100, 14)}`,
+          `  ${tx('饱腹', 'Fullness')} ${bar(profile.fullness, 100, 14)}`,
+          '',
+          `  ${tx('羁绊', 'Bond')} ${profile.bond}  ·  Lv.${profile.petLevel} ${growth.name}`,
+          '',
+        ].join('\n'),
+      ),
+    )
+    body.addChild(back)
+    companion.resume()
+    root.clear()
+    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
+    root.addChild(new Frame((width) => companion.rail(tx('状态', 'Status'), width), body))
+    tui.setFocus(back)
     tui.requestRender(true)
   }
   const petPage = () => {
@@ -1043,11 +977,6 @@ export async function runTui(config, profile, persist) {
             `${pet.type} · ${pet.personality} · bond ${profile.bond}${growth.nextLevel ? ` · next Lv.${growth.nextLevel}` : ''}`,
           ),
         },
-        {
-          value: 'change',
-          label: tx('更换伙伴', 'Change companion'),
-          description: tx('从 25 种伙伴中选择', 'Choose from 25 companions'),
-        },
         { value: 'rename', label: tx('重新取名', 'Rename'), description: tx(`当前名字：${pet.name}`, `Current name: ${pet.name}`) },
         {
           value: 'feed',
@@ -1059,116 +988,18 @@ export async function runTui(config, profile, persist) {
           label: tx('玩耍', 'Play'),
           description: tx(`消耗精力 · 羁绊 ${profile.bond}`, `Uses energy · bond ${profile.bond}`),
         },
-        {
-          value: 'wardrobe',
-          label: tx('小衣柜', 'Wardrobe'),
-          description: profile.equippedAccessory
-            ? tx('已装备一件小配饰', 'An accessory is equipped')
-            : tx('用星星解锁配饰', 'Unlock accessories with stars'),
-        },
         { value: 'home', label: tx('返回主页', 'Back home') },
       ],
       async ({ value }) => {
-        if (value === 'change') return changeCompanionPage()
         if (value === 'rename') return renamePet()
         if (value === 'feed') companion.react('feed', feed(config, profile, config.language))
         if (value === 'play') companion.react('play', play(config, profile, config.language))
-        if (value === 'wardrobe') return wardrobe()
-        if (value === 'status')
-          tui.flash(tx(`${pet.name} 是一只 ${pet.type}，性格 ${pet.personality}`, `${pet.name} is a ${pet.personality} ${pet.type}`))
+        if (value === 'status') return petStatusPage()
         await save()
         value === 'home' ? home() : petPage()
       },
     )
   }
-  const changeCompanionPage = () => {
-    const activePet = currentPet(config)
-    const items = PETS.map((pet) => ({
-      value: pet.id,
-      label: `${pet.name}${pet.id === activePet.id ? tx('（当前）', ' (current)') : ''}`,
-      description: `${pet.id} · ${pet.personality}`,
-    }))
-    const list = new SelectList(items, 7, selectTheme)
-    list.setSelectedIndex(
-      Math.max(
-        0,
-        PETS.findIndex((pet) => pet.id === activePet.id),
-      ),
-    )
-    const preview = new Text('')
-    const renderPreview = (petId) => {
-      const pet = PETS.find((item) => item.id === petId) || PETS[0]
-      const growth = petGrowthStage(profile.petLevel, config.language)
-      const art = applyGrowthArt(
-        animateSpeciesArt(pet.id, normalizeAsciiArt(PET_ASCII[pet.id] || PET_ASCII.cat), 1, 'idle', profile.petLevel),
-        profile.petLevel,
-      )
-      preview.setText(
-        `\n  ${c.bold(c.cyan(pet.name))}  ${c.dim(`${pet.id} / ${pet.personality} / Lv.${profile.petLevel} ${growth.name}`)}\n${art
-          .map((line) => `  ${c.purple(line)}`)
-          .join('\n')}\n\n  ${c.dim(tx('Enter 确认 · Esc 返回', 'Enter confirm · Esc back'))}`,
-      )
-      tui.requestRender(true)
-    }
-    const body = new Container()
-    body.addChild(list)
-    body.addChild(preview)
-    list.onSelectionChange = ({ value }) => renderPreview(value)
-    list.onCancel = petPage
-    list.onSelect = async ({ value }) => {
-      const pet = changeCompanion(config, value)
-      companion.pet = pet
-      companion.react('celebrate', tx(`${pet.name} 成为你的新伙伴啦`, `${pet.name} is your new companion`))
-      await save()
-      petPage()
-    }
-    companion.pause()
-    root.clear()
-    root.addChild(new Text(`\n  ${c.bold(c.purple('PanwithU'))}`))
-    root.addChild(new Frame(tx('更换伙伴', 'Change companion'), body))
-    tui.setFocus(list)
-    renderPreview(activePet.id)
-  }
-  const wardrobe = () =>
-    menu(
-      tx('小衣柜', 'Wardrobe'),
-      PET_ACCESSORIES.map((item) => {
-        const owned = profile.petAccessories.includes(item.id)
-        return {
-          value: item.id,
-          label: config.language === 'en' ? item.nameEn : item.name,
-          description: owned
-            ? profile.equippedAccessory === item.id
-              ? tx('正在佩戴', 'Equipped')
-              : tx('已拥有 · Enter 装备', 'Owned · Enter to equip')
-            : tx(`${item.cost} 星星 · 解锁后立即试穿`, `${item.cost} stars · Unlock and equip`),
-        }
-      }).concat({ value: 'back', label: tx('返回宠物中心', 'Back to pet center') }),
-      async ({ value }) => {
-        if (value === 'back') return petPage()
-        const result = buyAccessory(profile, value)
-        if (!result.ok) {
-          companion.react(
-            'comfort',
-            tx(
-              `还差 ${result.accessory.cost - profile.stars} 星星，再练一会儿吧。`,
-              `${result.accessory.cost - profile.stars} more stars. Let’s practice a little longer.`,
-            ),
-          )
-        } else {
-          const accessoryName = config.language === 'en' ? result.accessory.nameEn : result.accessory.name
-          companion.react(
-            'celebrate',
-            result.equipped
-              ? tx(`${accessoryName} 已装备。`, `${accessoryName} equipped.`)
-              : tx(`解锁 ${accessoryName}！`, `${accessoryName} unlocked!`),
-          )
-          await save()
-        }
-        petPage()
-      },
-      petPage,
-    )
   const resumePractice = () => {
     if (!pausedPractice) return home()
     activePractice = pausedPractice
@@ -1205,9 +1036,8 @@ export async function runTui(config, profile, persist) {
   }
   const editInvitationCode = () => {
     const input = new SecretInput()
-    root.clear()
-    root.addChild(new Text(`\n${c.bold(c.purple('  PanwithU'))}\n${c.cyan(`  ${tx('修改邀请码', 'Change invitation code')}`)}\n`))
-    root.addChild(
+    const body = new Container()
+    body.addChild(
       new Text(
         config.invitationCode
           ? c.dim(
@@ -1228,7 +1058,7 @@ export async function runTui(config, profile, persist) {
             ),
       ),
     )
-    root.addChild(input)
+    body.addChild(input)
     input.onSubmit = async (value) => {
       if (!value.trim()) {
         tui.flash(tx('邀请码未改变', 'Invitation code unchanged'))
@@ -1236,12 +1066,22 @@ export async function runTui(config, profile, persist) {
       }
       config.invitationCode = value.trim()
       await save()
-      tui.flash(tx('邀请码已保存到本机', 'Invitation code saved on this device'))
+      let backgroundEnabled = false
+      try {
+        const { installReminder } = await import('./reminder.mjs')
+        backgroundEnabled = await installReminder({ intervalMinutes: 30 })
+        if (backgroundEnabled) config.companionScheduleVersion = 1
+      } catch {}
+      await save()
+      tui.flash(
+        backgroundEnabled
+          ? tx('邀请码已保存，宠物会在后台陪伴你', 'Code saved. Your companion can now check in from the background')
+          : tx('邀请码已保存；系统后台提醒暂未开启', 'Code saved; background notifications could not be enabled'),
+      )
       settings()
     }
     input.onEscape = settings
-    tui.setFocus(input)
-    tui.requestRender(true)
+    mount(tx('修改邀请码', 'Change invitation code'), body, input)
   }
   const chooseLanguage = () =>
     menu(
@@ -1322,7 +1162,11 @@ export async function runTui(config, profile, persist) {
         if (value === 'clear') {
           config.invitationCode = ''
           await save()
-          tui.flash(tx('邀请码已清除', 'Invitation code cleared'))
+          try {
+            const { removeReminder } = await import('./reminder.mjs')
+            await removeReminder()
+          } catch {}
+          tui.flash(tx('邀请码已清除，后台陪伴已关闭', 'Invitation code cleared and background companion disabled'))
           return settings()
         }
         home()
@@ -1330,7 +1174,14 @@ export async function runTui(config, profile, persist) {
     )
   const start = async () => {
     activePractice?.dispose()
-    const words = await loadChapter(dictionary, config.chapter)
+    const personalEntries = entriesForDay(personalDays[config.chapter])
+    if (dictionary.id === personalDictionary.id) {
+      if (!personalEntries.length) {
+        tui.flash(tx('先运行 pwu sync 同步今天的 Codex 输入', 'Run pwu sync to import today’s Codex inputs first'))
+        return home()
+      }
+    }
+    const words = dictionary.id === personalDictionary.id ? personalEntries : await loadChapter(dictionary, config.chapter)
     const dailyReward = claimDailyCompanion(profile, config.language)
     const practice = new Practice({
       words,
@@ -1384,16 +1235,40 @@ export async function runTui(config, profile, persist) {
     mountPractice(practice)
   }
   function home() {
+    const pendingEvent = profile.companionAgent?.pendingEvent
     menu(
       tx('今天想练什么？', 'What would you like to practice?'),
       [
+        ...(pendingEvent
+          ? [
+              {
+                value: 'agent-event',
+                label: tx(`${currentPet(config).name} 刚刚找过你`, `${currentPet(config).name} stopped by`),
+                description:
+                  pendingEvent.type === 'quiz'
+                    ? tx('有一道突击单词题', 'A surprise word quiz is waiting')
+                    : pendingEvent.type === 'story'
+                    ? tx('带来了一个单词故事', 'A word story is waiting')
+                    : tx('给你留了一句问候', 'A greeting is waiting'),
+              },
+            ]
+          : []),
         {
           value: 'start',
           label: tx('开始练习', 'Start practice'),
-          description: `${dictionary.name} · Unit ${config.chapter + 1} · ${modes()[config.practiceMode][0]}`,
+          description: `${dictionary.name} · ${dictionary.chapterLabels?.[config.chapter] || `Unit ${config.chapter + 1}`} · ${
+            modes()[config.practiceMode][0]
+          }`,
         },
         { value: 'dict', label: tx('选择题库', 'Choose dictionary'), description: dictionary.name },
-        { value: 'chapter', label: tx('选择单元', 'Choose unit'), description: `Unit ${config.chapter + 1}/${dictionary.chapters}` },
+        {
+          value: 'chapter',
+          label: dictionary.id === personalDictionary.id ? tx('选择日期', 'Choose date') : tx('选择单元', 'Choose unit'),
+          description:
+            dictionary.id === personalDictionary.id
+              ? dictionary.chapterLabels?.[config.chapter] || tx('尚未同步', 'Not synced')
+              : `Unit ${config.chapter + 1}/${dictionary.chapters}`,
+        },
         { value: 'mode', label: tx('练习模式', 'Practice mode'), description: modes()[config.practiceMode][0] },
         { value: 'progress', label: tx('学习进度', 'Learning progress') },
         {
@@ -1410,12 +1285,20 @@ export async function runTui(config, profile, persist) {
         },
         { value: 'quit', label: tx('退出', 'Quit') },
       ],
-      ({ value }) =>
-        ((
+      ({ value }) => {
+        if (value === 'agent-event') {
+          const event = profile.companionAgent.pendingEvent
+          profile.companionAgent.pendingEvent = null
+          void save()
+          companion.react(event.type === 'quiz' ? 'quiz' : event.type === 'story' ? 'story' : 'calling', event.message)
+          return showMessage(currentPet(config).name, event.message, home)
+        }
+        return (
           { start, dict: chooseDictionary, chapter: chooseChapter, mode: chooseMode, progress, pet: petPage, config: settings, quit }[
             value
           ] || home
-        )()),
+        )()
+      },
     )
   }
   const showHelp = () =>
@@ -1445,10 +1328,39 @@ export async function runTui(config, profile, persist) {
     if (name === 'mode') return chooseMode()
     if (name === 'progress') return progress()
     if (name === 'coach') return coach()
+    if (name === 't') {
+      const source = parts.join(' ').trim()
+      if (!source) {
+        editor.setText('/t ')
+        return mountEditor(tx('输入要翻译的文字', 'Enter text to translate'), editor)
+      }
+      if (!config.invitationCode) {
+        tui.flash(tx('请先用 /invite 配置邀请码', 'Configure an invitation code with /invite first'))
+        return home()
+      }
+      showMessage(tx('翻译', 'Translation'), tx('正在翻译…', 'Translating…'), home)
+      try {
+        const { translateText } = await import('./ai.mjs')
+        const translation = await translateText(config, profile, source)
+        return showMessage(tx('翻译', 'Translation'), translation || tx('暂时没有结果。', 'No result yet.'), home)
+      } catch {
+        return showMessage(tx('翻译', 'Translation'), tx('暂时无法翻译。', 'Translation is unavailable.'), home)
+      }
+    }
+    if (name === 'rename') return renamePet()
+    if (name === 'status') return petStatusPage()
+    if (name === 'feed') {
+      companion.react('feed', feed(config, profile, config.language))
+      await save()
+      return petPage()
+    }
+    if (name === 'play') {
+      companion.react('play', play(config, profile, config.language))
+      await save()
+      return petPage()
+    }
     if (name === 'pet') {
-      if (parts[0] === 'change') return changeCompanionPage()
       if (parts[0] === 'rename') return renamePet()
-      if (parts[0] === 'wardrobe') return wardrobe()
       if (parts[0] === 'feed') {
         companion.react('feed', feed(config, profile, config.language))
         await save()
@@ -1460,8 +1372,7 @@ export async function runTui(config, profile, persist) {
         return petPage()
       }
       if (parts[0] === 'status') {
-        const pet = currentPet(config)
-        tui.flash(`${pet.name} · ${pet.type} · ${pet.personality} · Lv.${profile.petLevel}`)
+        return petStatusPage()
       }
       return petPage()
     }

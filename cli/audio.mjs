@@ -132,7 +132,7 @@ async function fetchDictionaryAudio(text, accent, fetchImpl) {
 
 async function fetchGeneratedAudio(text, config, { accent, slow }, fetchImpl) {
   if (!config.invitationCode) return null
-  const voice = accent === 'uk' ? 'fable' : 'alloy'
+  const voice = accent === 'uk' ? 'English_Graceful_Lady' : 'English_Trustworthy_Man'
   const cacheKey = `tts|${TTS_MODEL}|${voice}|${slow ? 'slow' : 'normal'}|${text}`
   const cached = await cachedFile(cacheKey)
   if (cached) return { file: cached, source: 'tts-cache' }

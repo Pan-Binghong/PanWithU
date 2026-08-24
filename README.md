@@ -23,17 +23,23 @@
 
 PanwithU turns vocabulary practice into an ongoing relationship with a local,
 persistent companion. It combines a keyboard-focused terminal UI, spaced
-review, pronunciation, pet growth, and a Pi-powered learning coach in one CLI.
+review, pronunciation, daily expression practice, pet growth, and a Pi-powered
+learning companion in one CLI.
 
 ## Quick start
 
 ```bash
 npm install -g panwithu@latest
-PWU
+pwu
 ```
 
-The first launch lets you choose a language, pronunciation, companion, and an
-optional invitation code. Without a code, the core learning experience remains
+`panwithu` is also available as a full-name alias. On case-insensitive systems
+such as Windows and default macOS installations, `PWU` resolves to the same
+command. Linux users who prefer uppercase can add `alias PWU=pwu` to their shell
+configuration.
+
+The first launch lets you choose a language and pronunciation, then optionally
+add an invitation code. Your state-symbol companion can be renamed at any time. Without a code, the core learning experience remains
 available offline.
 
 ## Why PanwithU
@@ -42,8 +48,9 @@ available offline.
 | ------------------ | ---------------------------------------------------------------------------------------------------- |
 | Terminal-first     | Practice, navigate dictionaries, and manage progress without leaving the keyboard.                   |
 | Local-first        | Your profile, review schedule, pet state, and cached audio stay on your computer.                    |
-| Learning companion | 25 companions grow through study sessions, streaks, feeding, play, and accessories.                  |
+| Learning companion | A compact state-symbol agent reacts to study sessions, physical needs, reminders, and play.          |
 | Adaptive review    | Due and failed words are prioritized before unseen vocabulary.                                       |
+| Daily expressions  | `pwu sync` turns the day's Chinese Codex prompts into short, dated English practice sentences.       |
 | Pi-powered coach   | Recent learning history and companion identity become contextual coaching, summaries, and reminders. |
 | Cross-platform     | Runs on Linux, macOS, and Windows, including native daily reminders and speech fallbacks.            |
 
@@ -60,7 +67,7 @@ flowchart LR
   C --> D["In-memory agent session"]
   D --> E["Coach advice"]
   D --> F["Post-session reflection"]
-  D --> G["Daily reminder"]
+  D --> G["Proactive pet notification"]
 ```
 
 The runtime registers the PanwithU learning provider, selects the configured
@@ -77,20 +84,23 @@ memory without weakening that local-first boundary.
 ## CLI
 
 ```text
-PWU                     Open the interactive terminal UI
-PWU learn [count]       Practice vocabulary
-PWU pet                 Visit your companion
-PWU feed                Feed your companion
-PWU play                Play together
-PWU todo                View the learning plan
-PWU reminder install 19 Enable the daily reminder
-PWU summary             Generate a learning summary
-PWU status              Show progress
-PWU config              Run setup again
+pwu                     Open the interactive terminal UI
+pwu learn [count]       Practice vocabulary
+pwu pet                 Visit your companion
+pwu feed                Feed your companion
+pwu play                Play together
+pwu todo                View the learning plan
+pwu sync                Build today's personal expression dictionary
+pwu reminder test       Send one companion notification now
+pwu summary             Generate a learning summary
+pwu status              Show progress
+pwu config              Run setup again
 ```
 
-Inside the TUI, use `/dict`, `/chapter`, and `/mode` to shape a session;
-`/coach` asks the Pi-powered companion for advice.
+Inside the TUI, choose **My Expressions** from `/dict` to practice by date. Use
+`/t hello` or `/t 日期` for LLM-powered translation, and type `/` to discover
+commands with autocomplete. Input placeholders stay light gray while correct
+and incorrect keystrokes turn green and red.
 
 See the
 [complete CLI guide](https://github.com/Pan-Binghong/PanWithU/blob/master/docs/PANWITHU_CLI.md)
@@ -106,8 +116,9 @@ development instructions.
 ```
 
 There is no PanwithU account system. Core progress is stored locally. Network
-access is used only for dictionary audio and optional AI/TTS features; generated
-audio is cached locally.
+access is used only for dictionary audio and optional AI/TTS features. Codex
+sync reads local conversation records, filters attachments and metadata, and
+stores the generated practice entries locally. Generated audio is cached locally.
 
 ## Development
 

@@ -1,4 +1,4 @@
-import { buyAccessory, changeCompanion, claimDailyCompanion, currentPet, decoratePetArt, feed, petGrowthStage, play } from './pet.mjs'
+import { claimDailyCompanion, currentPet, feed, petGrowthStage, play } from './pet.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -11,13 +11,8 @@ test('a pet keeps its species identity when renamed', () => {
   assert.equal(pet.defaultName, 'Mimi')
 })
 
-test('changing companion resets its name but preserves unrelated progress', () => {
-  const settings = { pet: 'cat', petName: 'Nabi', language: 'en' }
-  const profile = { bond: 42, stars: 18 }
-  const pet = changeCompanion(settings, 'frog')
-  assert.equal(pet.type, 'frog')
-  assert.equal(pet.name, 'Pip')
-  assert.deepEqual(profile, { bond: 42, stars: 18 })
+test('unknown pets are not silently replaced at runtime', () => {
+  assert.throws(() => currentPet({ pet: 'frog', petName: 'Pip' }), /Unknown pet: frog/)
 })
 
 test('pet growth stages unlock at stable level thresholds', () => {
@@ -63,18 +58,4 @@ test('first study of the day rewards the companion only once', () => {
   assert.equal(claimDailyCompanion(profile, 'en', at).awarded, false)
   assert.equal(profile.stars, 5)
   assert.equal(profile.bond, 5)
-})
-
-test('accessories spend stars once and equip when selected again', () => {
-  const profile = { stars: 12, petAccessories: [] }
-  assert.equal(buyAccessory(profile, 'scarf').ok, true)
-  assert.equal(profile.stars, 0)
-  assert.equal(buyAccessory(profile, 'scarf').equipped, true)
-})
-
-test('accessories become part of the ASCII pet silhouette', () => {
-  const art = [' /\\_/\\', '( o.o )', ' > ^ <']
-  assert.equal(decoratePetArt(art, 'cap')[0], ' .---.')
-  assert.match(decoratePetArt(art, 'scarf')[2], /\*/)
-  assert.match(decoratePetArt(art, 'headphones')[1], /^d.*b$/)
 })
