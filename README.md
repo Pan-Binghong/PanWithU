@@ -118,7 +118,7 @@ development instructions.
 There is no PanwithU account system. Core progress is stored locally. Network
 access is used only for dictionary audio and optional AI/TTS features. Agent
 sync reads supported local histories from Codex, Claude, Kiro, OpenClaw,
-Harness, Cursor, Gemini, Qwen, Kimi, Trae, OpenCode, and other common agents; it filters attachments and
+Hermes, Harness, Cursor, Gemini, Qwen, Kimi, Trae, OpenCode, and other common agents; it filters attachments and
 metadata and stores generated practice entries locally. Generated audio is
 cached locally.
 

@@ -12,6 +12,7 @@ export function agentHistoryRoots(env = process.env, home = homedir()) {
     { id: 'claude', path: env.CLAUDE_CONFIG_DIR || join(home, '.claude') },
     { id: 'kiro', path: env.KIRO_HOME || join(home, '.kiro') },
     { id: 'openclaw', path: env.OPENCLAW_HOME || join(home, '.openclaw') },
+    { id: 'hermes', path: env.HERMES_HOME || join(home, '.hermes') },
     { id: 'harness', path: env.HARNESS_HOME || join(home, '.harness') },
     { id: 'harnes', path: join(home, '.harnes') },
     { id: 'cursor', path: join(home, '.cursor') },

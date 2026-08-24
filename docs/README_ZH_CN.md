@@ -108,7 +108,7 @@ pwu config              重新运行设置
 
 PanwithU 没有账户系统，核心学习进度保存在本机。只有词典发音和可选的
 AI/TTS 功能会访问网络。同步功能支持读取本机的 Codex、Claude、Kiro、
-OpenClaw、Harness、Cursor、Gemini、Qwen、Kimi、Trae、OpenCode 等国内外常见
+OpenClaw、Hermes、Harness、Cursor、Gemini、Qwen、Kimi、Trae、OpenCode 等国内外常见
 Agent 的历史记录，过滤图片、文件信息和元数据，并将生成的练习内容保存在本地；
 生成的音频也会缓存在本地。
 

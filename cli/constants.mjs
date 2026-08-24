@@ -1,5 +1,5 @@
 export const APP_NAME = 'PanwithU'
-export const VERSION = '0.4.2'
+export const VERSION = '0.4.3'
 export const AI_BASE_URLS = ['https://www.dmxapi.cn/v1']
 export const AI_BASE_URL = AI_BASE_URLS[0]
 export const AI_MODEL = 'claude-sonnet-5'

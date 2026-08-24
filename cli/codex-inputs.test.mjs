@@ -27,6 +27,7 @@ test('mainstream agent history roots are discovered without hard-coding Codex on
     'claude',
     'kiro',
     'openclaw',
+    'hermes',
     'harness',
     'harnes',
     'cursor',
@@ -98,6 +99,27 @@ test('Claude and OpenClaw-style user messages share one dated collection', async
   assert.deepEqual(
     messages.map(({ text }) => text),
     ['帮我检查 Claude 项目', '整理 OpenClaw 任务'],
+  )
+})
+
+test('Hermes session exports are collected from nested conversations', async () => {
+  const root = join(tmpdir(), `pwu-hermes-${process.pid}-${Date.now()}`)
+  await mkdir(join(root, 'sessions'), { recursive: true })
+  await writeFile(
+    join(root, 'sessions', 'session.jsonl'),
+    `${JSON.stringify({
+      session_id: 'demo',
+      timestamp: '2026-08-24T05:00:00Z',
+      messages: [
+        { role: 'user', content: '帮我整理 Hermes 会话' },
+        { role: 'assistant', content: '不应采集回复' },
+      ],
+    })}\n`,
+  )
+  const messages = await collectTodayAgentInputs({ date: new Date(2026, 7, 24, 18), roots: [{ id: 'hermes', path: root }] })
+  assert.deepEqual(
+    messages.map(({ text }) => text),
+    ['帮我整理 Hermes 会话'],
   )
 })
 
