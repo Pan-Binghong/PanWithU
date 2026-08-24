@@ -40,11 +40,7 @@ test('renamed pet owns an agent-generated notification and pending event', async
 
 test('built-in pet greetings keep reminders useful without an API key', async () => {
   const profile = { words: {}, sessions: [], companionAgent: {} }
-  const local = await runCompanionAgent(
-    { ...config, invitationCode: '' },
-    profile,
-    { force: true, now: new Date(2026, 7, 21, 12) },
-  )
+  const local = await runCompanionAgent({ ...config, invitationCode: '' }, profile, { force: true, now: new Date(2026, 7, 21, 12) })
   assert.equal(local.reason, 'local-routine')
   assert.match(local.event.message, /中午好/)
   assert.match(local.event.message, /吃饭了吗/)

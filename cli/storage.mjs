@@ -115,7 +115,11 @@ export async function loadProfile() {
   }
   delete profile.petAccessories
   delete profile.equippedAccessory
-  if (profile.personalDictionary.day && profile.personalDictionary.entries?.length && !profile.personalDictionaries[profile.personalDictionary.day]) {
+  if (
+    profile.personalDictionary.day &&
+    profile.personalDictionary.entries?.length &&
+    !profile.personalDictionaries[profile.personalDictionary.day]
+  ) {
     profile.personalDictionaries[profile.personalDictionary.day] = {
       syncedAt: profile.personalDictionary.syncedAt,
       entries: profile.personalDictionary.entries,

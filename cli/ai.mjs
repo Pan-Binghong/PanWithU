@@ -27,7 +27,9 @@ async function askWithEndpoints(config, profile, request, outputRule) {
 }
 
 export function translationDirection(text) {
-  return /\p{Script=Han}/u.test(String(text)) ? { source: 'Chinese', target: 'English' } : { source: 'English', target: 'Simplified Chinese' }
+  return /\p{Script=Han}/u.test(String(text))
+    ? { source: 'Chinese', target: 'English' }
+    : { source: 'English', target: 'Simplified Chinese' }
 }
 
 export async function translateText(config, profile, text) {
@@ -44,7 +46,9 @@ export function parsePersonalDictionaryJson(answer, inputs) {
   const sourceById = new Map(inputs.map((input, id) => [id, input]))
   let parsed
   try {
-    const raw = String(answer || '').replace(/```(?:json)?|```/gi, '').trim()
+    const raw = String(answer || '')
+      .replace(/```(?:json)?|```/gi, '')
+      .trim()
     try {
       parsed = JSON.parse(raw)
     } catch {
@@ -61,8 +65,12 @@ export function parsePersonalDictionaryJson(answer, inputs) {
   const entries = parsed
     .map((item) => {
       const source = sourceById.get(Number(item?.id))
-      const chinese = String(item?.chinese || '').replace(/\s+/g, ' ').trim()
-      const english = String(item?.english || '').replace(/\s+/g, ' ').trim()
+      const chinese = String(item?.chinese || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+      const english = String(item?.english || '')
+        .replace(/\s+/g, ' ')
+        .trim()
       if (!source || !/\p{Script=Han}/u.test(chinese) || !/[A-Za-z]/.test(english)) return null
       if (chinese.length > 80 || english.length > 100 || english.split(/\s+/).length > 20) return null
       return { name: english, trans: [chinese], sourceText: source.text, timestamp: source.timestamp }
@@ -113,7 +121,9 @@ export async function askAsPet(config, profile, activity, context = {}) {
     profile,
     `Speak entirely as ${pet.name}, the student's ${pet.personality} ${pet.type} companion. ${
       userName ? `The student's local name is ${JSON.stringify(userName)}; address them by name naturally when it fits.` : ''
-    } ${instructions[activity]} ${uniqueness} This is a system notification: use no heading, stay under 18 words, and never call yourself an assistant.`,
+    } ${
+      instructions[activity]
+    } ${uniqueness} This is a system notification: use no heading, stay under 18 words, and never call yourself an assistant.`,
   )
 }
 

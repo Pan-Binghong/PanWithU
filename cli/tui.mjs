@@ -412,11 +412,7 @@ function studyBox(lines, width = 43, title = '') {
   const top = clippedTitle
     ? `${c.purple('╭─ ')}${c.yellow(clippedTitle)}${c.purple(` ${'─'.repeat(Math.max(0, inner - labelWidth))}╮`)}`
     : c.purple(`╭${'─'.repeat(inner)}╮`)
-  return [
-    top,
-    ...lines.map((line) => `${c.purple('│')}${fit(line)}${c.purple('│')}`),
-    c.purple(`╰${'─'.repeat(inner)}╯`),
-  ]
+  return [top, ...lines.map((line) => `${c.purple('│')}${fit(line)}${c.purple('│')}`), c.purple(`╰${'─'.repeat(inner)}╯`)]
 }
 
 class Practice {
@@ -610,8 +606,7 @@ class Practice {
     if (this.typed.length === this.word.name.length) {
       const isCorrect = !this.hadError && this.typed.toLowerCase() === this.word.name.toLowerCase()
       this.finishWord(isCorrect, isCorrect)
-    }
-    else this.requestRender()
+    } else this.requestRender()
   }
 }
 
@@ -621,10 +616,13 @@ export async function runTui(config, profile, persist) {
   config.colorTheme = setColorTheme(config.colorTheme || 'violet')
   const catalog = await loadDictionaryCatalog()
   const today = localDayParts().join('-')
-  const personalDays = Object.keys(profile.personalDictionaries || {}).sort().reverse()
+  const personalDays = Object.keys(profile.personalDictionaries || {})
+    .sort()
+    .reverse()
   if (!personalDays.length && profile.personalDictionary?.day) personalDays.push(profile.personalDictionary.day)
   const entriesForDay = (day) =>
-    profile.personalDictionaries?.[day]?.entries || (profile.personalDictionary?.day === day ? profile.personalDictionary.entries || [] : [])
+    profile.personalDictionaries?.[day]?.entries ||
+    (profile.personalDictionary?.day === day ? profile.personalDictionary.entries || [] : [])
   const personalDictionary = {
     id: 'personal-codex',
     name: tx('我的表达', 'My Expressions'),
@@ -694,8 +692,11 @@ export async function runTui(config, profile, persist) {
       if (/\s/.test(input)) return null
       const query = input.slice(1).toLowerCase()
       return {
-        items: commandSuggestions(query, config.language)
-          .map((item) => ({ value: `/${item.name}`, label: `/${item.name}`, description: item.description })),
+        items: commandSuggestions(query, config.language).map((item) => ({
+          value: `/${item.name}`,
+          label: `/${item.name}`,
+          description: item.description,
+        })),
         prefix: input,
       }
     },

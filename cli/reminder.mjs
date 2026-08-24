@@ -66,7 +66,9 @@ export async function installReminder({ hour = 12, minute = 0, intervalMinutes =
   const interval = intervalMinutes == null ? null : Math.max(1, Math.floor(Number(intervalMinutes)))
   const script = process.argv[1]
   if (process.platform === 'win32') {
-    const schedule = interval ? ['/SC', 'MINUTE', '/MO', String(interval)] : ['/SC', 'DAILY', '/ST', `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`]
+    const schedule = interval
+      ? ['/SC', 'MINUTE', '/MO', String(interval)]
+      : ['/SC', 'DAILY', '/ST', `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`]
     return run('schtasks', [
       '/Create',
       '/F',

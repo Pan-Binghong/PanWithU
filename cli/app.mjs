@@ -1,5 +1,5 @@
-import { APP_NAME, PETS, VERSION } from './constants.mjs'
 import { collectTodayCodexInputs, localDayParts } from './codex-inputs.mjs'
+import { APP_NAME, PETS, VERSION } from './constants.mjs'
 import { learn } from './learning.mjs'
 import { animatePet, currentPet, feed, play, showPet } from './pet.mjs'
 import { installReminder, notify, parseReminderHour, reminderStatus, removeReminder } from './reminder.mjs'
@@ -189,8 +189,7 @@ export async function run(args) {
           config.defaultReminderInstalled = false
           await saveConfig(config)
         }
-      }
-      else if (action === 'test') {
+      } else if (action === 'test') {
         const { runCompanionAgent } = await import('./companion-agent.mjs')
         const result = await runCompanionAgent(config, profile, { force: true })
         success = result.sent && (await notify(result.event.message, { title: result.event.title }))
@@ -240,7 +239,9 @@ export async function run(args) {
       }
     } else if (command === 'sync') {
       if (!config.invitationCode) {
-        console.log(config.language === 'zh-CN' ? '\n请先在 pwu 中配置邀请码，再运行 pwu sync。\n' : '\nConfigure an invitation code in pwu first.\n')
+        console.log(
+          config.language === 'zh-CN' ? '\n请先在 pwu 中配置邀请码，再运行 pwu sync。\n' : '\nConfigure an invitation code in pwu first.\n',
+        )
       } else {
         try {
           const inputs = await collectTodayCodexInputs()
@@ -258,7 +259,11 @@ export async function run(args) {
               : `\nAI processed ${inputs.length} inputs and kept ${entries.length} in My Expressions.\n`,
           )
         } catch {
-          console.log(config.language === 'zh-CN' ? '\n同步失败，原有个人词典未改变。\n' : '\nSync failed; your existing personal dictionary was not changed.\n')
+          console.log(
+            config.language === 'zh-CN'
+              ? '\n同步失败，原有个人词典未改变。\n'
+              : '\nSync failed; your existing personal dictionary was not changed.\n',
+          )
         }
       }
     } else if (command === 'pan')

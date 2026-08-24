@@ -1,9 +1,9 @@
 import { askAsPet } from './ai.mjs'
+import { systemUsername } from './identity.mjs'
 import { currentPet } from './pet.mjs'
 import { readFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { systemUsername } from './identity.mjs'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 
@@ -101,15 +101,34 @@ export function createLocalCompanionEvent(config, profile, { now = new Date() } 
     hour < 10
       ? ['早上好', '新的一天开始啦', '早呀', '太阳出来了', '我醒来啦']
       : hour < 14
-        ? ['中午好呀', '到午休时间了', '忙了一上午啦', '午间小憩一下吧', '我来看看你']
-        : hour < 18
-          ? ['下午好', '忙到现在辛苦啦', '下午也要加油呀', '我来陪你一会儿', '伸个懒腰吧']
-          : ['晚上好', '今天辛苦啦', '夜色到了', '忙完了吗', '我还在这里']
-  const zhEndings = [hour >= 10 && hour < 14 ? '吃饭了吗？' : '慢慢来，我陪着你。', '记得喝口水。', '休息一分钟也很好。', '今天过得怎么样？', '来学一句英语吧。', '别忘了照顾自己。']
+      ? ['中午好呀', '到午休时间了', '忙了一上午啦', '午间小憩一下吧', '我来看看你']
+      : hour < 18
+      ? ['下午好', '忙到现在辛苦啦', '下午也要加油呀', '我来陪你一会儿', '伸个懒腰吧']
+      : ['晚上好', '今天辛苦啦', '夜色到了', '忙完了吗', '我还在这里']
+  const zhEndings = [
+    hour >= 10 && hour < 14 ? '吃饭了吗？' : '慢慢来，我陪着你。',
+    '记得喝口水。',
+    '休息一分钟也很好。',
+    '今天过得怎么样？',
+    '来学一句英语吧。',
+    '别忘了照顾自己。',
+  ]
   const zh = `${zhOpenings[count % zhOpenings.length]}${address}。${zhEndings[Math.floor(count / zhOpenings.length) % zhEndings.length]}`
   const enName = name ? `, ${name}` : ''
-  const enOpenings = hour < 10 ? ['Good morning', 'Morning', 'A new day begins', 'The sun is up', 'I’m awake'] : hour < 18 ? ['Good afternoon', 'Quick check-in', 'You’ve worked hard', 'Break time', 'I’m here'] : ['Good evening', 'Long day', 'Night is here', 'Finished working', 'I’m still here']
-  const enEndings = ['Take it slowly.', 'Have some water.', 'A short break helps.', 'How are you doing?', 'Let’s learn one phrase.', 'Be kind to yourself.']
+  const enOpenings =
+    hour < 10
+      ? ['Good morning', 'Morning', 'A new day begins', 'The sun is up', 'I’m awake']
+      : hour < 18
+      ? ['Good afternoon', 'Quick check-in', 'You’ve worked hard', 'Break time', 'I’m here']
+      : ['Good evening', 'Long day', 'Night is here', 'Finished working', 'I’m still here']
+  const enEndings = [
+    'Take it slowly.',
+    'Have some water.',
+    'A short break helps.',
+    'How are you doing?',
+    'Let’s learn one phrase.',
+    'Be kind to yourself.',
+  ]
   const en = `${enOpenings[count % enOpenings.length]}${enName}. ${enEndings[Math.floor(count / enOpenings.length) % enEndings.length]}`
   const event = {
     id: `${now.getTime()}-greeting`,

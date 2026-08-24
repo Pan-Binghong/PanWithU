@@ -1,4 +1,13 @@
-import { COLOR_THEMES, answerPreview, buddyMessages, commandSuggestions, companionRail, practiceGlyph, printableKey, setColorTheme } from './tui.mjs'
+import {
+  COLOR_THEMES,
+  answerPreview,
+  buddyMessages,
+  commandSuggestions,
+  companionRail,
+  practiceGlyph,
+  printableKey,
+  setColorTheme,
+} from './tui.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -58,5 +67,8 @@ test('slash completion exposes direct pet commands and filters as the user types
   assert.ok(all.includes('feed'))
   assert.ok(all.includes('play'))
   assert.ok(all.includes('t'))
-  assert.deepEqual(commandSuggestions('/ren').map(({ name }) => name), ['rename'])
+  assert.deepEqual(
+    commandSuggestions('/ren').map(({ name }) => name),
+    ['rename'],
+  )
 })

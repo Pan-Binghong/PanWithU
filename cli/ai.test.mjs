@@ -30,7 +30,12 @@ test('one Codex input can become multiple short non-duplicate sentences', () => 
     { id: 0, chinese: '帮我删掉蝙蝠侠。', english: 'Please remove Batman.' },
     { id: 0, chinese: '然后检查一下结果。', english: 'Then check the result.' },
     { id: 0, chinese: '然后检查一下结果。', english: 'Then check the result.' },
-    { id: 0, chinese: '这句话太长。', english: 'This sentence contains far too many separate words to remain a useful focused learning item inside this compact terminal practice experience.' },
+    {
+      id: 0,
+      chinese: '这句话太长。',
+      english:
+        'This sentence contains far too many separate words to remain a useful focused learning item inside this compact terminal practice experience.',
+    },
   ])
   assert.deepEqual(
     parsePersonalDictionaryJson(answer, inputs).map(({ name }) => name),
