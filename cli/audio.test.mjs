@@ -89,8 +89,14 @@ test('platform commands support MP3 playback and system speech', () => {
 })
 
 test('keyboard sound is rate-limited during fast typing', () => {
-  assert.equal(playKeySound(1_000), true)
-  assert.equal(playKeySound(1_020), false)
+  const played = []
+  const play = (file) => {
+    played.push(file)
+    return true
+  }
+  assert.equal(playKeySound(1_000, play), true)
+  assert.equal(playKeySound(1_020, play), false)
+  assert.equal(played.length, 1)
 })
 
 test('correct and incorrect answers use different bundled feedback sounds', () => {

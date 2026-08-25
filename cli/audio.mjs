@@ -57,12 +57,12 @@ export function playFile(file) {
   return player ? runDetached(player[0], player[1]) : false
 }
 
-export function playKeySound(now = Date.now()) {
+export function playKeySound(now = Date.now(), play = playFile) {
   // A detached player is started for each key. Limit bursts so fast typing does
   // not create an audio-process backlog while keeping the keyboard responsive.
   if (now - lastKeySoundAt < 35) return false
   lastKeySoundAt = now
-  return playFile(defaultKeySound)
+  return play(defaultKeySound)
 }
 
 export function feedbackSoundFile(isCorrect) {
