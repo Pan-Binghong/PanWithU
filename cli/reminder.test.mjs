@@ -1,9 +1,23 @@
-import { macNotificationAppPath, NOTIFICATION_APP_NAME, notificationCommand, parseReminderHour, systemdExecArgument } from './reminder.mjs'
+import {
+  macNotificationAppPath,
+  NOTIFICATION_APP_NAME,
+  NOTIFICATION_LOGO_PATH,
+  notificationCommand,
+  parseReminderHour,
+  systemdExecArgument,
+} from './reminder.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
 test('notification commands are generated for all supported platforms', () => {
-  assert.deepEqual(notificationCommand('study', 'linux', 'Mimi')[1], ['--app-name', 'Pan', 'Mimi', 'study'])
+  assert.deepEqual(notificationCommand('study', 'linux', 'Mimi')[1], [
+    '--app-name',
+    'Pan',
+    '--icon',
+    NOTIFICATION_LOGO_PATH,
+    'Mimi',
+    'study',
+  ])
   assert.deepEqual(notificationCommand('study', 'darwin', 'Mimi'), [
     'open',
     ['-n', '-a', macNotificationAppPath(), '--args', 'study', 'Mimi'],
@@ -12,6 +26,9 @@ test('notification commands are generated for all supported platforms', () => {
   assert.equal(windows[0], 'powershell')
   assert.match(windows[1].join(' '), /ToastNotificationManager/)
   assert.match(windows[1].join(' '), /SetCurrentProcessExplicitAppUserModelID\('Pan'\)/)
+  assert.match(windows[1].join(' '), /appLogoOverride/)
+  assert.match(windows[1].join(' '), /256, 256/)
+  assert.match(NOTIFICATION_LOGO_PATH, /panwithu-logo\.png$/)
   assert.equal(NOTIFICATION_APP_NAME, 'Pan')
 })
 

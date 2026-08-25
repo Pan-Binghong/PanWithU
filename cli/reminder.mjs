@@ -2,9 +2,12 @@ import { paths } from './storage.mjs'
 import { spawn } from 'node:child_process'
 import { access, mkdir, rm, writeFile } from 'node:fs/promises'
 import { homedir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 export const NOTIFICATION_APP_NAME = 'Pan'
+const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)))
+export const NOTIFICATION_LOGO_PATH = join(packageRoot, 'assets', 'brand', 'panwithu-logo.png')
 
 function run(command, args) {
   return new Promise((resolve) => {
@@ -31,10 +34,11 @@ export function notificationCommand(message, platform = process.platform, title 
   if (platform === 'win32') {
     const safe = message.replaceAll("'", "''")
     const safeTitle = title.replaceAll("'", "''")
-    const script = `Add-Type -TypeDefinition 'using System.Runtime.InteropServices; public static class PanIdentity { [DllImport("shell32.dll", CharSet = CharSet.Unicode)] public static extern int SetCurrentProcessExplicitAppUserModelID(string appID); }'; [PanIdentity]::SetCurrentProcessExplicitAppUserModelID('${NOTIFICATION_APP_NAME}') > $null; $manager = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]; $toastType = [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime]; $template = [Windows.UI.Notifications.ToastTemplateType]::ToastText02; $xml = $manager::GetTemplateContent($template); $xml.GetElementsByTagName('text')[0].AppendChild($xml.CreateTextNode('${safeTitle}')) > $null; $xml.GetElementsByTagName('text')[1].AppendChild($xml.CreateTextNode('${safe}')) > $null; $manager::CreateToastNotifier('${NOTIFICATION_APP_NAME}').Show($toastType::new($xml))`
+    const safeLogo = NOTIFICATION_LOGO_PATH.replaceAll("'", "''")
+    const script = `Add-Type -AssemblyName System.Drawing; Add-Type -TypeDefinition 'using System.Runtime.InteropServices; public static class PanIdentity { [DllImport("shell32.dll", CharSet = CharSet.Unicode)] public static extern int SetCurrentProcessExplicitAppUserModelID(string appID); }'; $iconDir = Join-Path $env:LOCALAPPDATA 'PanWithU'; $iconPath = Join-Path $iconDir 'pan-notification-256.png'; if (!(Test-Path $iconPath)) { New-Item -ItemType Directory -Force -Path $iconDir > $null; $source = [System.Drawing.Image]::FromFile('${safeLogo}'); $icon = New-Object System.Drawing.Bitmap 256, 256; $graphics = [System.Drawing.Graphics]::FromImage($icon); $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic; $graphics.DrawImage($source, 0, 0, 256, 256); $icon.Save($iconPath, [System.Drawing.Imaging.ImageFormat]::Png); $graphics.Dispose(); $icon.Dispose(); $source.Dispose() }; [PanIdentity]::SetCurrentProcessExplicitAppUserModelID('${NOTIFICATION_APP_NAME}') > $null; $safeTitle = [Security.SecurityElement]::Escape('${safeTitle}'); $safeMessage = [Security.SecurityElement]::Escape('${safe}'); $iconUri = 'file:///' + $iconPath.Replace('\\', '/'); $xmlText = '<toast><visual><binding template="ToastGeneric"><image placement="appLogoOverride" hint-crop="circle" src="' + $iconUri + '"/><text>' + $safeTitle + '</text><text>' + $safeMessage + '</text></binding></visual></toast>'; $xml = [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime]::New(); $xml.LoadXml($xmlText); $manager = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]; $toastType = [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime]; $manager::CreateToastNotifier('${NOTIFICATION_APP_NAME}').Show($toastType::new($xml))`
     return ['powershell', ['-NoProfile', '-NonInteractive', '-Command', script]]
   }
-  return ['notify-send', ['--app-name', NOTIFICATION_APP_NAME, title, message]]
+  return ['notify-send', ['--app-name', NOTIFICATION_APP_NAME, '--icon', NOTIFICATION_LOGO_PATH, title, message]]
 }
 
 export async function notify(message, { title = 'PanwithU' } = {}) {
@@ -49,17 +53,45 @@ export function macNotificationAppPath(home = homedir()) {
 
 async function ensureMacNotificationApp() {
   const app = macNotificationAppPath()
+  const iconMarker = join(app, 'Contents', 'Resources', '.panwithu-logo-v1')
   try {
-    await access(app)
+    await access(iconMarker)
     return true
   } catch {}
-  await mkdir(join(homedir(), 'Library', 'Application Support', 'PanWithU'), { recursive: true })
+  const supportDir = join(homedir(), 'Library', 'Application Support', 'PanWithU')
+  await mkdir(supportDir, { recursive: true })
   const script = `on run argv
 set notificationMessage to item 1 of argv
 set notificationTitle to item 2 of argv
 display notification notificationMessage with title notificationTitle
 end run`
-  return run('osacompile', ['-o', app, '-e', script])
+  if (!(await run('osacompile', ['-o', app, '-e', script]))) return false
+  const iconset = join(supportDir, 'Pan.iconset')
+  await rm(iconset, { recursive: true, force: true })
+  await mkdir(iconset, { recursive: true })
+  const sizes = [16, 32, 128, 256, 512]
+  for (const size of sizes) {
+    if (
+      !(await run('sips', ['-z', String(size), String(size), NOTIFICATION_LOGO_PATH, '--out', join(iconset, `icon_${size}x${size}.png`)]))
+    )
+      return false
+    if (
+      !(await run('sips', [
+        '-z',
+        String(size * 2),
+        String(size * 2),
+        NOTIFICATION_LOGO_PATH,
+        '--out',
+        join(iconset, `icon_${size}x${size}@2x.png`),
+      ]))
+    )
+      return false
+  }
+  const icon = join(app, 'Contents', 'Resources', 'applet.icns')
+  if (!(await run('iconutil', ['-c', 'icns', iconset, '-o', icon]))) return false
+  await writeFile(iconMarker, 'PanWithU notification icon v1\n', { mode: 0o600 })
+  await rm(iconset, { recursive: true, force: true })
+  return true
 }
 
 function scheduleFiles(platform = process.platform) {
