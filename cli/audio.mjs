@@ -3,7 +3,7 @@ import { TTS_MODEL } from './constants.mjs'
 import { paths } from './storage.mjs'
 import { spawn, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { access, mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -98,10 +98,23 @@ export function speakWithSystem(text, options) {
   return command ? runDetached(command[0], command[1]) : false
 }
 
+export function isAudioBytes(bytes) {
+  if (!bytes || bytes.length < 256) return false
+  if (bytes.subarray(0, 3).toString('ascii') === 'ID3') return true
+  if (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0) return true
+  if (bytes.subarray(0, 4).toString('ascii') === 'OggS') return true
+  if (bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WAVE') return true
+  return bytes.subarray(4, 8).toString('ascii') === 'ftyp'
+}
+
 async function cachedFile(cacheKey) {
   const file = join(paths.audio, `${hash(cacheKey)}.mp3`)
   try {
-    await access(file)
+    const bytes = await readFile(file)
+    if (!isAudioBytes(bytes)) {
+      await unlink(file).catch(() => {})
+      return null
+    }
     return file
   } catch {
     return null
@@ -126,7 +139,7 @@ async function fetchDictionaryAudio(text, accent, fetchImpl) {
   })
   if (!response.ok) return null
   const bytes = Buffer.from(await response.arrayBuffer())
-  if (bytes.length < 256) return null
+  if (!isAudioBytes(bytes)) return null
   return { file: await saveAudio(cacheKey, bytes), source: 'dictionary' }
 }
 
@@ -146,7 +159,7 @@ async function fetchGeneratedAudio(text, config, { accent, slow }, fetchImpl) {
       })
       if (!response.ok) continue
       const bytes = Buffer.from(await response.arrayBuffer())
-      if (bytes.length < 256) continue
+      if (!isAudioBytes(bytes)) continue
       rememberApiBaseUrl(baseUrl)
       return { file: await saveAudio(cacheKey, bytes), source: 'tts' }
     } catch {}
@@ -159,7 +172,7 @@ export async function resolveAudio(text, config, options = {}, fetchImpl = fetch
   if (!normalized) return null
   const accent = options.accent === 'uk' ? 'uk' : 'us'
   const slow = Boolean(options.slow)
-  const requestKey = `${normalized}|${accent}|${slow}`
+  const requestKey = `${normalized}|${accent}|${slow}|api:${Boolean(config.invitationCode)}`
   if (inFlight.has(requestKey)) return inFlight.get(requestKey)
   const request = (async () => {
     try {
@@ -178,6 +191,17 @@ export async function resolveAudio(text, config, options = {}, fetchImpl = fetch
 
 export async function speak(text, config, options = {}) {
   const audio = await resolveAudio(text, config, options)
+  if (options.shouldPlay && !options.shouldPlay()) return { played: false, source: 'cancelled' }
   if (audio && playFile(audio.file)) return { played: true, source: audio.source }
+  if (audio?.source.startsWith('dictionary')) {
+    const generated = await fetchGeneratedAudio(
+      text.trim(),
+      config,
+      { accent: options.accent === 'uk' ? 'uk' : 'us', slow: Boolean(options.slow) },
+      fetch,
+    )
+    if (options.shouldPlay && !options.shouldPlay()) return { played: false, source: 'cancelled' }
+    if (generated && playFile(generated.file)) return { played: true, source: generated.source }
+  }
   return { played: speakWithSystem(text, options), source: 'system' }
 }

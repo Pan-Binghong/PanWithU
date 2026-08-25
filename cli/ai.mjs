@@ -113,6 +113,7 @@ export async function askAsPet(config, profile, activity, context = {}) {
       context.translation,
     )}. The answer is ${JSON.stringify(context.word)}; never reveal the answer in the notification.`,
     story: `Write a vivid one-sentence micro-story that naturally uses the English word ${JSON.stringify(context.word)}.`,
+    session: `The student just finished a dictation session with ${context.correct} correct answers out of ${context.count}, an accuracy of ${context.accuracy}%. Give one specific, warm sentence of encouragement.`,
   }
   const recent = (profile.companionAgent?.recentMessages || []).slice(0, 5)
   const uniqueness = recent.length ? `Do not repeat these recent messages: ${JSON.stringify(recent)}.` : ''

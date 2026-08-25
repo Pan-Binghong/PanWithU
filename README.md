@@ -102,6 +102,9 @@ Inside the TUI, choose **My Expressions** from `/dict` to practice by date. Use
 commands with autocomplete. Input placeholders stay light gray while correct
 and incorrect keystrokes turn green and red.
 
+PanWithU also checks the public [Pan notification feed](https://pan-binghong.github.io/panwithu-notifications/notifications.json)
+every five minutes. New, unexpired message IDs are shown once through the native `Pan` notification integration on Windows, macOS, and Linux.
+
 See the
 [complete CLI guide](https://github.com/Pan-Binghong/PanWithU/blob/master/docs/PANWITHU_CLI.md)
 for installation details, commands, storage paths, pronunciation behavior, and

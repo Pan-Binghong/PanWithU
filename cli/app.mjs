@@ -2,7 +2,14 @@ import { collectTodayAgentInputs, localDayParts } from './codex-inputs.mjs'
 import { APP_NAME, PETS, VERSION } from './constants.mjs'
 import { learn } from './learning.mjs'
 import { animatePet, currentPet, feed, play, showPet } from './pet.mjs'
-import { installReminder, notify, parseReminderHour, reminderStatus, removeReminder } from './reminder.mjs'
+import {
+  installReminder,
+  installRemoteNotificationPolling,
+  notify,
+  parseReminderHour,
+  reminderStatus,
+  removeReminder,
+} from './reminder.mjs'
 import { loadConfig, loadProfile, saveConfig, saveProfile } from './storage.mjs'
 import { activeTodos, addTodo, completeTodo, dueWordCount, syncLearningTodo } from './todo.mjs'
 import { choose, clear, colors, createPrompt, logo, paint } from './ui.mjs'
@@ -125,6 +132,14 @@ export async function run(args) {
   const profile = await loadProfile()
   syncLearningTodo(profile, config.language)
   if (!args.length && stdin.isTTY) {
+    if (config.reminders !== false && config.remoteNotificationScheduleVersion !== 1) {
+      try {
+        if (await installRemoteNotificationPolling({ intervalMinutes: 5 })) {
+          config.remoteNotificationScheduleVersion = 1
+          await saveConfig(config)
+        }
+      } catch {}
+    }
     if (config.reminders !== false && config.companionScheduleVersion !== 1) {
       try {
         if (await installReminder({ intervalMinutes: 30 })) {
@@ -170,6 +185,9 @@ export async function run(args) {
       }
       syncLearningTodo(profile, config.language)
       showTodos(config, profile)
+    } else if (command === 'pull-notifications') {
+      const { pullRemoteNotifications } = await import('./remote-notifications.mjs')
+      await pullRemoteNotifications(config, profile)
     } else if (command === 'reminder') {
       const action = args[1] || 'status'
       let success

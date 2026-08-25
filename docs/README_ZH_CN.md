@@ -95,6 +95,9 @@ pwu config              重新运行设置
 使用 `/t hello` 或 `/t 日期` 可进行 LLM 驱动的中英互译；输入 `/` 会显示并
 补全命令。练习时，占位内容保持浅灰色，输入正确变绿，输入错误变红。
 
+PanWithU 每 5 分钟读取一次公开的 [Pan 通知源](https://pan-binghong.github.io/panwithu-notifications/notifications.json)。
+新的、未过期的消息只会通过 Windows、macOS 或 Linux 原生的 `Pan` 系统通知展示一次。
+
 完整的安装说明、命令、存储路径、发音逻辑和开发方式请参阅
 [CLI 使用指南](https://github.com/Pan-Binghong/PanWithU/blob/master/docs/PANWITHU_CLI.md)。
 

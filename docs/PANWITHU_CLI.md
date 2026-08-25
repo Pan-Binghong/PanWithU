@@ -79,6 +79,14 @@ Running `pwu` without a command opens the interactive terminal UI. Inside the
 UI, `/coach` asks the pet for personalized learning advice, and `/color`
 changes the saved terminal theme.
 
+## Remote notifications
+
+PanWithU installs a separate five-minute background poller for the public
+[`Pan` notification feed](https://pan-binghong.github.io/panwithu-notifications/notifications.json).
+Each unexpired message ID is displayed once with the native system notification
+integration. Publishing is managed from the
+[`panwithu-notifications` Actions page](https://github.com/Pan-Binghong/panwithu-notifications/actions/workflows/publish-notification.yml).
+
 ## Local data
 
 PanwithU has no account system. Configuration and learning history stay on the
