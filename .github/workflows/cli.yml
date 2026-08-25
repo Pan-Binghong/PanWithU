@@ -21,8 +21,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22.19.0
-          cache: npm
-      - run: npm ci
+          cache: yarn
+      - run: yarn install --frozen-lockfile
       - run: npm test
       - run: npm run lint -- --quiet
       - run: npm run cli:smoke
