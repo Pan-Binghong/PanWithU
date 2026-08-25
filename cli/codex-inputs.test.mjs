@@ -8,7 +8,7 @@ import {
   parseCodexUserInputs,
 } from './codex-inputs.mjs'
 import assert from 'node:assert/strict'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, utimes, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
@@ -76,12 +76,14 @@ test('Claude and OpenClaw-style user messages share one dated collection', async
   const openclaw = join(root, '.openclaw', 'agents', 'main', 'sessions')
   await mkdir(claude, { recursive: true })
   await mkdir(openclaw, { recursive: true })
+  const claudeSession = join(claude, 'session.jsonl')
+  const openclawSession = join(openclaw, 'session.jsonl')
   await writeFile(
-    join(claude, 'session.jsonl'),
+    claudeSession,
     `${JSON.stringify({ type: 'user', timestamp: '2026-08-24T03:00:00Z', message: { role: 'user', content: '帮我检查 Claude 项目' } })}\n`,
   )
   await writeFile(
-    join(openclaw, 'session.jsonl'),
+    openclawSession,
     `${JSON.stringify({
       type: 'message',
       timestamp: '2026-08-24T04:00:00Z',
@@ -89,6 +91,7 @@ test('Claude and OpenClaw-style user messages share one dated collection', async
     })}\n`,
   )
   const date = new Date(2026, 7, 24, 18)
+  await Promise.all([utimes(claudeSession, date, date), utimes(openclawSession, date, date)])
   const messages = await collectTodayAgentInputs({
     date,
     roots: [
@@ -105,8 +108,9 @@ test('Claude and OpenClaw-style user messages share one dated collection', async
 test('Hermes session exports are collected from nested conversations', async () => {
   const root = join(tmpdir(), `pwu-hermes-${process.pid}-${Date.now()}`)
   await mkdir(join(root, 'sessions'), { recursive: true })
+  const session = join(root, 'sessions', 'session.jsonl')
   await writeFile(
-    join(root, 'sessions', 'session.jsonl'),
+    session,
     `${JSON.stringify({
       session_id: 'demo',
       timestamp: '2026-08-24T05:00:00Z',
@@ -116,7 +120,9 @@ test('Hermes session exports are collected from nested conversations', async () 
       ],
     })}\n`,
   )
-  const messages = await collectTodayAgentInputs({ date: new Date(2026, 7, 24, 18), roots: [{ id: 'hermes', path: root }] })
+  const date = new Date(2026, 7, 24, 18)
+  await utimes(session, date, date)
+  const messages = await collectTodayAgentInputs({ date, roots: [{ id: 'hermes', path: root }] })
   assert.deepEqual(
     messages.map(({ text }) => text),
     ['帮我整理 Hermes 会话'],

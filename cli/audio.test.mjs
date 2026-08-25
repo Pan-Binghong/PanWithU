@@ -8,9 +8,12 @@ const testRoot = await mkdtemp(join(tmpdir(), 'panwithu-audio-'))
 process.env.XDG_CONFIG_HOME = join(testRoot, 'config')
 process.env.XDG_DATA_HOME = join(testRoot, 'data')
 
-const { audioPlayerForPlatform, feedbackSoundFile, playKeySound, resolveAudio, systemSpeechCommand } = await import('./audio.mjs')
+const { audioPlayerForPlatform, feedbackSoundFile, isAudioBytes, playKeySound, resolveAudio, speak, systemSpeechCommand } = await import(
+  './audio.mjs'
+)
 
-const audioResponse = () => new Response(Buffer.alloc(512, 1), { status: 200, headers: { 'content-type': 'audio/mpeg' } })
+const audioBytes = () => Buffer.concat([Buffer.from('ID3'), Buffer.alloc(509, 1)])
+const audioResponse = () => new Response(audioBytes(), { status: 200, headers: { 'content-type': 'audio/mpeg' } })
 
 test('single words prefer dictionary pronunciation and use the cache', async () => {
   let requests = 0
@@ -39,6 +42,23 @@ test('phrases and sentences use generated TTS when an invitation code exists', a
   assert.equal(JSON.parse(request.options.body).input, 'grow together')
 })
 
+test('a word without dictionary audio immediately falls back to the TTS API', async () => {
+  const requests = []
+  const result = await resolveAudio('zzzznotarealwordqqqq', { invitationCode: 'test-key' }, { accent: 'us' }, async (url) => {
+    requests.push(String(url))
+    if (requests.length === 1) return new Response(JSON.stringify({ error: 'missing' }), { status: 500 })
+    return audioResponse()
+  })
+  assert.equal(result.source, 'tts')
+  assert.match(requests[0], /dict\.youdao\.com/)
+  assert.equal(requests[1], 'https://www.dmxapi.cn/v1/audio/speech')
+})
+
+test('non-audio HTTP bodies are rejected even when the response is successful', async () => {
+  assert.equal(isAudioBytes(Buffer.alloc(512, 1)), false)
+  assert.equal(isAudioBytes(audioBytes()), true)
+})
+
 test('British sentence audio uses a natural English MiniMax voice', async () => {
   let body
   await resolveAudio('How are you today?', { invitationCode: 'test-key' }, { accent: 'uk' }, async (_url, options) => {
@@ -56,6 +76,11 @@ test('phrases without an invitation code fall through to system speech', async (
   assert.equal(result, null)
 })
 
+test('stale pronunciation requests are cancelled before playback', async () => {
+  const result = await speak('no longer current', { invitationCode: '' }, { shouldPlay: () => false })
+  assert.deepEqual(result, { played: false, source: 'cancelled' })
+})
+
 test('platform commands support MP3 playback and system speech', () => {
   assert.equal(audioPlayerForPlatform('/tmp/a.mp3', 'darwin')[0], 'afplay')
   assert.match(audioPlayerForPlatform('C:\\audio.mp3', 'win32')[1].join(' '), /WMPlayer\.OCX/)
@@ -64,8 +89,14 @@ test('platform commands support MP3 playback and system speech', () => {
 })
 
 test('keyboard sound is rate-limited during fast typing', () => {
-  assert.equal(playKeySound(1_000), true)
-  assert.equal(playKeySound(1_020), false)
+  const played = []
+  const play = (file) => {
+    played.push(file)
+    return true
+  }
+  assert.equal(playKeySound(1_000, play), true)
+  assert.equal(playKeySound(1_020, play), false)
+  assert.equal(played.length, 1)
 })
 
 test('correct and incorrect answers use different bundled feedback sounds', () => {

@@ -4,8 +4,11 @@ import {
   buddyMessages,
   commandSuggestions,
   companionRail,
+  nextHintIndex,
   practiceGlyph,
   printableKey,
+  sessionAccuracy,
+  sessionEncouragementFallback,
   setColorTheme,
 } from './tui.mjs'
 import assert from 'node:assert/strict'
@@ -39,6 +42,23 @@ test('sentence spaces are rendered as short underscores without changing input',
   assert.equal(practiceGlyph(' '), '_')
   assert.equal(practiceGlyph('a'), 'a')
   assert.equal([...answerPreview('How are you?', 'How', 'learn')].map(practiceGlyph).join(''), 'How_are_you?')
+})
+
+test('non-learning session summary reports accuracy in the pet voice', () => {
+  assert.equal(sessionAccuracy(4, 5), 80)
+  assert.equal(sessionAccuracy(0, 0), 0)
+  assert.match(sessionEncouragementFallback(80, 'zh-CN'), /正确率 80%/)
+  assert.match(sessionEncouragementFallback(100, 'en'), /100% accuracy/)
+})
+
+test('Ctrl+P hints reveal hidden letters in order and skip visible characters', () => {
+  const hints = new Set()
+  assert.equal(nextHintIndex('practice', 0, hints, 'hideAll'), 0)
+  hints.add(0)
+  assert.equal(nextHintIndex('practice', 0, hints, 'hideAll'), 1)
+  assert.equal(nextHintIndex('practice', 0, new Set(), 'hideVowel'), 2)
+  assert.equal(nextHintIndex('go home', 2, new Set(), 'hideAll'), 3)
+  assert.equal(nextHintIndex('practice', 0, new Set(), 'learn'), -1)
 })
 
 test('terminal color themes validate persisted theme ids', () => {

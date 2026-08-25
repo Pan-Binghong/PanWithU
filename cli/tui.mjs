@@ -1,4 +1,4 @@
-import { playFeedbackSound, playKeySound, speak } from './audio.mjs'
+import { playFeedbackSound, playKeySound, resolveAudio, speak } from './audio.mjs'
 import { localDayParts } from './codex-inputs.mjs'
 import { PETS } from './constants.mjs'
 import { loadChapter, loadDictionaryCatalog } from './dictionary.mjs'
@@ -150,6 +150,35 @@ export function answerPreview(target, typed, mode = 'learn') {
 
 export function practiceGlyph(character) {
   return character === ' ' ? '_' : character
+}
+
+export function nextHintIndex(target, typedLength, hintedIndexes, mode = 'hideAll') {
+  const isHidden = (letter, index) => {
+    if (mode === 'learn' || !/[A-Za-z]/.test(letter)) return false
+    if (mode === 'hideVowel') return /[aeiou]/i.test(letter)
+    if (mode === 'hideConsonant') return /[b-df-hj-np-tv-z]/i.test(letter)
+    if (mode === 'randomHide') return index % 2 === 0
+    return true
+  }
+  for (let index = typedLength; index < target.length; index += 1) {
+    if (isHidden(target[index], index) && !hintedIndexes.has(index)) return index
+  }
+  return -1
+}
+
+export function sessionAccuracy(correct, count) {
+  return count > 0 ? Math.round((correct / count) * 100) : 0
+}
+
+export function sessionEncouragementFallback(accuracy, language = 'zh-CN') {
+  if (language === 'en') {
+    if (accuracy === 100) return `100% accuracy — flawless work. I knew you had it!`
+    if (accuracy >= 80) return `${accuracy}% accuracy — strong work. Let’s polish the few misses together.`
+    return `${accuracy}% accuracy — every miss showed us exactly what to practice next.`
+  }
+  if (accuracy === 100) return `本次正确率 100%——全对，太稳了！`
+  if (accuracy >= 80) return `本次正确率 ${accuracy}%——表现很稳，我们把少数错词再磨亮一点。`
+  return `本次正确率 ${accuracy}%——每个错词都帮我们找到了下一步。`
 }
 
 class SecretInput {
@@ -425,6 +454,10 @@ class Practice {
     this.mistakes = 0
     this.keystrokes = 0
     this.hadError = false
+    this.completedWords = []
+    this.reviewIndex = null
+    this.hintedIndexes = new Set()
+    this.speechRequestId = 0
     this.startedAt = Date.now()
     this.pet = currentPet(config)
     this.buddyCopy = buddyMessages(config.language)
@@ -436,6 +469,7 @@ class Practice {
     this.lastInputAt = Date.now()
     this.resume()
     void this.say()
+    this.prefetchUpcomingAudio()
   }
   pause() {
     if (this.animation) {
@@ -464,8 +498,20 @@ class Practice {
   get word() {
     return this.words[this.index]
   }
-  async say() {
-    if (this.word) await speak(this.word.name, this.config, { accent: this.config.accent })
+  async say(delay = 0) {
+    const entry = this.reviewIndex === null ? this.word : this.words[this.reviewIndex]
+    if (!entry) return
+    const requestId = ++this.speechRequestId
+    if (delay) await new Promise((resolve) => setTimeout(resolve, delay))
+    if (requestId !== this.speechRequestId) return
+    await speak(entry.name, this.config, {
+      accent: this.config.accent,
+      shouldPlay: () => requestId === this.speechRequestId,
+    })
+  }
+  prefetchUpcomingAudio() {
+    const entry = this.words[this.index + 1]
+    if (entry) void resolveAudio(entry.name, this.config, { accent: this.config.accent }).catch(() => {})
   }
   setPetState(state, message, duration = 1600) {
     this.petState = state
@@ -488,13 +534,41 @@ class Practice {
     return [...clue].map(practiceGlyph).join('')
   }
   render(width) {
-    const entry = this.word
+    const entry = this.reviewIndex === null ? this.word : this.words[this.reviewIndex]
     if (!entry) return ['']
+    if (this.reviewIndex !== null) {
+      const result = this.completedWords[this.reviewIndex]
+      const status = result?.isCorrect
+        ? this.config.language === 'en'
+          ? 'Correct'
+          : '正确'
+        : this.config.language === 'en'
+        ? 'Incorrect'
+        : '错误'
+      const study = studyBox(
+        [
+          c.bold(result?.isCorrect ? c.green(status) : c.red(status)),
+          `${this.config.language === 'en' ? 'Your answer' : '你的答案'}: ${result?.typed || '—'}`,
+          `${this.config.language === 'en' ? 'Correct word' : '正确拼写'}: ${entry.name}`,
+          c.cyan((entry.trans || []).join('；')),
+        ],
+        Math.max(28, Math.min(72, width - 4)),
+        this.config.language === 'en' ? 'Previous result' : '上一题结果',
+      )
+      return [
+        '',
+        `  ${c.bold(c.purple(this.dictionary.name))}  ${c.dim(`· ${this.reviewIndex + 1}/${this.words.length}`)}`,
+        ...study.map((line) => `  ${line}`),
+        '',
+        `  ${c.dim(this.config.language === 'en' ? '← older  ·  → return to practice' : '← 更早一题  ·  → 返回练习')}`,
+      ]
+    }
     const target = entry.name
     const mode = this.config.practiceMode || 'learn'
     const preview = answerPreview(target, this.typed, mode)
     const shown = [...target]
       .map((letter, i) => {
+        if (this.hintedIndexes.has(i) && i >= this.typed.length) return c.yellow(practiceGlyph(letter))
         if (i >= this.typed.length) return c.dim(practiceGlyph(preview[i]))
         return this.typed[i]?.toLowerCase() === letter.toLowerCase()
           ? c.green(practiceGlyph(this.typed[i]))
@@ -504,8 +578,8 @@ class Practice {
     const phone = this.config.accent === 'uk' ? entry.ukphone : entry.usphone
     const tips =
       this.config.language === 'en'
-        ? ['Ctrl+J replay audio', '→ skip word  ·  Esc back', '/ pause and open commands']
-        : ['Ctrl+J 重新发音', '→ 跳过当前词  ·  Esc 返回', '/ 暂停并打开命令']
+        ? ['Ctrl+P reveal next letter', 'Ctrl+J replay audio', '← previous result  ·  → skip word', '/ pause and open commands']
+        : ['Ctrl+P 提示下一个字母', 'Ctrl+J 重新发音', '← 查看上一题  ·  → 跳过当前词', '/ 暂停并打开命令']
     const tip = this.index % 4 === 3 ? '' : tips[this.index % tips.length]
     const study = studyBox(
       [
@@ -532,6 +606,7 @@ class Practice {
   }
   finishWord(isCorrect, playSound = true) {
     if (playSound) playFeedbackSound(isCorrect)
+    this.completedWords.push({ typed: this.typed, isCorrect })
     updateWordMemory(this.profile, this.word.name, isCorrect)
     if (isCorrect) {
       this.correct += 1
@@ -552,6 +627,7 @@ class Practice {
     this.index += 1
     this.typed = ''
     this.hadError = false
+    this.hintedIndexes.clear()
     if (this.index >= this.words.length) {
       this.profile.learned += this.words.length
       this.profile.correct += this.correct
@@ -569,7 +645,8 @@ class Practice {
       this.dispose()
       this.onComplete({ correct: this.correct, count: this.words.length, wpm: Math.round(this.keystrokes / 5 / minutes) })
     } else {
-      void this.say()
+      this.prefetchUpcomingAudio()
+      void this.say(playSound ? 320 : 0)
       this.requestRender()
     }
   }
@@ -579,6 +656,32 @@ class Practice {
       return this.onExit()
     }
     if (matchesKey(data, 'ctrl+j')) return void this.say()
+    if (matchesKey(data, 'left')) {
+      if (!this.completedWords.length) return
+      this.reviewIndex = this.reviewIndex === null ? this.completedWords.length - 1 : Math.max(0, this.reviewIndex - 1)
+      return this.requestRender()
+    }
+    if (this.reviewIndex !== null) {
+      if (matchesKey(data, 'right')) {
+        this.reviewIndex = this.reviewIndex >= this.completedWords.length - 1 ? null : this.reviewIndex + 1
+        return this.requestRender()
+      }
+      return
+    }
+    if (matchesKey(data, 'ctrl+p')) {
+      const mode = this.config.practiceMode || 'learn'
+      const index = nextHintIndex(this.word.name, this.typed.length, this.hintedIndexes, mode)
+      if (index < 0) return
+      this.hintedIndexes.add(index)
+      this.setPetState(
+        'quiz',
+        this.config.language === 'en'
+          ? `Hint: the next letter is “${this.word.name[index]}”.`
+          : `提示：下一个字母是“${this.word.name[index]}”。`,
+        1800,
+      )
+      return this.requestRender()
+    }
     if (matchesKey(data, 'right')) return this.finishWord(false)
     if (matchesKey(data, 'backspace')) {
       this.typed = this.typed.slice(0, -1)
@@ -1194,14 +1297,20 @@ export async function runTui(config, profile, persist) {
       dailyReward,
       onComplete: async (result) => {
         activePractice = null
+        const accuracy = sessionAccuracy(result.correct, result.count)
+        const isLearnMode = (config.practiceMode || 'learn') === 'learn'
         const shouldAutoCoach = Boolean(
-          config.invitationCode && profile.lastCompanionDay && profile.lastAiCoachDay !== profile.lastCompanionDay,
+          isLearnMode && config.invitationCode && profile.lastCompanionDay && profile.lastAiCoachDay !== profile.lastCompanionDay,
         )
         if (shouldAutoCoach) profile.lastAiCoachDay = profile.lastCompanionDay
         await save()
         companion.react(
           'celebrate',
-          config.language === 'zh-CN' ? `我们完成了这一单元！羁绊 ${profile.bond}。` : `We finished this unit! Bond ${profile.bond}.`,
+          isLearnMode
+            ? config.language === 'zh-CN'
+              ? `我们完成了这一单元！羁绊 ${profile.bond}。`
+              : `We finished this unit! Bond ${profile.bond}.`
+            : sessionEncouragementFallback(accuracy, config.language),
         )
         menu(
           tx('练习完成 ✦', 'Practice complete ✦'),
@@ -1209,9 +1318,9 @@ export async function runTui(config, profile, persist) {
             {
               value: 'again',
               label: tx('再练一次', 'Practice again'),
-              description: `${result.correct}/${result.count} ${tx('正确', 'correct')} · ${Math.round(
-                (result.correct / result.count) * 100,
-              )}% · ${result.wpm} WPM · +${result.correct * 2} ${tx('星星', 'stars')}`,
+              description: `${result.correct}/${result.count} ${tx('正确', 'correct')} · ${accuracy}% · ${result.wpm} WPM · +${
+                result.correct * 2
+              } ${tx('星星', 'stars')}`,
             },
             { value: 'next', label: tx('下一个单元', 'Next unit') },
             { value: 'home', label: tx('返回主页', 'Back home') },
@@ -1221,6 +1330,20 @@ export async function runTui(config, profile, persist) {
             value === 'home' ? home() : start()
           },
         )
+        if (!isLearnMode && config.invitationCode) {
+          void import('./ai.mjs')
+            .then(({ askAsPet }) =>
+              askAsPet(config, profile, 'session', {
+                accuracy,
+                correct: result.correct,
+                count: result.count,
+              }),
+            )
+            .then((message) => {
+              if (message) companion.react('cheer', `${tx(`本次正确率 ${accuracy}% · `, `${accuracy}% accuracy · `)}${message}`)
+            })
+            .catch(() => {})
+        }
         if (shouldAutoCoach) {
           void import('./ai.mjs')
             .then(({ askCoach }) => askCoach(config, profile, 'Give one warm, specific post-session observation in no more than 20 words.'))
