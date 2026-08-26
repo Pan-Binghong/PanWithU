@@ -10,6 +10,7 @@ import {
   sessionAccuracy,
   sessionEncouragementFallback,
   setColorTheme,
+  submittedAnswerCorrect,
 } from './tui.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -49,6 +50,13 @@ test('non-learning session summary reports accuracy in the pet voice', () => {
   assert.equal(sessionAccuracy(0, 0), 0)
   assert.match(sessionEncouragementFallback(80, 'zh-CN'), /正确率 80%/)
   assert.match(sessionEncouragementFallback(100, 'en'), /100% accuracy/)
+})
+
+test('practice answers are judged from the final text submitted with Enter', () => {
+  assert.equal(submittedAnswerCorrect('practice', 'practice'), true)
+  assert.equal(submittedAnswerCorrect('Practice', 'practice'), true)
+  assert.equal(submittedAnswerCorrect('practice', 'practicf'), false)
+  assert.equal(submittedAnswerCorrect('practice', 'practic'), false)
 })
 
 test('Ctrl+P hints reveal hidden letters in order and skip visible characters', () => {

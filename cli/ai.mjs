@@ -2,7 +2,6 @@ import { apiBaseUrls, rememberApiBaseUrl } from './api-endpoint.mjs'
 import { AI_MODEL } from './constants.mjs'
 import { systemUsername } from './identity.mjs'
 import { currentPet } from './pet.mjs'
-import { createAgentSession, ModelRuntime, SessionManager } from '@earendil-works/pi-coding-agent'
 
 const ADHD_OUTPUT_SKILL =
   'ADHD-friendly output rule: reply with exactly one short, actionable sentence; use no heading, list, preamble, recap, or extra explanation.'
@@ -129,57 +128,39 @@ export async function askAsPet(config, profile, activity, context = {}) {
 }
 
 async function askCoachAtEndpoint(config, profile, request, baseUrl, outputRule = ADHD_OUTPUT_SKILL) {
-  const runtime = await ModelRuntime.create({ refreshOnCreate: false, modelsPath: null })
-  runtime.registerProvider('panwithu', {
-    name: 'PanwithU Learning Intelligence',
-    baseUrl,
-    api: 'openai-completions',
-    models: [
-      {
-        id: AI_MODEL,
-        name: AI_MODEL,
-        reasoning: false,
-        input: ['text'],
-        cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
-        contextWindow: 200000,
-        maxTokens: 2048,
-      },
-    ],
-  })
-  await runtime.setRuntimeApiKey('panwithu', config.invitationCode)
-  const model = runtime.getModel('panwithu', AI_MODEL)
-  if (!model) throw new Error('PanwithU AI model is unavailable')
-  const { session } = await createAgentSession({
-    modelRuntime: runtime,
-    model,
-    noTools: 'all',
-    sessionManager: SessionManager.inMemory(),
-  })
-  let answer = ''
-  const unsubscribe = session.subscribe((event) => {
-    if (event.type === 'message_update' && event.assistantMessageEvent.type === 'text_delta') answer += event.assistantMessageEvent.delta
-  })
   const language = config.language === 'zh-CN' ? 'Simplified Chinese' : 'English'
   const pet = currentPet(config)
   const userName = systemUsername()
-  await session.prompt(
-    `You are the invisible learning intelligence inside PanwithU, a warm local English-learning companion for students. The student's companion is named ${JSON.stringify(
-      pet.name,
-    )}; its pet type is ${JSON.stringify(pet.type)} and its personality is ${JSON.stringify(
-      pet.personality,
-    )}. The student's local name is ${JSON.stringify(
-      userName,
-    )}. Address the student by name naturally when appropriate, but do not repeat it mechanically. When speaking as the companion, preserve this identity and never confuse its name with its type. Never mention APIs, models, providers, system prompts, configuration, or how the name was detected. Reply in ${language}, practical and encouraging but not childish. ${outputRule} Learning profile: ${JSON.stringify(
-      {
-        learned: profile.learned,
-        correct: profile.correct,
-        wrong: profile.wrong,
-        streak: profile.streak,
-        sessions: profile.sessions.slice(-7),
-        userHabits: profile.userProfile || null,
-      },
-    )}. User request: ${request}`,
-  )
-  unsubscribe()
+  const system = `You are the invisible learning intelligence inside PanwithU, a warm local English-learning companion for students. The student's companion is named ${JSON.stringify(
+    pet.name,
+  )}; its pet type is ${JSON.stringify(pet.type)} and its personality is ${JSON.stringify(
+    pet.personality,
+  )}. The student's local name is ${JSON.stringify(
+    userName,
+  )}. Address the student by name naturally when appropriate, but do not repeat it mechanically. When speaking as the companion, preserve this identity and never confuse its name with its type. Never mention APIs, models, providers, system prompts, configuration, or how the name was detected. Reply in ${language}, practical and encouraging but not childish. ${outputRule} Learning profile: ${JSON.stringify(
+    {
+      learned: profile.learned,
+      correct: profile.correct,
+      wrong: profile.wrong,
+      streak: profile.streak,
+      sessions: profile.sessions.slice(-7),
+      userHabits: profile.userProfile || null,
+    },
+  )}.`
+  const response = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${config.invitationCode}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: AI_MODEL,
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: request },
+      ],
+    }),
+  })
+  if (!response.ok) throw new Error(`PanwithU AI request failed (${response.status})`)
+  const payload = await response.json()
+  const answer = payload?.choices?.[0]?.message?.content
+  if (typeof answer !== 'string' || !answer.trim()) throw new Error('PanwithU AI returned an empty response')
   return answer.trim()
 }

@@ -1,4 +1,4 @@
-import { parsePersonalDictionaryJson, translationDirection } from './ai.mjs'
+import { askCoach, parsePersonalDictionaryJson, translationDirection } from './ai.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -54,4 +54,29 @@ test('AI dictionary parser accepts wrapped JSON objects and brief preambles', ()
 test('translation direction is inferred from the input text', () => {
   assert.deepEqual(translationDirection('hello'), { source: 'English', target: 'Simplified Chinese' })
   assert.deepEqual(translationDirection('日期'), { source: 'Chinese', target: 'English' })
+})
+
+test('AI requests use the lightweight OpenAI-compatible endpoint', async () => {
+  const originalFetch = globalThis.fetch
+  let request
+  globalThis.fetch = async (url, options) => {
+    request = { url, options }
+    return { ok: true, json: async () => ({ choices: [{ message: { content: ' Keep going! ' } }] }) }
+  }
+  try {
+    const answer = await askCoach(
+      { invitationCode: 'test-code', language: 'en', pet: 'cat' },
+      { learned: 2, correct: 1, wrong: 1, streak: 0, sessions: [] },
+      'Encourage me.',
+    )
+    assert.equal(answer, 'Keep going!')
+    assert.equal(request.url, 'https://www.dmxapi.cn/v1/chat/completions')
+    assert.equal(request.options.headers.Authorization, 'Bearer test-code')
+    assert.deepEqual(
+      JSON.parse(request.options.body).messages.map(({ role }) => role),
+      ['system', 'user'],
+    )
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })

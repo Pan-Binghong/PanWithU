@@ -2,10 +2,14 @@ import {
   macNotificationAppPath,
   NOTIFICATION_APP_NAME,
   NOTIFICATION_LOGO_PATH,
+  WINDOWS_NOTIFICATION_APP_ID,
   notificationCommand,
   parseReminderHour,
   systemdExecArgument,
   windowsLauncherScript,
+  windowsNotificationArgs,
+  windowsNotificationIconPath,
+  windowsSnoreToastPath,
 } from './reminder.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -24,11 +28,11 @@ test('notification commands are generated for all supported platforms', () => {
     ['-n', '-a', macNotificationAppPath(), '--args', 'study', 'Mimi'],
   ])
   const windows = notificationCommand("let's study", 'win32')
-  assert.equal(windows[0], 'powershell')
-  assert.match(windows[1].join(' '), /ToastNotificationManager/)
-  assert.match(windows[1].join(' '), /SetCurrentProcessExplicitAppUserModelID\('Pan'\)/)
-  assert.match(windows[1].join(' '), /appLogoOverride/)
-  assert.match(windows[1].join(' '), /256, 256/)
+  assert.match(windows[0], /snoretoast-x(?:64|86)\.exe$/)
+  assert.deepEqual(windows[1], windowsNotificationArgs("let's study", 'PanwithU'))
+  assert.match(windowsNotificationIconPath('C:\\Users\\Pan\\AppData\\Local'), /pan-notification-256\.png$/)
+  assert.match(windowsSnoreToastPath('x64'), /snoretoast-x64\.exe$/)
+  assert.equal(windows[1].at(-1), WINDOWS_NOTIFICATION_APP_ID)
   assert.match(NOTIFICATION_LOGO_PATH, /panwithu-logo\.png$/)
   assert.equal(NOTIFICATION_APP_NAME, 'Pan')
 })
