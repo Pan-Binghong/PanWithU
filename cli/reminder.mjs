@@ -1,19 +1,22 @@
 import { paths } from './storage.mjs'
 import { spawn } from 'node:child_process'
-import { access, mkdir, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, rm, stat, writeFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 export const NOTIFICATION_APP_NAME = 'Pan'
+export const WINDOWS_NOTIFICATION_APP_ID = 'PanWithU.Pan'
 const packageRoot = dirname(dirname(fileURLToPath(import.meta.url)))
 export const NOTIFICATION_LOGO_PATH = join(packageRoot, 'assets', 'brand', 'panwithu-logo.png')
+const require = createRequire(import.meta.url)
 
-function run(command, args) {
+function run(command, args, acceptedExitCodes = [0]) {
   return new Promise((resolve) => {
-    const child = spawn(command, args, { stdio: 'ignore' })
+    const child = spawn(command, args, { stdio: 'ignore', windowsHide: true })
     child.once('error', () => resolve(false))
-    child.once('exit', (code) => resolve(code === 0))
+    child.once('exit', (code) => resolve(acceptedExitCodes.includes(code)))
   })
 }
 
@@ -49,20 +52,50 @@ async function ensureWindowsLauncher(name, command, script) {
 
 export function notificationCommand(message, platform = process.platform, title = 'PanwithU') {
   if (platform === 'darwin') return ['open', ['-n', '-a', macNotificationAppPath(), '--args', message, title]]
-  if (platform === 'win32') {
-    const safe = message.replaceAll("'", "''")
-    const safeTitle = title.replaceAll("'", "''")
-    const safeLogo = NOTIFICATION_LOGO_PATH.replaceAll("'", "''")
-    const script = `Add-Type -AssemblyName System.Drawing; Add-Type -TypeDefinition 'using System.Runtime.InteropServices; public static class PanIdentity { [DllImport("shell32.dll", CharSet = CharSet.Unicode)] public static extern int SetCurrentProcessExplicitAppUserModelID(string appID); }'; $iconDir = Join-Path $env:LOCALAPPDATA 'PanWithU'; $iconPath = Join-Path $iconDir 'pan-notification-256.png'; if (!(Test-Path $iconPath)) { New-Item -ItemType Directory -Force -Path $iconDir > $null; $source = [System.Drawing.Image]::FromFile('${safeLogo}'); $icon = New-Object System.Drawing.Bitmap 256, 256; $graphics = [System.Drawing.Graphics]::FromImage($icon); $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic; $graphics.DrawImage($source, 0, 0, 256, 256); $icon.Save($iconPath, [System.Drawing.Imaging.ImageFormat]::Png); $graphics.Dispose(); $icon.Dispose(); $source.Dispose() }; [PanIdentity]::SetCurrentProcessExplicitAppUserModelID('${NOTIFICATION_APP_NAME}') > $null; $safeTitle = [Security.SecurityElement]::Escape('${safeTitle}'); $safeMessage = [Security.SecurityElement]::Escape('${safe}'); $iconUri = 'file:///' + $iconPath.Replace('\\', '/'); $xmlText = '<toast><visual><binding template="ToastGeneric"><image placement="appLogoOverride" hint-crop="circle" src="' + $iconUri + '"/><text>' + $safeTitle + '</text><text>' + $safeMessage + '</text></binding></visual></toast>'; $xml = [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime]::New(); $xml.LoadXml($xmlText); $manager = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]; $toastType = [Windows.UI.Notifications.ToastNotification, Windows.UI.Notifications, ContentType = WindowsRuntime]; $manager::CreateToastNotifier('${NOTIFICATION_APP_NAME}').Show($toastType::new($xml))`
-    return ['powershell', ['-NoProfile', '-NonInteractive', '-Command', script]]
-  }
+  if (platform === 'win32') return [windowsSnoreToastPath(), windowsNotificationArgs(message, title)]
   return ['notify-send', ['--app-name', NOTIFICATION_APP_NAME, '--icon', NOTIFICATION_LOGO_PATH, title, message]]
 }
 
 export async function notify(message, { title = 'PanwithU' } = {}) {
   if (process.platform === 'darwin' && !(await ensureMacNotificationApp())) return false
+  if (process.platform === 'win32' && !(await ensureWindowsNotificationSupport())) return false
   const [command, args] = notificationCommand(message, process.platform, title)
-  return run(command, args)
+  return run(command, args, process.platform === 'win32' ? [0, 1, 2, 3, 4, 5] : [0])
+}
+
+export function windowsSnoreToastPath(arch = process.arch) {
+  const moduleRoot = dirname(require.resolve('node-notifier/package.json'))
+  return join(moduleRoot, 'vendor', 'snoreToast', `snoretoast-${arch === 'x64' ? 'x64' : 'x86'}.exe`)
+}
+
+export function windowsNotificationArgs(message, title, iconPath = windowsNotificationIconPath()) {
+  return ['-t', title, '-m', message, '-p', iconPath, '-appID', WINDOWS_NOTIFICATION_APP_ID]
+}
+
+export function windowsNotificationIconPath(localAppData = process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local')) {
+  return join(localAppData, 'PanWithU', 'pan-notification-256.png')
+}
+
+async function ensureWindowsNotificationSupport() {
+  const iconPath = windowsNotificationIconPath()
+  await mkdir(dirname(iconPath), { recursive: true })
+  let iconReady = false
+  try {
+    const info = await stat(iconPath)
+    iconReady = info.size <= 200 * 1024
+  } catch {}
+  if (!iconReady) {
+    const source = NOTIFICATION_LOGO_PATH.replaceAll("'", "''")
+    const target = iconPath.replaceAll("'", "''")
+    const resize = `$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.Drawing; $source=[System.Drawing.Image]::FromFile('${source}'); try { $icon=New-Object System.Drawing.Bitmap 256,256; try { $graphics=[System.Drawing.Graphics]::FromImage($icon); try { $graphics.InterpolationMode=[System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic; $graphics.DrawImage($source,0,0,256,256); $icon.Save('${target}',[System.Drawing.Imaging.ImageFormat]::Png) } finally { $graphics.Dispose() } } finally { $icon.Dispose() } } finally { $source.Dispose() }`
+    if (!(await run('powershell', ['-NoProfile', '-NonInteractive', '-Command', resize]))) return false
+    try {
+      if ((await stat(iconPath)).size > 200 * 1024) return false
+    } catch {
+      return false
+    }
+  }
+  return run(windowsSnoreToastPath(), ['-install', 'PanWithU\\Pan.lnk', process.execPath, WINDOWS_NOTIFICATION_APP_ID])
 }
 
 export function macNotificationAppPath(home = homedir()) {

@@ -181,6 +181,10 @@ export function sessionEncouragementFallback(accuracy, language = 'zh-CN') {
   return `本次正确率 ${accuracy}%——每个错词都帮我们找到了下一步。`
 }
 
+export function submittedAnswerCorrect(target, typed) {
+  return typed.length === target.length && typed.toLowerCase() === target.toLowerCase()
+}
+
 class SecretInput {
   focused = false
   constructor() {
@@ -453,7 +457,6 @@ class Practice {
     this.correct = 0
     this.mistakes = 0
     this.keystrokes = 0
-    this.hadError = false
     this.completedWords = []
     this.reviewIndex = null
     this.hintedIndexes = new Set()
@@ -578,8 +581,8 @@ class Practice {
     const phone = this.config.accent === 'uk' ? entry.ukphone : entry.usphone
     const tips =
       this.config.language === 'en'
-        ? ['Ctrl+P reveal next letter', 'Ctrl+J replay audio', '← previous result  ·  → skip word', '/ pause and open commands']
-        : ['Ctrl+P 提示下一个字母', 'Ctrl+J 重新发音', '← 查看上一题  ·  → 跳过当前词', '/ 暂停并打开命令']
+        ? ['Enter submit answer', 'Ctrl+P reveal next letter', '← previous result  ·  → skip word', '/ pause and open commands']
+        : ['Enter 提交答案', 'Ctrl+P 提示下一个字母', '← 查看上一题  ·  → 跳过当前词', '/ 暂停并打开命令']
     const tip = this.index % 4 === 3 ? '' : tips[this.index % tips.length]
     const study = studyBox(
       [
@@ -626,7 +629,6 @@ class Practice {
     }
     this.index += 1
     this.typed = ''
-    this.hadError = false
     this.hintedIndexes.clear()
     if (this.index >= this.words.length) {
       this.profile.learned += this.words.length
@@ -682,6 +684,10 @@ class Practice {
       )
       return this.requestRender()
     }
+    if (matchesKey(data, 'enter')) {
+      const isCorrect = submittedAnswerCorrect(this.word.name, this.typed)
+      return this.finishWord(isCorrect, isCorrect)
+    }
     if (matchesKey(data, 'right')) return this.finishWord(false)
     if (matchesKey(data, 'backspace')) {
       this.typed = this.typed.slice(0, -1)
@@ -702,14 +708,10 @@ class Practice {
     this.keystrokes += 1
     if (isMatch) playKeySound()
     else {
-      this.hadError = true
       playFeedbackSound(false)
     }
     this.typed += printable
-    if (this.typed.length === this.word.name.length) {
-      const isCorrect = !this.hadError && this.typed.toLowerCase() === this.word.name.toLowerCase()
-      this.finishWord(isCorrect, isCorrect)
-    } else this.requestRender()
+    this.requestRender()
   }
 }
 
