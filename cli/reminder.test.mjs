@@ -5,6 +5,7 @@ import {
   notificationCommand,
   parseReminderHour,
   systemdExecArgument,
+  windowsLauncherScript,
 } from './reminder.mjs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
@@ -44,4 +45,11 @@ test('reminder hours accept midnight and reject invalid values', () => {
 test('systemd reminder command arguments preserve special paths', () => {
   assert.equal(systemdExecArgument('/opt/Pan With U/node'), '"/opt/Pan With U/node"')
   assert.equal(systemdExecArgument('/opt/100%/pwu"cli'), '"/opt/100%%/pwu\\"cli"')
+})
+
+test('Windows scheduled tasks launch the CLI without a visible terminal', () => {
+  const launcher = windowsLauncherScript('C:\\Program Files\\nodejs\\node.exe', 'C:\\Users\\Pan Binghong\\pwu.mjs', 'pull-notifications')
+  assert.match(launcher, /WScript\.Shell/)
+  assert.match(launcher, /pull-notifications", 0, False/)
+  assert.doesNotMatch(launcher, /powershell/i)
 })
