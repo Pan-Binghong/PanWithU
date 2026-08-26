@@ -29,6 +29,24 @@ export function systemdExecArgument(value) {
   return `"${escaped}"`
 }
 
+function vbsString(value) {
+  return String(value).replaceAll('"', '""')
+}
+
+export function windowsLauncherScript(nodePath, scriptPath, command) {
+  return `Set shell = CreateObject("WScript.Shell")\nshell.Run Chr(34) & "${vbsString(nodePath)}" & Chr(34) & " " & Chr(34) & "${vbsString(
+    scriptPath,
+  )}" & Chr(34) & " ${vbsString(command)}", 0, False\n`
+}
+
+async function ensureWindowsLauncher(name, command, script) {
+  const supportDir = join(process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local'), 'PanWithU')
+  const launcher = join(supportDir, name)
+  await mkdir(supportDir, { recursive: true })
+  await writeFile(launcher, windowsLauncherScript(process.execPath, script, command), { mode: 0o600 })
+  return launcher
+}
+
 export function notificationCommand(message, platform = process.platform, title = 'PanwithU') {
   if (platform === 'darwin') return ['open', ['-n', '-a', macNotificationAppPath(), '--args', message, title]]
   if (platform === 'win32') {
@@ -128,6 +146,7 @@ export async function installReminder({ hour = 12, minute = 0, intervalMinutes =
   const interval = intervalMinutes == null ? null : Math.max(1, Math.floor(Number(intervalMinutes)))
   const script = process.argv[1]
   if (process.platform === 'win32') {
+    const launcher = await ensureWindowsLauncher('daily-reminder.vbs', 'remind', script)
     const schedule = interval
       ? ['/SC', 'MINUTE', '/MO', String(interval)]
       : ['/SC', 'DAILY', '/ST', `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`]
@@ -138,7 +157,7 @@ export async function installReminder({ hour = 12, minute = 0, intervalMinutes =
       '/TN',
       'PanWithU Daily Reminder',
       '/TR',
-      `"${process.execPath}" "${script}" remind`,
+      `wscript.exe //B //NoLogo "${launcher}"`,
     ])
   }
   if (process.platform === 'darwin') {
@@ -178,6 +197,7 @@ export async function installRemoteNotificationPolling({ intervalMinutes = 5 } =
   const interval = Math.max(1, Math.floor(Number(intervalMinutes)))
   const script = process.argv[1]
   if (process.platform === 'win32') {
+    const launcher = await ensureWindowsLauncher('remote-notifications.vbs', 'pull-notifications', script)
     return run('schtasks', [
       '/Create',
       '/F',
@@ -188,7 +208,7 @@ export async function installRemoteNotificationPolling({ intervalMinutes = 5 } =
       '/TN',
       'Pan Remote Notifications',
       '/TR',
-      `"${process.execPath}" "${script}" pull-notifications`,
+      `wscript.exe //B //NoLogo "${launcher}"`,
     ])
   }
   if (process.platform === 'darwin') {

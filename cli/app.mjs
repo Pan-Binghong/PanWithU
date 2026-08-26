@@ -132,20 +132,20 @@ export async function run(args) {
   const profile = await loadProfile()
   syncLearningTodo(profile, config.language)
   if (!args.length && stdin.isTTY) {
-    if (config.reminders !== false && config.remoteNotificationScheduleVersion !== 1) {
+    if (config.reminders !== false && config.remoteNotificationScheduleVersion !== 2) {
       try {
         if (await installRemoteNotificationPolling({ intervalMinutes: 5 })) {
-          config.remoteNotificationScheduleVersion = 1
+          config.remoteNotificationScheduleVersion = 2
           await saveConfig(config)
         }
       } catch {}
     }
-    if (config.reminders !== false && config.companionScheduleVersion !== 1) {
+    if (config.reminders !== false && config.companionScheduleVersion !== 2) {
       try {
         if (await installReminder({ intervalMinutes: 30 })) {
           config.defaultReminderInstalled = true
           config.reminderHour = 12
-          config.companionScheduleVersion = 1
+          config.companionScheduleVersion = 2
           await saveConfig(config)
         }
       } catch {}
